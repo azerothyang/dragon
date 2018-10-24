@@ -1,7 +1,7 @@
 package main
 
 import (
-	"core/keep"
+	"core/gr"
 	"router"
 )
 
@@ -9,10 +9,10 @@ import (
 
 func main() {
 	//初始化配置
-	keep.InitConf()
+	gr.InitConf()
 
 	//初始化框架
-	keeper := keep.New()
+	keeper := gr.New()
 	//初始化路由
 	keeper.InitRoute(router.Routes)
 
