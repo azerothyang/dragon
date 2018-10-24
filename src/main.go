@@ -1,7 +1,7 @@
 package main
 
 import (
-	"core/gr"
+	"core/dragon"
 	"router"
 )
 
@@ -9,14 +9,14 @@ import (
 
 func main() {
 	//初始化配置
-	gr.InitConf()
+	dragon.InitConf()
 
 	//初始化框架
-	keeper := gr.New()
+	dr := dragon.New()
 	//初始化路由
-	keeper.InitRoute(router.Routes)
+	dr.InitRoute(router.Routes)
 
 	//根据配置初始化服务和中间件
-	keeper.Run()
+	dr.Fly()
 
 }
