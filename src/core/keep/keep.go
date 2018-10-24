@@ -6,23 +6,23 @@ import (
 	"net/http"
 )
 
-type KeepS struct {
+type Keeper struct {
 	Router *httprouter.Router
 }
 
 //new一个keeper
-func New() *KeepS {
-	return new(KeepS)
+func New() *Keeper {
+	return new(Keeper)
 }
 
 //初始化路由
-func (keeper *KeepS)InitRoute(router *httprouter.Router)  {
+func (keeper *Keeper)InitRoute(router *httprouter.Router)  {
 	keeper.Router = router
 }
 
 
 //开始监听
-func (keeper *KeepS)Run()  {
+func (keeper *Keeper)Run()  {
 
 	//初始化框架
 	log.Println("start server on " + Conf.Server.Host + ":" + Conf.Server.Port)
