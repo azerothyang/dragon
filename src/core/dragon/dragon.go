@@ -10,21 +10,21 @@ type Dragon struct {
 	Router *httprouter.Router
 }
 
-//new一个dragon
+//new dragon
 func New() *Dragon {
 	return new(Dragon)
 }
 
-//初始化路由
+// init route
 func (dragon *Dragon)InitRoute(router *httprouter.Router)  {
 	dragon.Router = router
 }
 
 
-//开始监听
+//start listening
 func (dragon *Dragon)Fly()  {
 
-	//初始化框架
+	//dragon fly
 	log.Println("start server on " + Conf.Server.Host + ":" + Conf.Server.Port)
 	log.Fatal(http.ListenAndServe(Conf.Server.Host + ":" + Conf.Server.Port, dragon.Router))
 }

@@ -24,7 +24,7 @@ type ConfS struct {
 	}
 } 
 
-//初始化配置文件
+//init config
 func InitConf() {
 	dir, err := GetCurrentPath()
 	if err != nil {
@@ -38,7 +38,7 @@ func InitConf() {
 	}
 
 	var config []byte
-	//如果.env不等于debug则是生产环境
+	//check release/.env, if .env 's content == debug
 	if string(envb) != "debug" {
 		Env = "production"
 		config, err = ioutil.ReadFile(dir + FmtSlash("conf/prod.yml"))
@@ -52,7 +52,7 @@ func InitConf() {
 	}
 }
 
-//获取当前执行文件路径
+//get current exec file path
 func GetCurrentPath() (string, error) {
 	file, err := exec.LookPath(os.Args[0])
 	if err != nil {
@@ -73,7 +73,7 @@ func GetCurrentPath() (string, error) {
 }
 
 
-//根据操作系统，如果linux保持不变; 如果windows,将linux路径换为window路径。
+// according to operating system to change path slash, default use linux path slash
 func FmtSlash(path string) string  {
 	sys := runtime.GOOS
 	if sys == `windows`{

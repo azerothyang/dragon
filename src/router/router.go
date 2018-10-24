@@ -13,6 +13,11 @@ var(
 	Routes *httprouter.Router
 )
 
+type Info struct {
+	Name string
+	Age int32
+}
+
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Welcome!\n")
 }
@@ -20,4 +25,5 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func init()  {
 	Routes = httprouter.New()
 	Routes.GET("/", Index)
+	Routes.POST("/", Index)
 }
