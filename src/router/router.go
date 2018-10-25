@@ -4,6 +4,7 @@ package router
  * @link https://github.com/julienschmidt/httprouter
  */
 import (
+	"ctrl"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -24,6 +25,6 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func init()  {
 	Routes = httprouter.New()
-	Routes.GET("/", Index)
+	Routes.GET("/", (&ctrl.Test{}).Test)
 	Routes.POST("/", Index)
 }

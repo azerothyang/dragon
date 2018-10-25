@@ -1,6 +1,8 @@
 package dragon
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -25,4 +27,21 @@ func Parse(r *http.Request) map[string]string {
 	}
 
 	return requests
+}
+
+//解析请求原始json数据
+func ParseRawJson(r *http.Request, data interface{}) error {
+	var body []byte
+	var err error
+	body , err = ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = json.Unmarshal(body, data)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }
