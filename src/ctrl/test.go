@@ -18,3 +18,8 @@ func (t *Test)Upload(w http.ResponseWriter, r *http.Request, _ httprouter.Params
 	dragon.Upload(r, "file", "./test.png")
 	t.Json("upload success", w)
 }
+
+func (t *Test)GetDBData(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
+	res := testModel.Get()
+	t.Json(res, w)
+}

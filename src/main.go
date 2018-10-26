@@ -2,21 +2,26 @@ package main
 
 import (
 	"core/dragon"
+	"model"
 	"router"
 )
 
 
 
 func main() {
-	//初始化配置
+	//init config
 	dragon.InitConf()
 
-	//初始化框架
+	//init dragon
 	dr := dragon.New()
-	//初始化路由
+
+	//init route
 	dr.InitRoute(router.Routes)
 
-	//根据配置初始化服务和中间件
+	//init db
+	model.InitDB()
+
+	//dragon fly
 	dr.Fly()
 
 }

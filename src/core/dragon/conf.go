@@ -17,10 +17,45 @@ var	(
 	Env = "debug"
 )
 
+//config struct
 type ConfS struct {
 	Server struct{
 		Host string
 		Port string
+	}
+	Database struct{
+		Mysql struct{
+			Master struct{
+				Host string
+				Port string
+				User string
+				Password string
+				Database string
+				Charset string
+				Timeout string
+				MaxIdle int
+				MaxConn int
+			}
+			Slave struct{
+				Host string
+				Port string
+				User string
+				Password string
+				Database string
+				Charset string
+				Timeout string
+				MaxIdle int
+				MaxConn int
+			}
+			Redis struct{
+				Host string
+				Port string
+				Auth string
+				Timeout string
+				Db int
+
+			}
+		}
 	}
 } 
 

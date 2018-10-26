@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"model"
 	"net/http"
 )
 
-
+var	(
+	testModel = &model.TestModel{}
+)
 
 type Ctrl struct {
 	
