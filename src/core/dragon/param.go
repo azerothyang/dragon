@@ -29,7 +29,7 @@ func Parse(r *http.Request) map[string]string {
 	return requests
 }
 
-//解析请求原始json数据
+//parse raw json
 func ParseRawJson(r *http.Request, data interface{}) error {
 	var body []byte
 	var err error

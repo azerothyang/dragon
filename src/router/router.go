@@ -26,5 +26,6 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func init()  {
 	Routes = httprouter.New()
 	Routes.GET("/", (&ctrl.Test{}).Test)
+	Routes.POST("/upload", (&ctrl.Test{}).Upload)
 	Routes.POST("/", Index)
 }
