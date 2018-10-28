@@ -8,7 +8,7 @@ type Test struct {
 	Id int64 `gorm:"primary_key"`
 }
 
-func (*TestModel) Get() *Test{
+func (*TestModel) Get() *Test {
 	test := Test{}
 	readDB.First(&test)
 	return &test

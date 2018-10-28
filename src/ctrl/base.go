@@ -8,20 +8,19 @@ import (
 	"net/http"
 )
 
-var	(
+var (
 	testModel = &model.TestModel{}
 )
 
 type Ctrl struct {
-	
 }
 
-func init()  {
+func init() {
 
 }
 
 //return with json
-func (*Ctrl)Json(data interface{}, resp http.ResponseWriter) {
+func (*Ctrl) Json(data interface{}, resp http.ResponseWriter) {
 	resp.Header().Set("content-type", "application/json; charset=utf-8")
 	resp.Header().Set("server", "dragon")
 	js, err := json.Marshal(data)

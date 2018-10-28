@@ -12,52 +12,51 @@ import (
 	"strings"
 )
 
-var	(
+var (
 	Conf ConfS
-	Env = "debug"
+	Env  = "debug"
 )
 
 //config struct
 type ConfS struct {
-	Server struct{
+	Server struct {
 		Host string
 		Port string
 	}
-	Database struct{
-		Mysql struct{
-			Master struct{
-				Host string
-				Port string
-				User string
+	Database struct {
+		Mysql struct {
+			Master struct {
+				Host     string
+				Port     string
+				User     string
 				Password string
 				Database string
-				Charset string
-				Timeout string
-				MaxIdle int
-				MaxConn int
+				Charset  string
+				Timeout  string
+				MaxIdle  int
+				MaxConn  int
 			}
-			Slave struct{
-				Host string
-				Port string
-				User string
+			Slave struct {
+				Host     string
+				Port     string
+				User     string
 				Password string
 				Database string
-				Charset string
-				Timeout string
-				MaxIdle int
-				MaxConn int
-			}
-			Redis struct{
-				Host string
-				Port string
-				Auth string
-				Timeout string
-				Db int
-
+				Charset  string
+				Timeout  string
+				MaxIdle  int
+				MaxConn  int
 			}
 		}
+		Redis struct {
+			Host    string
+			Port    string
+			Auth    string
+			Timeout string
+			Db      int
+		}
 	}
-} 
+}
 
 //init config
 func InitConf() {
@@ -107,11 +106,10 @@ func GetCurrentPath() (string, error) {
 	return string(path[0 : i+1]), nil
 }
 
-
 // according to operating system to change path slash, default use linux path slash
-func FmtSlash(path string) string  {
+func FmtSlash(path string) string {
 	sys := runtime.GOOS
-	if sys == `windows`{
+	if sys == `windows` {
 		return strings.Replace(path, "/", "\\", -1)
 	}
 	return path

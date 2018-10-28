@@ -7,13 +7,13 @@ import (
 	"github.com/jinzhu/gorm"
 	"log"
 )
+
 var (
-	db  *gorm.DB 	 //master db
-	readDB *gorm.DB  //read db
+	db     *gorm.DB //master db
+	readDB *gorm.DB //read db
 )
 
 type baseModel struct {
-
 }
 
 //init db
