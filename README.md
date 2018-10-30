@@ -24,6 +24,7 @@
 
 # ab performance
  ``` 
+ cpu: 1 core, ram: 1 G
  Server Software:        nginx/1.12.2
  Server Hostname:        test.com
  Server Port:            80
