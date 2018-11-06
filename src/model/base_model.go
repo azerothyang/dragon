@@ -43,6 +43,8 @@ func InitDB() {
 
 	db.DB().SetMaxIdleConns(masterMaxIdle)
 	db.DB().SetMaxOpenConns(masterMaxConn)
+	//db.LogMode(true) enable log to debug, log can write into elasticsearch
 	readDB.DB().SetMaxIdleConns(slaveMaxIdle)
 	readDB.DB().SetMaxOpenConns(slaveMaxConn)
+	//readDB.LogMode(true)
 }
