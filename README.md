@@ -19,6 +19,16 @@
  __build__: 
  >Just compile your src file and move bin file to directory dragon/release/
  
+ >you might develop with [gobuild](https://github.com/caixw/gobuild) for hot rebuilding.
+ just like:
+ ```
+ linux:
+ gobuild -o ../release/go
+ 
+ windows:
+ gobuild -o ../release/go.exe
+ ```
+ 
  __config__:
 > dragon/release/conf/  
 
