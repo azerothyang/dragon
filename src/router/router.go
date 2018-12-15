@@ -7,6 +7,7 @@ import (
 	"ctrl"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"log"
 	"net/http"
 )
 
@@ -25,6 +26,7 @@ func init() {
 	Routes.GET("/db", testCtrl.GetDBData)
 	Routes.GET("/redis", testCtrl.GetRedis)
 	Routes.NotFound = notFoundHandler{}
+	Routes.PanicHandler = panicHandler
 }
 
 // not found route handle
@@ -32,4 +34,12 @@ func (notFoundHandler)ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	w.Header().Set("content-type", "text/html; charset=utf-8")
 	fmt.Fprintf(w, "<h2>Not Found</h2>")
 	//baseCtrl.Json("not found", w)
+}
+
+// all panic handler
+func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
+	log.Println(err)
+	w.Header().Set("content-type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(w, "<h2>500 Internal Server Error</h2>")
 }
