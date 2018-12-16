@@ -3,7 +3,9 @@ package ctrl
 import (
 	"core/dragon"
 	"core/dragon/dredis"
+	"dto"
 	"github.com/julienschmidt/httprouter"
+	"model"
 	"net/http"
 )
 
@@ -12,6 +14,9 @@ type Test struct {
 }
 
 func (t *Test) Test(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	requests := dragon.Parse(r)
+	tt := model.Test{}
+	dto.TestPToTestS(requests, &tt)
 	t.Json("hello world", w)
 }
 
@@ -28,7 +33,7 @@ func (t *Test) GetDBData(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 }
 
 // redis test
-func (t *Test)GetRedis(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
+func (t *Test) GetRedis(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	res, _ := dredis.Redis.Get("x").Result()
 	t.Json(res, w)
 }
