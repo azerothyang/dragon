@@ -3,6 +3,7 @@ package main
 import (
 	"core/dragon"
 	"core/dragon/dredis"
+	"middleware"
 	"model"
 	"router"
 )
@@ -14,8 +15,8 @@ func main() {
 	//init dragon
 	dr := dragon.New()
 
-	//init route
-	dr.InitRoute(router.Routes)
+	//init route, you can chain any middleware here :)
+	dr.InitRoute(middleware.LogInfo(router.Routes))
 
 	//init db
 	model.InitDB()
