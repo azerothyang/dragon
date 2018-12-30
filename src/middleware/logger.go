@@ -8,9 +8,9 @@ import (
 
 func LogInfo(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter,r *http.Request) {
-		startTime := time.Now()
-		log.Println(r.URL.String())
+		start := time.Now()
+		log.Printf("%s %s", r.Method, r.URL.Path)
 		next.ServeHTTP(w, r)
-		log.Printf("time cost:%d ms\n", time.Since(startTime)/time.Millisecond)
+		log.Printf("Time cost: %s in %v", r.URL.Path, time.Since(start))
 	})
 }
