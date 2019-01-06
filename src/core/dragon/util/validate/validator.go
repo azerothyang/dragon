@@ -124,6 +124,22 @@ func (validator *Validator) Validate(form *map[string]string, rules rules) *Vali
 					continue
 				}
 			}
+
+			if method == "int64" {
+				if validator.int64(field, form) == false {
+					validator.HasErr = true
+					validator.ErrList[field] = "非64位整型"
+					continue
+				}
+			}
+
+			if method == "int32" {
+				if validator.int32(field, form) == false {
+					validator.HasErr = true
+					validator.ErrList[field] = "非32位整型"
+					continue
+				}
+			}
 		}
 	}
 	return validator
@@ -236,4 +252,22 @@ func (*Validator) minLength(field string, form *map[string]string, arg string) b
 		return true
 	}
 	return false
+}
+
+func (*Validator) int64(field string, form *map[string]string) bool {
+	v, _ := (*form)[field]
+	_, err := strconv.ParseInt(v, 10, 64)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func (*Validator) int32(field string, form *map[string]string) bool {
+	v, _ := (*form)[field]
+	_, err := strconv.ParseInt(v, 10, 32)
+	if err != nil {
+		return false
+	}
+	return true
 }
