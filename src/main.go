@@ -2,6 +2,7 @@ package main
 
 import (
 	"core/dragon"
+	"core/dragon/conf"
 	"core/dragon/dredis"
 	"middleware"
 	"model"
@@ -10,7 +11,7 @@ import (
 
 func main() {
 	//init config
-	dragon.InitConf()
+	conf.InitConf()
 
 	//init dragon
 	dr := dragon.New()

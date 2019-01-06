@@ -1,7 +1,7 @@
 package model
 
 import (
-	"core/dragon"
+	"core/dragon/conf"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" //导入mysql驱动
 	"github.com/jinzhu/gorm"
@@ -24,15 +24,15 @@ func InitDB() {
 
 	//mysql master
 	dsnMaster = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&timeout=%s&parseTime=True&loc=Local", //loc set the timezone
-		dragon.Conf.Database.Mysql.Master.User, dragon.Conf.Database.Mysql.Master.Password, dragon.Conf.Database.Mysql.Master.Host, dragon.Conf.Database.Mysql.Master.Port, dragon.Conf.Database.Mysql.Master.Database, dragon.Conf.Database.Mysql.Master.Charset, dragon.Conf.Database.Mysql.Master.Timeout)
+		conf.Conf.Database.Mysql.Master.User, conf.Conf.Database.Mysql.Master.Password, conf.Conf.Database.Mysql.Master.Host, conf.Conf.Database.Mysql.Master.Port, conf.Conf.Database.Mysql.Master.Database, conf.Conf.Database.Mysql.Master.Charset, conf.Conf.Database.Mysql.Master.Timeout)
 
 	//mysql slave
 	dsnSlave = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&timeout=%s&parseTime=True&loc=Local",
-		dragon.Conf.Database.Mysql.Slave.User, dragon.Conf.Database.Mysql.Slave.Password, dragon.Conf.Database.Mysql.Slave.Host, dragon.Conf.Database.Mysql.Slave.Port, dragon.Conf.Database.Mysql.Slave.Database, dragon.Conf.Database.Mysql.Slave.Charset, dragon.Conf.Database.Mysql.Slave.Timeout)
-	masterMaxIdle = dragon.Conf.Database.Mysql.Master.MaxIdle
-	masterMaxConn = dragon.Conf.Database.Mysql.Master.MaxConn
-	slaveMaxIdle = dragon.Conf.Database.Mysql.Slave.MaxIdle
-	slaveMaxConn = dragon.Conf.Database.Mysql.Slave.MaxConn
+		conf.Conf.Database.Mysql.Slave.User, conf.Conf.Database.Mysql.Slave.Password, conf.Conf.Database.Mysql.Slave.Host, conf.Conf.Database.Mysql.Slave.Port, conf.Conf.Database.Mysql.Slave.Database, conf.Conf.Database.Mysql.Slave.Charset, conf.Conf.Database.Mysql.Slave.Timeout)
+	masterMaxIdle = conf.Conf.Database.Mysql.Master.MaxIdle
+	masterMaxConn = conf.Conf.Database.Mysql.Master.MaxConn
+	slaveMaxIdle = conf.Conf.Database.Mysql.Slave.MaxIdle
+	slaveMaxConn = conf.Conf.Database.Mysql.Slave.MaxConn
 
 	//gorm realizes mysql reconnect
 	db, errM = gorm.Open("mysql", dsnMaster)

@@ -15,8 +15,8 @@ type notFoundHandler struct {
 }
 
 var (
-	Routes *httprouter.Router
-	testCtrl = &ctrl.Test{}  //test controller
+	Routes   *httprouter.Router
+	testCtrl = &ctrl.Test{} //test controller
 )
 
 func init() {
@@ -30,7 +30,7 @@ func init() {
 }
 
 // not found route handle
-func (notFoundHandler)ServeHTTP(w http.ResponseWriter, r *http.Request)  {
+func (notFoundHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "text/html; charset=utf-8")
 	fmt.Fprintf(w, "<h2>Not Found</h2>")
 	//baseCtrl.Json("not found", w)

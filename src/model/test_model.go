@@ -9,7 +9,7 @@ type Test struct {
 }
 
 //set orm table name
-func (Test)TableName() string {
+func (Test) TableName() string {
 	return "test"
 }
 

@@ -1,4 +1,4 @@
-package dragon
+package conf
 
 import (
 	"core/yaml"
@@ -10,11 +10,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-)
-
-var (
-	Conf ConfS
-	Env  = "debug"
 )
 
 //config struct
@@ -57,6 +52,11 @@ type ConfS struct {
 		}
 	}
 }
+
+var (
+	Conf ConfS
+	Env  = "debug"
+)
 
 //init config
 func InitConf() {

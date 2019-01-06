@@ -1,6 +1,7 @@
 package dragon
 
 import (
+	"core/dragon/conf"
 	"log"
 	"net/http"
 )
@@ -23,6 +24,6 @@ func (dragon *Dragon) InitRoute(handler http.Handler) {
 func (dragon *Dragon) Fly() {
 
 	//dragon fly
-	log.Println("start server on " + Conf.Server.Host + ":" + Conf.Server.Port)
-	log.Fatal(http.ListenAndServe(Conf.Server.Host+":"+Conf.Server.Port, dragon.Handler))
+	log.Println("start server on " + conf.Conf.Server.Host + ":" + conf.Conf.Server.Port)
+	log.Fatal(http.ListenAndServe(conf.Conf.Server.Host+":"+conf.Conf.Server.Port, dragon.Handler))
 }
