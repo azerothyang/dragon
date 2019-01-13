@@ -28,8 +28,11 @@ func (t *Test) Upload(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 
 // mysql test
 func (t *Test) GetDBData(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//testModel.Create()
+	//testModel.Update()
 	res := testModel.Get()
-	t.Json(res, w)
+	output := dto.TestSToTest(res)
+	t.Json(output, w)
 }
 
 // redis test
