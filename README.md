@@ -48,7 +48,10 @@
  }
  
  ```
- >$ fswatch
+ > just run cmd
+ ```
+ $ fswatch
+ ```
  
  __config__:
 > dragon/release/conf/  
