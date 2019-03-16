@@ -9,7 +9,7 @@
       "env": {
         "DEBUG": "1"
       },
-      "cmd": "cd src && go build -o ../release/go \u0026\u0026 ../release/go",
+      "cmd": "cd src && go build -o ../release/go && ../release/go",
       "shell": true,
       "delay": "100ms",
       "stop_timeout": "500ms",
