@@ -7,7 +7,7 @@ import (
 	"ctrl"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"log"
+	"middleware"
 	"net/http"
 )
 
@@ -38,7 +38,7 @@ func (notFoundHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // all panic handler
 func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
-	log.Println(err)
+	middleware.SugarLogger.Errorf("err: %v", err)
 	w.Header().Set("content-type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusInternalServerError)
 	fmt.Fprintf(w, "<h2>500 Internal Server Error</h2>")
