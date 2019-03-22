@@ -29,5 +29,10 @@ database:
     auth:
     timeout: 100 #redis dial timeout per millisecond. int type
     db: 0
+zipkin:        #zipkin for distributed tracing system.  https://zipkin.io/
+  enable: false
+  url: http://localhost:9411/api/v2/spans
+  endpoint: 192.168.1.5:1130
+  serviceName: dragon
 
 

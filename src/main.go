@@ -4,6 +4,7 @@ import (
 	"core/dragon"
 	"core/dragon/conf"
 	"core/dragon/dredis"
+	"core/dragon/trace"
 	"middleware"
 	"model"
 	"router"
@@ -12,6 +13,9 @@ import (
 func main() {
 	//init config
 	conf.InitConf()
+
+	//init trace (use zipkin)
+	trace.Init()
 
 	//init dragon
 	dr := dragon.New()

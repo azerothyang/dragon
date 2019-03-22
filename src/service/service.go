@@ -1,59 +1,40 @@
 package service
 
 import (
+	"core/dragon/conf"
+	"core/dragon/dlogger"
+	"core/dragon/trace"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
 
 //send get request
-func GET(url string, params map[string]string) (rspContent string, rspStatus int, rspErr error){
-	paramsStr := ""
-	for k, v := range params {
-		paramsStr += k + "=" + v + "&"
-	}
-	if paramsStr != "" {
-		// have params
-		url += "?" + paramsStr
-		url = url[:len(url)-1]
-	}
-	rsp, err := http.Get(url)
-	defer rsp.Body.Close()
-	if err != nil {
-		log.Println(err)
-		rspContent, rspStatus, rspErr = "", 600, err
-		return
-	}
-	content, errR := ioutil.ReadAll(rsp.Body)
-	if errR != nil {
-		log.Println(errR)
-	}
-	rspContent, rspStatus, rspErr = string(content), rsp.StatusCode, errR
-	return
+func GET(url string, params map[string]string, calleeService ...string) (rspContent string, rspStatus int, rspErr error) {
+	return send(url, params, "GET", calleeService...)
 }
 
 //send post request
-func POST(url string, params map[string]string) (string, int, error){
-	return sendWWWFormUrlencoded(url, params, "POST")
+func POST(url string, params map[string]string, calleeService ...string) (string, int, error) {
+	return send(url, params, "POST", calleeService...)
 }
 
 //send put request
-func PUT(url string, params map[string]string) (string, int, error){
-	return sendWWWFormUrlencoded(url, params, "PUT")
+func PUT(url string, params map[string]string, calleeService ...string) (string, int, error) {
+	return send(url, params, "PUT", calleeService...)
 }
 
 //send delete request
-func DELETE(url string, params map[string]string) (string, int, error){
-	return sendWWWFormUrlencoded(url, params, "DELETE")
+func DELETE(url string, params map[string]string, calleeService ...string) (string, int, error) {
+	return send(url, params, "DELETE", calleeService...)
 }
 
 //send patch request
-func PATCH(url string, params map[string]string) (string, int, error){
-	return sendWWWFormUrlencoded(url, params, "PATCH")
+func PATCH(url string, params map[string]string, calleeService ...string) (string, int, error) {
+	return send(url, params, "PATCH", calleeService...)
 }
 
-func sendWWWFormUrlencoded(url string, params map[string]string, method string) (rspContent string, rspStatus int, rspErr error) {
+func send(url string, params map[string]string, method string, calleeService ...string) (rspContent string, rspStatus int, rspErr error) {
 	paramsStr := ""
 	for k, v := range params {
 		paramsStr += k + "=" + v + "&"
@@ -61,21 +42,43 @@ func sendWWWFormUrlencoded(url string, params map[string]string, method string) 
 	if paramsStr != "" {
 		paramsStr = paramsStr[:len(paramsStr)-1]
 	}
-
-	req, _ := http.NewRequest(method, url, strings.NewReader(paramsStr))
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	var req *http.Request
+	if method == "GET" {
+		if paramsStr != "" {
+			url += "?" + paramsStr
+		}
+		req, _ = http.NewRequest(method, url, nil)
+	} else {
+		req, _ = http.NewRequest(method, url, strings.NewReader(paramsStr))
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	}
 	rsp, err := http.DefaultClient.Do(req)
 	defer rsp.Body.Close()
+
+	// if enable zipkin,
+	if conf.Conf.Zipkin.Enable {
+		go chainZipkin(req, calleeService...)
+	}
+
 	if err != nil {
-		log.Println(err)
+		dlogger.SugarLogger.Error(err)
 		rspContent, rspStatus, rspErr = "", 600, err
 		return
 	}
 	content, errR := ioutil.ReadAll(rsp.Body)
 	if errR != nil {
-		log.Println(errR)
+		dlogger.SugarLogger.Error(errR)
 	}
 	rspContent, rspStatus, rspErr = string(content), rsp.StatusCode, errR
 	return
 }
 
+// chain zipkin monitor
+func chainZipkin(req *http.Request, calleeService ...string) {
+	// args[0] for serviceName
+	res, err := trace.Client.DoWithAppSpan(req, calleeService[0])
+	if err != nil {
+		dlogger.SugarLogger.Error(err)
+	}
+	res.Body.Close()
+}

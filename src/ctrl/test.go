@@ -2,11 +2,12 @@ package ctrl
 
 import (
 	"core/dragon"
+	"core/dragon/conf"
 	"core/dragon/dredis"
 	"dto"
 	"github.com/julienschmidt/httprouter"
-	"model"
 	"net/http"
+	"service"
 )
 
 type Test struct {
@@ -14,10 +15,27 @@ type Test struct {
 }
 
 func (t *Test) Test(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	requests := dragon.Parse(r)
-	tt := model.Test{}
-	dto.TestPToTestS(requests, &tt)
+	//requests := dragon.Parse(r)
+	//tt := model.Test{}
+	//dto.TestPToTestS(requests, &tt)
+	service.GET("http://127.0.0.1:1130/t2", nil, conf.Conf.Zipkin.ServiceName)
 	t.Json("hello world", w)
+}
+
+func (t *Test) Test2(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//requests := dragon.Parse(r)
+	//tt := model.Test{}
+	//dto.TestPToTestS(requests, &tt)
+	service.GET("http://127.0.0.1:1130/t3", nil, conf.Conf.Zipkin.ServiceName)
+	t.Json("test2", w)
+}
+
+func (t *Test) Test3(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//requests := dragon.Parse(r)
+	//tt := model.Test{}
+	//dto.TestPToTestS(requests, &tt)
+	service.GET("http://www.baidu.com", nil, conf.Conf.Zipkin.ServiceName)
+	t.Json("test3", w)
 }
 
 // upload test
