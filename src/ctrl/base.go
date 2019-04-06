@@ -1,11 +1,12 @@
 package ctrl
 
 import (
+	"core/dragon/dlogger"
 	"encoding/json"
 	"fmt"
-	"log"
 	"model"
 	"net/http"
+	"time"
 )
 
 var (
@@ -25,14 +26,21 @@ func (*Ctrl) Json(data interface{}, resp http.ResponseWriter) {
 	resp.Header().Set("server", "dragon")
 	js, err := json.Marshal(data)
 	if err != nil {
-		log.Println(err)
+	    dlogger.SugarLogger.Error(err)
 		resp.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(resp, "")
 		return
 	}
+
+	// print response data
+	dlogger.SugarLogger.Infow("Response Data Info:",
+		"Data", string(js),
+		"Time", time.Now().Format("2006-01-02 15:04:05"),
+	)
+
 	_, err = resp.Write(js)
 	if err != nil {
-		log.Println(err)
+		dlogger.SugarLogger.Error(err)
 		resp.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(resp, "")
 		return
