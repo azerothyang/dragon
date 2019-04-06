@@ -11,10 +11,15 @@
 
 ![CI Status](https://travis-ci.org/azerothyang/dragon.svg?branch=master)
 
- Dragon 🐲 is a lightweight high performance web framework with [Go](https://golang.org/) for the feature and comfortable develop
+ Dragon 🐲 is a lightweight high performance web framework with [Go](https://golang.org/) for the feature and comfortable develop.
+ 
+# components 
+1. [httprouter](https://github.com/julienschmidt/httprouter). HttpRouter is a lightweight high performance HTTP request router.
+2. [GORM](https://github.com/jinzhu/gorm). The fantastic ORM library for Golang, aims to be developer friendly.
+3. [zap](https://github.com/uber-go/zap). Blazing fast, structured, leveled logging in Go.
 
 # start dragon
- dragon is mvc go framework. So you can hack with controller and model.  
+ dragon is mvc go framework. So you can hack with controller and model. 
  
  __build__: 
  >Just compile your src file and move bin file to directory dragon/release/
