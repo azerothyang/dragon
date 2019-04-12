@@ -2,6 +2,7 @@ package test
 
 import (
 	"core/dragon/util"
+	"fmt"
 	"log"
 	"testing"
 )
@@ -32,4 +33,8 @@ func BenchmarkRandomStr(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		util.RandomStr(16)
 	}
+}
+
+func TestHmacSha1(t *testing.T)  {
+	fmt.Println(util.HmacSha1("dasdaf", "123"))
 }
