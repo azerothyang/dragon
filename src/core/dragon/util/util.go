@@ -2,6 +2,7 @@ package util
 
 import (
 	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
 )
@@ -26,6 +27,13 @@ func OnlyCols(cols []string, data *map[string]string) {
 // hmac-sha1 input with key
 func HmacSha1(input, key string) string {
 	mac := hmac.New(sha1.New, []byte(key))
+	mac.Write([]byte(input))
+	return hex.EncodeToString(mac.Sum(nil))
+}
+
+// hmac-md5 input with key
+func HmacMD5(input, key string) string {
+	mac := hmac.New(md5.New, []byte(key))
 	mac.Write([]byte(input))
 	return hex.EncodeToString(mac.Sum(nil))
 }
