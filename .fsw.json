@@ -9,7 +9,8 @@
       "env": {
         "DEBUG": "1"
       },
-      "cmd": "cd src && go build -o ../release/go && ../release/go",
+      "cmd": "cd src && go build -o ../release/dragon && ../release/dragon",
+      "_comment": "windows cmd: cd src && go build -o ../release/dragon.exe && cd ../release && dragon.exe",
       "shell": true,
       "delay": "100ms",
       "stop_timeout": "500ms",
