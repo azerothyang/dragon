@@ -9,32 +9,39 @@ import (
 	"strings"
 )
 
+// response struct
+type Response struct {
+	Content string
+	Status  int
+	Err     error
+}
+
 //send get request
-func GET(url string, params map[string]string, calleeService ...string) (rspContent string, rspStatus int, rspErr error) {
+func GET(url string, params map[string]string, calleeService ...string) *Response {
 	return send(url, params, "GET", calleeService...)
 }
 
 //send post request
-func POST(url string, params map[string]string, calleeService ...string) (string, int, error) {
+func POST(url string, params map[string]string, calleeService ...string) *Response {
 	return send(url, params, "POST", calleeService...)
 }
 
 //send put request
-func PUT(url string, params map[string]string, calleeService ...string) (string, int, error) {
+func PUT(url string, params map[string]string, calleeService ...string) *Response {
 	return send(url, params, "PUT", calleeService...)
 }
 
 //send delete request
-func DELETE(url string, params map[string]string, calleeService ...string) (string, int, error) {
+func DELETE(url string, params map[string]string, calleeService ...string) *Response {
 	return send(url, params, "DELETE", calleeService...)
 }
 
 //send patch request
-func PATCH(url string, params map[string]string, calleeService ...string) (string, int, error) {
+func PATCH(url string, params map[string]string, calleeService ...string) *Response {
 	return send(url, params, "PATCH", calleeService...)
 }
 
-func send(url string, params map[string]string, method string, calleeService ...string) (rspContent string, rspStatus int, rspErr error) {
+func send(url string, params map[string]string, method string, calleeService ...string) (resp *Response) {
 	paramsStr := ""
 	for k, v := range params {
 		paramsStr += k + "=" + v + "&"
@@ -62,14 +69,28 @@ func send(url string, params map[string]string, method string, calleeService ...
 
 	if err != nil {
 		dlogger.SugarLogger.Error(err)
-		rspContent, rspStatus, rspErr = "", 600, err
+		resp = &Response{
+			"",
+			http.StatusInternalServerError,
+			err,
+		}
 		return
 	}
 	content, errR := ioutil.ReadAll(rsp.Body)
 	if errR != nil {
 		dlogger.SugarLogger.Error(errR)
+		resp = &Response{
+			string(content),
+			500,
+			errR,
+		}
+		return
 	}
-	rspContent, rspStatus, rspErr = string(content), rsp.StatusCode, errR
+	resp = &Response{
+		string(content),
+		200,
+		errR,
+	}
 	return
 }
 
