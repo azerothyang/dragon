@@ -9,11 +9,12 @@ import (
 	"strings"
 )
 
-// response struct
+// service response struct
 type Response struct {
 	Content string
 	Status  int
 	Err     error
+	Rsp    *http.Response
 }
 
 //send get request
@@ -60,6 +61,16 @@ func send(url string, params map[string]string, method string, calleeService ...
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 	rsp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		dlogger.SugarLogger.Error(err)
+		resp = &Response{
+			"",
+			http.StatusInternalServerError,
+			err,
+			rsp,
+		}
+		return
+	}
 	defer rsp.Body.Close()
 
 	// if enable zipkin,
@@ -67,29 +78,22 @@ func send(url string, params map[string]string, method string, calleeService ...
 		go chainZipkin(req, calleeService...)
 	}
 
-	if err != nil {
-		dlogger.SugarLogger.Error(err)
-		resp = &Response{
-			"",
-			http.StatusInternalServerError,
-			err,
-		}
-		return
-	}
 	content, errR := ioutil.ReadAll(rsp.Body)
 	if errR != nil {
 		dlogger.SugarLogger.Error(errR)
 		resp = &Response{
 			string(content),
-			500,
+			http.StatusInternalServerError,
 			errR,
+			rsp,
 		}
 		return
 	}
 	resp = &Response{
 		string(content),
-		200,
+		rsp.StatusCode,
 		errR,
+		rsp,
 	}
 	return
 }
