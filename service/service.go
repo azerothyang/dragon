@@ -14,7 +14,7 @@ type Response struct {
 	Content string
 	Status  int
 	Err     error
-	Rsp    *http.Response
+	Rsp     *http.Response
 }
 
 //send get request
