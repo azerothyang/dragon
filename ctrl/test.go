@@ -22,7 +22,7 @@ func (t *Test) Test(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	res := Output{
 		200,
 		"ok",
-		[]int{1, 2, 3},
+		[]interface{}{1, 2, "hello"},
 	}
 	t.Json(res, w)
 }
