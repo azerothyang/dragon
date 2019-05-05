@@ -41,7 +41,7 @@ func (*Ctrl) Json(data interface{}, resp http.ResponseWriter) {
 	}
 
 	// print response data
-	dlogger.SugarLogger.Infow("Response Data Info:",
+	dlogger.SugarLogger.Infow("Response Info",
 		"Data", string(js),
 		"Time", time.Now().Format("2006-01-02 15:04:05"),
 	)
@@ -68,7 +68,7 @@ func (*Ctrl) MsgPack(data interface{}, resp http.ResponseWriter) {
 	}
 
 	// print response data
-	dlogger.SugarLogger.Infow("Response Data Info:",
+	dlogger.SugarLogger.Infow("Response Info",
 		"Data", data,
 		"Time", time.Now().Format("2006-01-02 15:04:05"),
 	)
