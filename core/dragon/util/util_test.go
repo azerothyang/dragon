@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"log"
 	"testing"
 )
 
@@ -35,7 +34,8 @@ func TestOnlyCols(t *testing.T) {
 	}
 	OnlyCols([]string{"p1", "p2", "p5"}, params)
 	if params["p1"] != "hello" || params["p2"] != "hi" {
-		log.Fatal("TestOnlyCols fail")
+		t.Error("TestOnlyCols fail")
+		return
 	}
 	fmt.Println(params)
 }

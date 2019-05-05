@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"log"
 	"testing"
 )
 
@@ -10,7 +9,8 @@ import (
 func TestInitPageAndPageSize(t *testing.T) {
 	off, size := InitPageAndPageSize("20", "10")
 	if off != "200" || size != "10" {
-		log.Fatal("InitPageAndPageSize test fail")
+		t.Error()
+		return
 	}
 	fmt.Println(InitPageAndPageSize("0.3", "10.2"))
 	fmt.Println(InitPageAndPageSize("-2", "-3"))
