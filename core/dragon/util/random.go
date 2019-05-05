@@ -6,7 +6,7 @@ import (
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-//生成随机字符串
+// generate random string
 func RandomStr(length int) string {
 	runes := make([]rune, length)
 	lettersLen := len(letters)
