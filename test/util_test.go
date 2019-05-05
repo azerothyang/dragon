@@ -11,6 +11,14 @@ import (
 func TestNewUUID(t *testing.T) {
 	log.Println(util.NewUUID())
 	log.Println(util.NewUUID())
+	uuid, _ := util.NewUUID()
+	log.Println(len(uuid))
+}
+
+func BenchmarkNewUUID(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		util.NewUUID()
+	}
 }
 
 //test rand generate string
@@ -37,4 +45,21 @@ func BenchmarkRandomStr(b *testing.B) {
 
 func TestHmacSha1(t *testing.T) {
 	fmt.Println(util.HmacSha1("dasdaf", "123"))
+}
+
+func BenchmarkHmacSha1(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		util.HmacSha1("dasdaf", "123")
+	}
+}
+
+func TestHmacMD5(t *testing.T) {
+	fmt.Println(util.HmacMD5("dasdaf", "123"))
+	fmt.Println(util.HmacMD5("dasdaf", "123"))
+}
+
+func BenchmarkHmacMD5(b *testing.B)  {
+	for i:=0; i<b.N; i++ {
+		util.HmacMD5("dasdaf", "123")
+	}
 }
