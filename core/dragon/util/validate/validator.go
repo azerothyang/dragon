@@ -30,9 +30,9 @@ rules参数形式:, map[string]string{
 }
 */
 func (validator *Validator) Validate(form *map[string]string, rules rules) *Validator {
+	validator.HasErr = false //单个字段校验结果是否有错
 	for field, rule := range rules {
 		valis := strings.Split(rule, "|")
-		validator.HasErr = false //单个字段校验结果是否有错
 		for _, vali := range valis {
 			if vali == "" {
 				continue
