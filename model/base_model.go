@@ -2,6 +2,7 @@ package model
 
 import (
 	"dragon/core/dragon/conf"
+	"dragon/core/dragon/dlogger"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" //导入mysql驱动
 	"github.com/jinzhu/gorm"
@@ -14,6 +15,14 @@ var (
 )
 
 type baseModel struct {
+}
+
+// sql logger
+type Logger struct {
+}
+
+func (Logger) Print(v ...interface{}) {
+	dlogger.SugarLogger.Info(v...)
 }
 
 //init db
@@ -43,8 +52,15 @@ func InitDB() {
 
 	db.DB().SetMaxIdleConns(masterMaxIdle)
 	db.DB().SetMaxOpenConns(masterMaxConn)
-	//db.LogMode(true) enable log to debug, log can write into elasticsearch
 	readDB.DB().SetMaxIdleConns(slaveMaxIdle)
 	readDB.DB().SetMaxOpenConns(slaveMaxConn)
-	//readDB.LogMode(true)
+
+	//如果是debug模式则开启彩色sql调试模式, 否则为文本模式
+	db.LogMode(true)
+	readDB.LogMode(true)
+	logger := Logger{}
+	if conf.Env != "debug" {
+		db.SetLogger(logger)
+		readDB.SetLogger(logger)
+	}
 }
