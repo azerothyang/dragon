@@ -12,7 +12,7 @@ type Validator struct {
 	ErrList map[string]string //校验错误列表
 }
 
-type rules map[string]string
+type Rules map[string]string
 
 //初始化Validator
 func New() *Validator {
@@ -29,7 +29,7 @@ rules参数形式:, map[string]string{
 	"param1": "numeric|min:10",
 }
 */
-func (validator *Validator) Validate(form *map[string]string, rules rules) *Validator {
+func (validator *Validator) Validate(form *map[string]string, rules Rules) *Validator {
 	validator.HasErr = false //单个字段校验结果是否有错
 	for field, rule := range rules {
 		valis := strings.Split(rule, "|")
