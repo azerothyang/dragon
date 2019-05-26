@@ -27,7 +27,7 @@ func (*TestModel) Get() *Test {
 
 func (*TestModel) Create() *Test {
 	test := Test{}
-	readDB.Create(&Test{
+	db.Create(&Test{
 		Name:       "holmes",
 		CreateTime: time.Now(),
 	})
@@ -36,7 +36,7 @@ func (*TestModel) Create() *Test {
 
 func (*TestModel) Update() *Test {
 	test := Test{}
-	readDB.Model(&test).Updates(map[string]interface{}{
+	db.Model(&test).Updates(map[string]interface{}{
 		"name": "33",
 	})
 	return &test
