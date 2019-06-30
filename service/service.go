@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // service response struct
@@ -14,35 +15,34 @@ type Response struct {
 	Content string
 	Status  int
 	Err     error
-	Rsp     *http.Response
 }
 
 //send get request
-func GET(url string, params map[string]string, calleeService ...string) *Response {
-	return send(url, params, "GET", calleeService...)
+func GET(url string, params map[string]string, spanId string, calleeService ...string) *Response {
+	return send(url, params, "GET", spanId, calleeService...)
 }
 
 //send post request
-func POST(url string, params map[string]string, calleeService ...string) *Response {
-	return send(url, params, "POST", calleeService...)
+func POST(url string, params map[string]string, spanId string, calleeService ...string) *Response {
+	return send(url, params, "POST", spanId, calleeService...)
 }
 
 //send put request
-func PUT(url string, params map[string]string, calleeService ...string) *Response {
-	return send(url, params, "PUT", calleeService...)
+func PUT(url string, params map[string]string, spanId string, calleeService ...string) *Response {
+	return send(url, params, "PUT", spanId, calleeService...)
 }
 
 //send delete request
-func DELETE(url string, params map[string]string, calleeService ...string) *Response {
-	return send(url, params, "DELETE", calleeService...)
+func DELETE(url string, params map[string]string, spanId string, calleeService ...string) *Response {
+	return send(url, params, "DELETE", spanId, calleeService...)
 }
 
 //send patch request
-func PATCH(url string, params map[string]string, calleeService ...string) *Response {
-	return send(url, params, "PATCH", calleeService...)
+func PATCH(url string, params map[string]string, spanId string, calleeService ...string) *Response {
+	return send(url, params, "PATCH", spanId, calleeService...)
 }
 
-func send(url string, params map[string]string, method string, calleeService ...string) (resp *Response) {
+func send(url string, params map[string]string, method string, spanId string, calleeService ...string) (resp *Response) {
 	paramsStr := ""
 	for k, v := range params {
 		paramsStr += k + "=" + v + "&"
@@ -62,12 +62,14 @@ func send(url string, params map[string]string, method string, calleeService ...
 	}
 	rsp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		dlogger.SugarLogger.Error(err)
+		dlogger.SugarLogger.Errorw("Service Request Error",
+			"Time", time.Now().Format("2006-01-02 15:04:05"),
+			"SpanId", spanId,
+			"errorInfo", err)
 		resp = &Response{
 			"",
 			http.StatusInternalServerError,
 			err,
-			rsp,
 		}
 		return
 	}
@@ -80,21 +82,30 @@ func send(url string, params map[string]string, method string, calleeService ...
 
 	content, errR := ioutil.ReadAll(rsp.Body)
 	if errR != nil {
-		dlogger.SugarLogger.Error(errR)
+		dlogger.SugarLogger.Errorw("Service Response Body Parse Error",
+			"Time", time.Now().Format("2006-01-02 15:04:05"),
+			"SpanId", spanId,
+			"errorInfo", errR)
 		resp = &Response{
 			string(content),
 			http.StatusInternalServerError,
 			errR,
-			rsp,
 		}
 		return
 	}
+
 	resp = &Response{
 		string(content),
 		rsp.StatusCode,
 		errR,
-		rsp,
 	}
+
+	// write log
+	dlogger.SugarLogger.Infow("Service Response Info",
+		"Time", time.Now().Format("2006-01-02 15:04:05"),
+		"SpanId", spanId,
+		"response", resp,
+	)
 	return
 }
 
