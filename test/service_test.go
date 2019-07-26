@@ -13,7 +13,7 @@ func TestGET(t *testing.T) {
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	})
+	}, "")
 
 	if res.Err != nil {
 		log.Println(res.Err)
@@ -28,7 +28,7 @@ func TestPOST(t *testing.T) {
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	})
+	}, "")
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
@@ -41,7 +41,7 @@ func TestPUT(t *testing.T) {
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	})
+	}, "")
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
@@ -54,7 +54,7 @@ func TestPATCH(t *testing.T) {
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	})
+	}, "")
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
@@ -67,7 +67,7 @@ func TestDELETE(t *testing.T) {
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	})
+	}, "")
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
