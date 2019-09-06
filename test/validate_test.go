@@ -35,4 +35,46 @@ func TestValidator(t *testing.T) {
 		log.Fatal("test fail")
 	}
 
+	// test datetime
+	validator = validate.New()
+	data = map[string]string{
+		"datetime": "2016-09-13 08:33:12s",
+	}
+	rules = map[string]string{
+		"datetime": "datetime",
+	}
+	validator.Validate(&data, rules)
+	if validator.HasErr == false {
+		log.Fatal("datetime test fail")
+	}
+	log.Println("datetime test success")
+
+	validator = validate.New()
+	data = map[string]string{
+		"datetime": "2016-09-13 08:33:12",
+	}
+	rules = map[string]string{
+		"datetime": "datetime",
+	}
+	validator.Validate(&data, rules)
+	if validator.HasErr == true {
+		log.Fatal("datetime test fail")
+	}
+	log.Println("datetime test success")
+
+	validator = validate.New()
+	data = map[string]string{
+		"data":  "1",
+		"data2": "4",
+	}
+	rules = map[string]string{
+		"data":  "in:1,2,3",
+		"data2": "notIn:1,2,3",
+	}
+	validator.Validate(&data, rules)
+	if validator.HasErr == false {
+		log.Println("in not in test success")
+	} else {
+		log.Fatal("in not in test fail")
+	}
 }

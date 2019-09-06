@@ -118,3 +118,57 @@ func chainZipkin(req *http.Request, calleeService ...string) {
 	}
 	res.Body.Close()
 }
+
+//send postJson
+func POSTJson(url string, paramsStr string, spanId string, calleeService ...string) (resp *Response) {
+	var req *http.Request
+	req, _ = http.NewRequest("POST", url, strings.NewReader(paramsStr))
+	req.Header.Add("Content-Type", "application/json")
+	rsp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		dlogger.SugarLogger.Errorw("Service Request Error",
+			"Time", time.Now().Format("2006-01-02 15:04:05"),
+			"SpanId", spanId,
+			"errorInfo", err)
+		resp = &Response{
+			"",
+			http.StatusInternalServerError,
+			err,
+		}
+		return
+	}
+	defer rsp.Body.Close()
+
+	// if enable zipkin,
+	if conf.Conf.Zipkin.Enable {
+		go chainZipkin(req, calleeService...)
+	}
+
+	content, errR := ioutil.ReadAll(rsp.Body)
+	if errR != nil {
+		dlogger.SugarLogger.Errorw("Service Response Body Parse Error",
+			"Time", time.Now().Format("2006-01-02 15:04:05"),
+			"SpanId", spanId,
+			"errorInfo", errR)
+		resp = &Response{
+			string(content),
+			http.StatusInternalServerError,
+			errR,
+		}
+		return
+	}
+
+	resp = &Response{
+		string(content),
+		rsp.StatusCode,
+		errR,
+	}
+
+	// write log
+	dlogger.SugarLogger.Infow("Service Response Info",
+		"Time", time.Now().Format("2006-01-02 15:04:05"),
+		"SpanId", spanId,
+		"response", resp,
+	)
+	return
+}

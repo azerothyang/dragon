@@ -11,14 +11,22 @@ import (
 )
 
 var (
-	testModel = &model.TestModel{}
+	//品牌模型
+	BrandModel = &model.BrandModel{
+		BaseModel: model.BaseModel{TableName: model.TBrand{}.TableName()},
+	}
+	//商品模型
+	ProductModel = &model.ProductModel{
+		BaseModel: model.BaseModel{TableName: model.TProduct{}.TableName()}, // 传入表名
+	}
 )
 
 // output struct
 type Output struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	Code   int         `json:"code"`
+	Msg    string      `json:"msg"`
+	Data   interface{} `json:"data"`
+	SpanId string      `json:"span_id"`
 }
 
 type Ctrl struct {
@@ -31,8 +39,14 @@ func init() {
 //return with json
 func (*Ctrl) Json(data interface{}, resp http.ResponseWriter, spanId string) {
 	resp.Header().Set("content-type", "application/json; charset=utf-8")
-	resp.Header().Set("server", "dragon")
-	js, err := json.Marshal(data)
+	resp.Header().Set("x-server", "dragon")
+	resp.Header().Set("Access-Control-Allow-Origin", "*")
+	resp.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT,PATCH")
+	resp.Header().Set("Access-Control-Allow-Credentials", "true")
+	resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept-Encoding, Origin")
+	output := data.(Output)
+	output.SpanId = spanId
+	js, err := json.Marshal(output)
 	if err != nil {
 		dlogger.SugarLogger.Errorw("Response Marshal Error",
 			"Time", time.Now().Format("2006-01-02 15:04:05"),
@@ -45,8 +59,8 @@ func (*Ctrl) Json(data interface{}, resp http.ResponseWriter, spanId string) {
 
 	// print response data
 	dlogger.SugarLogger.Infow("Response Info",
-		"SpanId", spanId,
 		"Time", time.Now().Format("2006-01-02 15:04:05"),
+		"SpanId", spanId,
 		"Data", string(js),
 	)
 
@@ -65,8 +79,14 @@ func (*Ctrl) Json(data interface{}, resp http.ResponseWriter, spanId string) {
 // return with msgpack
 func (*Ctrl) MsgPack(data interface{}, resp http.ResponseWriter, spanId string) {
 	resp.Header().Set("content-type", "text/html;charset=utf-8")
-	resp.Header().Set("server", "dragon")
-	msgp, err := msgpack.Marshal(data)
+	resp.Header().Set("x-server", "dragon")
+	resp.Header().Set("Access-Control-Allow-Origin", "*")
+	resp.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT,PATCH")
+	resp.Header().Set("Access-Control-Allow-Credentials", "true")
+	resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept-Encoding, Origin")
+	output := data.(Output)
+	output.SpanId = spanId
+	msgp, err := msgpack.Marshal(output)
 	if err != nil {
 		dlogger.SugarLogger.Errorw("Response Marshal Error",
 			"Time", time.Now().Format("2006-01-02 15:04:05"),
@@ -81,7 +101,7 @@ func (*Ctrl) MsgPack(data interface{}, resp http.ResponseWriter, spanId string) 
 	dlogger.SugarLogger.Infow("Response Info",
 		"SpanId", spanId,
 		"Time", time.Now().Format("2006-01-02 15:04:05"),
-		"Data", data,
+		"Data", output,
 	)
 
 	_, err = resp.Write(msgp)

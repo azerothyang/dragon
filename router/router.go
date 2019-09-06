@@ -15,33 +15,41 @@ type notFoundHandler struct {
 }
 
 var (
-	Routes   *httprouter.Router
-	testCtrl = &ctrl.Test{} //test controller
+	Routes      *httprouter.Router
+	productCtrl = &ctrl.Product{}   //product controller
 )
 
 func init() {
 	Routes = httprouter.New()
-	Routes.GET("/", testCtrl.Test)
-	Routes.POST("/t2", testCtrl.Test2)
-	Routes.GET("/t3", testCtrl.Test3)
-	Routes.POST("/upload", testCtrl.Upload)
-	Routes.GET("/db", testCtrl.GetDBData)
-	Routes.GET("/redis", testCtrl.GetRedis)
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
+	// -----------------------------商品相关-----------------------------
+	// 新增商品
+	Routes.POST("/api/product", productCtrl.Add)
+	// 伪删除单个商品
+	Routes.DELETE("/api/product/:product_code", productCtrl.Delete)
+	// 查询商品列表
+	Routes.GET("/api/product", productCtrl.GetList)
+	// 更新商品信息
+	Routes.PUT("/api/product/:product_code", productCtrl.Update)
+	// 获取单个商品详情
+	Routes.GET("/api/product/:product_code", productCtrl.GetOne)
+	// -----------------------------商品相关-----------------------------
 }
 
 // not found route handle
-func (notFoundHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "text/html; charset=utf-8")
-	fmt.Fprintf(w, "<h2>Not Found</h2>")
+func (notFoundHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	resp.Header().Set("content-type", "text/html; charset=utf-8")
+	resp.Header().Set("x-server", "dragon")
+	fmt.Fprintf(resp, "<h2>Dragon Not Found</h2>")
 	//baseCtrl.Json("not found", w)
 }
 
 // all panic handler
-func panicHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
+func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) {
 	dlogger.SugarLogger.Errorf("err: %v", err)
-	w.Header().Set("content-type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusInternalServerError)
-	fmt.Fprintf(w, "<h2>500 Internal Server Error</h2>")
+	resp.Header().Set("content-type", "text/html; charset=utf-8")
+	resp.Header().Set("x-server", "dragon")
+	resp.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(resp, "<h2>500 Internal Server Error</h2>")
 }

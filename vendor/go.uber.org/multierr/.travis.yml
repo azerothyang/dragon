@@ -16,18 +16,18 @@ cache:
     - vendor
 
 before_install:
-  - go version
+- go version
 
 install:
-  - |
-    set -e
-    make install_ci
+- |
+  set -e
+  make install_ci
 
 script:
-  - |
-    set -e
-    make lint
-    make test_ci
+- |
+  set -e
+  make lint
+  make test_ci
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)

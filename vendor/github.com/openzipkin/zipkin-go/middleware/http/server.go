@@ -20,7 +20,7 @@ import (
 	"strconv"
 	"sync/atomic"
 
-	"github.com/openzipkin/zipkin-go"
+	zipkin "github.com/openzipkin/zipkin-go"
 	"github.com/openzipkin/zipkin-go/model"
 	"github.com/openzipkin/zipkin-go/propagation/b3"
 )

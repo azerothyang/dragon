@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -84,7 +85,7 @@ func (validator *Validator) Validate(form *map[string]string, rules Rules) *Vali
 			if method == "min" {
 				if validator.min(field, form, arg) == false {
 					validator.HasErr = true
-					validator.ErrList[field] = "值小于规定值"
+					validator.ErrList[field] = "值小于规定值:" + arg
 					continue
 				}
 			}
@@ -93,7 +94,7 @@ func (validator *Validator) Validate(form *map[string]string, rules Rules) *Vali
 			if method == "max" {
 				if validator.max(field, form, arg) == false {
 					validator.HasErr = true
-					validator.ErrList[field] = "大于指定值"
+					validator.ErrList[field] = "大于规定值:" + arg
 					continue
 				}
 			}
@@ -102,7 +103,7 @@ func (validator *Validator) Validate(form *map[string]string, rules Rules) *Vali
 			if method == "minLength" {
 				if validator.minLength(field, form, arg) == false {
 					validator.HasErr = true
-					validator.ErrList[field] = "小于最小长度"
+					validator.ErrList[field] = "小于最小长度:" + arg
 					continue
 				}
 			}
@@ -111,7 +112,7 @@ func (validator *Validator) Validate(form *map[string]string, rules Rules) *Vali
 			if method == "maxLength" {
 				if validator.maxLength(field, form, arg) == false {
 					validator.HasErr = true
-					validator.ErrList[field] = "超过最大长度"
+					validator.ErrList[field] = "超过最大长度:" + arg
 					continue
 				}
 			}
@@ -137,6 +138,30 @@ func (validator *Validator) Validate(form *map[string]string, rules Rules) *Vali
 				if validator.int32(field, form) == false {
 					validator.HasErr = true
 					validator.ErrList[field] = "非32位整型"
+					continue
+				}
+			}
+
+			if method == "datetime" {
+				if validator.datetime(field, form) == false {
+					validator.HasErr = true
+					validator.ErrList[field] = "格式不正确, 正确格式需要: 2006-01-02 15:04:05"
+					continue
+				}
+			}
+
+			if method == "in" {
+				if validator.in(field, form, arg) == false {
+					validator.HasErr = true
+					validator.ErrList[field] = "参数不正确，没有在规定范围内"
+					continue
+				}
+			}
+
+			if method == "notIn" {
+				if validator.notIn(field, form, arg) == false {
+					validator.HasErr = true
+					validator.ErrList[field] = "参数不正确，没有在规定范围内"
 					continue
 				}
 			}
@@ -270,4 +295,32 @@ func (*Validator) int32(field string, form *map[string]string) bool {
 		return false
 	}
 	return true
+}
+
+// date time validate
+func (*Validator) datetime(field string, form *map[string]string) bool {
+	v, _ := (*form)[field]
+	_, err := time.Parse("2006-01-02 15:04:05", v)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+//检测在某些数据内  in:1,2,3
+func (*Validator) in(field string, form *map[string]string, arg string) bool {
+	v, _ := (*form)[field]
+	args := strings.Split(arg, ",")
+	for _, str := range args {
+		if v == str {
+			// 如果校验的数据值是和规则匹配的，返回true
+			return true
+		}
+	}
+	return false
+}
+
+//检测参数 不要在某些数据内  notIn:1,2,3
+func (v *Validator) notIn(field string, form *map[string]string, arg string) bool {
+	return !v.in(field, form, arg)
 }

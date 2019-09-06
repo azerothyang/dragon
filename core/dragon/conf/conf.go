@@ -31,17 +31,6 @@ type ConfS struct {
 				MaxIdle  int
 				MaxConn  int
 			}
-			Slave struct {
-				Host     string
-				Port     string
-				User     string
-				Password string
-				Database string
-				Charset  string
-				Timeout  string
-				MaxIdle  int
-				MaxConn  int
-			}
 		}
 		Redis struct {
 			Host    string
@@ -72,7 +61,13 @@ func InitConf() {
 	}
 
 	var envb []byte
-	envb, err = ioutil.ReadFile(dir + FmtSlash("conf/.env"))
+	// read DRAGON env first
+	env := os.Getenv("DRAGON")
+	if env == "" {
+		envb, err = ioutil.ReadFile(dir + FmtSlash("conf/.env"))
+	} else {
+		envb = []byte(env)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}

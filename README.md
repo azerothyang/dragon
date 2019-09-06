@@ -20,6 +20,9 @@
 
 # start dragon
  dragon is mvc go framework. So you can hack with controller and model. 
+ __config__:
+ > dir release/conf,   .env ***debug/prod***
+ > or you can set env DRAGON  in docker
  
  __build__: 
  >Just compile your src file and move bin file to directory dragon/release/

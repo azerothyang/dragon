@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/openzipkin/zipkin-go"
+	zipkin "github.com/openzipkin/zipkin-go"
 )
 
 type spanTrace struct {

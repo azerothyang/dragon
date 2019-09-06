@@ -20,7 +20,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/openzipkin/zipkin-go"
+	zipkin "github.com/openzipkin/zipkin-go"
 	"github.com/openzipkin/zipkin-go/model"
 )
 
