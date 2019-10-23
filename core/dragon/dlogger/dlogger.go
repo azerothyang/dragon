@@ -4,6 +4,7 @@ import (
 	"dragon/core/dragon/conf"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"reflect"
 	"time"
@@ -18,7 +19,10 @@ func writeLog(data interface{}, level string) {
 	// 生成或打开文件
 	logDir := conf.Conf.Log.Dir
 	path := logDir + "/" + date + ".log"
-	logFile, _ := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 	var logInfo string
 	if reflect.TypeOf(data).String() == "string" {
 		logInfo = data.(string)
