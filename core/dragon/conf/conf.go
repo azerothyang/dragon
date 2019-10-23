@@ -40,11 +40,8 @@ type ConfS struct {
 			Db      int
 		}
 	}
-	Zipkin struct {
-		Enable      bool
-		Url         string
-		Endpoint    string
-		ServiceName string
+	Log struct {
+		Dir string
 	}
 }
 

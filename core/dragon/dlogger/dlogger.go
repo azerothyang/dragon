@@ -1,12 +1,50 @@
 package dlogger
 
-import "go.uber.org/zap"
+import (
+	"dragon/core/dragon/conf"
+	"encoding/json"
+	"fmt"
+	"os"
+	"reflect"
+	"time"
+)
 
-var Logger *zap.Logger
-var SugarLogger *zap.SugaredLogger
+// write log
+func writeLog(data interface{}, level string) {
+	// 根据data类型删除json或者字符串
+	now := time.Now()
+	datetime := now.Format("2006-01-02 15:04:05")
+	date := now.Format("2006-01-02")
+	// 生成或打开文件
+	logDir := conf.Conf.Log.Dir
+	path := logDir + "/" + date + ".log"
+	logFile, _ := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	var logInfo string
+	if reflect.TypeOf(data).String() == "string" {
+		logInfo = data.(string)
+	} else {
+		d, _ := json.Marshal(data)
+		logInfo = string(d)
+	}
+	// todo check if safe
+	go func() {
+		fmt.Fprintf(logFile, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
+		logFile.Close()
+	}()
+}
 
-// zap link: https://github.com/uber-go/zap
-func init() {
-	Logger, _ = zap.NewProduction()
-	SugarLogger = Logger.Sugar()
+func Debug(data interface{}) {
+	writeLog(data, "debug")
+}
+
+func Info(data interface{}) {
+	writeLog(data, "info")
+}
+
+func Warn(data interface{}) {
+	writeLog(data, "warn")
+}
+
+func Error(data interface{}) {
+	writeLog(data, "error")
 }

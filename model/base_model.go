@@ -2,7 +2,6 @@ package model
 
 import (
 	"dragon/core/dragon/conf"
-	"dragon/core/dragon/dlogger"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" //导入mysql驱动
 	"github.com/jinzhu/gorm"
@@ -87,7 +86,8 @@ type Logger struct {
 }
 
 func (Logger) Print(v ...interface{}) {
-	dlogger.SugarLogger.Info(v...)
+	// todo 更好的日志打印方案
+	log.Println(v...)
 }
 
 //init db

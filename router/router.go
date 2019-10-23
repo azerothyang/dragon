@@ -5,10 +5,12 @@ package router
  */
 import (
 	"dragon/core/dragon/dlogger"
+	"dragon/core/dragon/tracker"
 	"dragon/ctrl"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"time"
 )
 
 type notFoundHandler struct {
@@ -16,7 +18,7 @@ type notFoundHandler struct {
 
 var (
 	Routes      *httprouter.Router
-	productCtrl = &ctrl.Product{}   //product controller
+	productCtrl = &ctrl.Product{} //product controller
 )
 
 func init() {
@@ -24,16 +26,9 @@ func init() {
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
 	// -----------------------------商品相关-----------------------------
+	Routes.GET("/test", productCtrl.Test)
 	// 新增商品
 	Routes.POST("/api/product", productCtrl.Add)
-	// 伪删除单个商品
-	Routes.DELETE("/api/product/:product_code", productCtrl.Delete)
-	// 查询商品列表
-	Routes.GET("/api/product", productCtrl.GetList)
-	// 更新商品信息
-	Routes.PUT("/api/product/:product_code", productCtrl.Update)
-	// 获取单个商品详情
-	Routes.GET("/api/product/:product_code", productCtrl.GetOne)
 	// -----------------------------商品相关-----------------------------
 }
 
@@ -41,15 +36,32 @@ func init() {
 func (notFoundHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("content-type", "text/html; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
+
+	trackInfo := resp.Header().Get(tracker.TrackKey)
+	resp.Header().Del(tracker.TrackKey) // 清除Header中的track
+	trackMan := tracker.UnMarshal(trackInfo)
+	trackMan.Resp.Header = resp.Header()
+	trackMan.Resp.Data = "<h2>Dragon Not Found</h2>"
+	trackMan.CostTime = time.Since(trackMan.StartTime).String()
+	dlogger.Info(trackMan) // 最后写日志跟踪
+
 	fmt.Fprintf(resp, "<h2>Dragon Not Found</h2>")
 	//baseCtrl.Json("not found", w)
 }
 
 // all panic handler
 func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) {
-	dlogger.SugarLogger.Errorf("err: %v", err)
 	resp.Header().Set("content-type", "text/html; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
 	resp.WriteHeader(http.StatusInternalServerError)
+
+	trackInfo := resp.Header().Get(tracker.TrackKey)
+	resp.Header().Del(tracker.TrackKey) // 清除Header中的track
+	trackMan := tracker.UnMarshal(trackInfo)
+	trackMan.Resp.Header = resp.Header()
+	trackMan.Resp.Data = "<h2>500 Internal Server Error</h2>"
+	trackMan.Error = err
+	dlogger.Error(trackMan) // 写入日志跟踪
+
 	fmt.Fprintf(resp, "<h2>500 Internal Server Error</h2>")
 }

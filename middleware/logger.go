@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"dragon/core/dragon"
-	"dragon/core/dragon/dlogger"
+	"dragon/core/dragon/tracker"
 	"dragon/core/dragon/util"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -13,25 +13,19 @@ func LogInfo(next http.Handler) http.Handler {
 		start := time.Now()
 		// todo parse params will sometimes happen twice, because in controller will call it
 
-		requests := dragon.Parse(r)
-
 		spanId, _ := util.NewUUID()
-		r.Form.Set("SpanId", spanId)
-		dlogger.SugarLogger.Infow("Request Info",
-			"Method", r.Method,
-			"Path", r.URL.Path,
-			"Time", start.Format("2006-01-02 15:04:05"),
-			"SpanId", spanId,
-			"Params", requests,
-		)
+		body, _ := ioutil.ReadAll(r.Body)
+		trackMan := &tracker.Tracker{
+			SpanId:    spanId,
+			Uri:       r.RequestURI,
+			Method:    r.Method,
+			Header:    r.Header,
+			Body:      string(body),
+			StartTime: start,
+			CostTime:  "",
+		}
+		trackInfo := trackMan.Marshal()
+		w.Header().Set(tracker.TrackKey, trackInfo)
 		next.ServeHTTP(w, r)
-		dlogger.SugarLogger.Infow("Request Finish Info",
-			"Method", r.Method,
-			"Path", r.URL.Path,
-			"Time", start.Format("2006-01-02 15:04:05"),
-			"SpanId", spanId,
-			"CostTime", time.Since(start).String(),
-		)
-		dlogger.Logger.Sync() // flushes buffer, if any
 	})
 }

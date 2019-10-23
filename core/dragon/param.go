@@ -1,9 +1,7 @@
 package dragon
 
 import (
-	"dragon/core/dragon/dlogger"
 	"encoding/json"
-	"github.com/vmihailenco/msgpack"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -41,23 +39,6 @@ func ParseRawJson(r *http.Request, data interface{}) error {
 	err = json.Unmarshal(body, data)
 	if err != nil {
 		log.Println(err)
-		return err
-	}
-	return nil
-}
-
-// parse raw msgpack data
-func ParseMsgPack(r *http.Request, data interface{}) error {
-	var body []byte
-	var err error
-	body, err = ioutil.ReadAll(r.Body)
-	if err != nil {
-		dlogger.SugarLogger.Error(err)
-		return err
-	}
-	err = msgpack.Unmarshal(body, data)
-	if err != nil {
-		dlogger.SugarLogger.Error(err)
 		return err
 	}
 	return nil

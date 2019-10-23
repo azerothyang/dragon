@@ -10,6 +10,48 @@ github.com/go-redis/redis/internal/util
 github.com/go-sql-driver/mysql
 # github.com/golang/protobuf v1.2.0
 github.com/golang/protobuf/proto
+# github.com/huandu/goroutine v0.0.0-20180206030456-53e1d22d487d
+github.com/huandu/goroutine
+github.com/huandu/goroutine/hack/go1_5/runtime
+github.com/huandu/goroutine/hack/go1_5_1/runtime
+github.com/huandu/goroutine/hack/go1_5_2/runtime
+github.com/huandu/goroutine/hack/go1_5_3/runtime
+github.com/huandu/goroutine/hack/go1_5_4/runtime
+github.com/huandu/goroutine/hack/go1_6/runtime
+github.com/huandu/goroutine/hack/go1_6/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_6_1/runtime
+github.com/huandu/goroutine/hack/go1_6_1/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_6_2/runtime
+github.com/huandu/goroutine/hack/go1_6_2/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_6_3/runtime
+github.com/huandu/goroutine/hack/go1_6_3/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_7/runtime
+github.com/huandu/goroutine/hack/go1_7/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_7_1/runtime
+github.com/huandu/goroutine/hack/go1_7_1/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_7_2/runtime
+github.com/huandu/goroutine/hack/go1_7_2/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_7_3/runtime
+github.com/huandu/goroutine/hack/go1_7_3/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_7_4/runtime
+github.com/huandu/goroutine/hack/go1_7_4/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_7_5/runtime
+github.com/huandu/goroutine/hack/go1_7_5/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_8/runtime
+github.com/huandu/goroutine/hack/go1_8/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_8_1/runtime
+github.com/huandu/goroutine/hack/go1_8_1/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_8_2/runtime
+github.com/huandu/goroutine/hack/go1_8_2/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_8_3/runtime
+github.com/huandu/goroutine/hack/go1_8_3/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_9/runtime
+github.com/huandu/goroutine/hack/go1_9/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_9_1/runtime
+github.com/huandu/goroutine/hack/go1_9_1/runtime/internal/sys
+github.com/huandu/goroutine/hack/go1_9_2/runtime
+github.com/huandu/goroutine/hack/go1_9_2/runtime/internal/sys
+github.com/huandu/goroutine/version
 # github.com/jinzhu/gorm v1.9.4
 github.com/jinzhu/gorm
 # github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
@@ -18,13 +60,13 @@ github.com/jinzhu/inflection
 github.com/julienschmidt/httprouter
 # github.com/openzipkin/zipkin-go v0.1.6
 github.com/openzipkin/zipkin-go
-github.com/openzipkin/zipkin-go/middleware/http
-github.com/openzipkin/zipkin-go/reporter/http
 github.com/openzipkin/zipkin-go/idgenerator
+github.com/openzipkin/zipkin-go/middleware/http
 github.com/openzipkin/zipkin-go/model
 github.com/openzipkin/zipkin-go/propagation
-github.com/openzipkin/zipkin-go/reporter
 github.com/openzipkin/zipkin-go/propagation/b3
+github.com/openzipkin/zipkin-go/reporter
+github.com/openzipkin/zipkin-go/reporter/http
 # github.com/vmihailenco/msgpack v4.0.4+incompatible
 github.com/vmihailenco/msgpack
 github.com/vmihailenco/msgpack/codes
@@ -34,23 +76,23 @@ go.uber.org/atomic
 go.uber.org/multierr
 # go.uber.org/zap v1.9.1
 go.uber.org/zap
-go.uber.org/zap/internal/bufferpool
-go.uber.org/zap/zapcore
 go.uber.org/zap/buffer
+go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
+go.uber.org/zap/zapcore
 # golang.org/x/net v0.0.0-20190311183353-d8887717615a
 golang.org/x/net/context
 # google.golang.org/appengine v1.4.0
-google.golang.org/appengine/datastore
-google.golang.org/appengine/cloudsql
 google.golang.org/appengine
+google.golang.org/appengine/cloudsql
+google.golang.org/appengine/datastore
 google.golang.org/appengine/internal
-google.golang.org/appengine/internal/datastore
 google.golang.org/appengine/internal/app_identity
-google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
 google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/remote_api
 # google.golang.org/grpc v1.19.0
 google.golang.org/grpc/metadata

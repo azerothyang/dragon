@@ -105,3 +105,6 @@
   100%     31 (longest request)
 
  ```
+
+app will read DRAGON env first to check production or debug
+

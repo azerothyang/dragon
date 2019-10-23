@@ -2,10 +2,10 @@ package ctrl
 
 import (
 	"dragon/core/dragon/dlogger"
+	"dragon/core/dragon/tracker"
 	"dragon/model"
 	"encoding/json"
 	"fmt"
-	"github.com/vmihailenco/msgpack"
 	"net/http"
 	"time"
 )
@@ -37,80 +37,38 @@ func init() {
 }
 
 //return with json
-func (*Ctrl) Json(data interface{}, resp http.ResponseWriter, spanId string) {
+func (*Ctrl) Json(data *Output, resp http.ResponseWriter) {
 	resp.Header().Set("content-type", "application/json; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
 	resp.Header().Set("Access-Control-Allow-Origin", "*")
 	resp.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT,PATCH")
 	resp.Header().Set("Access-Control-Allow-Credentials", "true")
 	resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept-Encoding, Origin")
-	output := data.(Output)
-	output.SpanId = spanId
-	js, err := json.Marshal(output)
+
+	trackInfo := resp.Header().Get(tracker.TrackKey)
+	resp.Header().Del(tracker.TrackKey) // 清除Header中的track
+	trackMan := tracker.UnMarshal(trackInfo)
+	defer dlogger.Info(trackMan) // 最后写日志跟踪
+	trackMan.Resp.Header = resp.Header()
+	data.SpanId = trackMan.SpanId
+	js, err := json.Marshal(data)
+	// 生成耗时
+	trackMan.CostTime = time.Since(trackMan.StartTime).String()
+
 	if err != nil {
-		dlogger.SugarLogger.Errorw("Response Marshal Error",
-			"Time", time.Now().Format("2006-01-02 15:04:05"),
-			"SpanId", spanId,
-			"errorInfo", err)
-		resp.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprint(resp, "")
+		trackMan.Error = err
+		fmt.Fprint(resp, "error")
 		return
 	}
+	// trackMan data log
+	trackMan.Resp.Data = string(js)
 
-	// print response data
-	dlogger.SugarLogger.Infow("Response Info",
-		"Time", time.Now().Format("2006-01-02 15:04:05"),
-		"SpanId", spanId,
-		"Data", string(js),
-	)
-
+	// output
 	_, err = resp.Write(js)
 	if err != nil {
-		dlogger.SugarLogger.Errorw("Response Write Error",
-			"Time", time.Now().Format("2006-01-02 15:04:05"),
-			"SpanId", spanId,
-			"errorInfo", err)
 		resp.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprint(resp, "")
-		return
-	}
-}
-
-// return with msgpack
-func (*Ctrl) MsgPack(data interface{}, resp http.ResponseWriter, spanId string) {
-	resp.Header().Set("content-type", "text/html;charset=utf-8")
-	resp.Header().Set("x-server", "dragon")
-	resp.Header().Set("Access-Control-Allow-Origin", "*")
-	resp.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT,PATCH")
-	resp.Header().Set("Access-Control-Allow-Credentials", "true")
-	resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept-Encoding, Origin")
-	output := data.(Output)
-	output.SpanId = spanId
-	msgp, err := msgpack.Marshal(output)
-	if err != nil {
-		dlogger.SugarLogger.Errorw("Response Marshal Error",
-			"Time", time.Now().Format("2006-01-02 15:04:05"),
-			"SpanId", spanId,
-			"errorInfo", err)
-		resp.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprint(resp, "")
-		return
-	}
-
-	// print response data
-	dlogger.SugarLogger.Infow("Response Info",
-		"SpanId", spanId,
-		"Time", time.Now().Format("2006-01-02 15:04:05"),
-		"Data", output,
-	)
-
-	_, err = resp.Write(msgp)
-	if err != nil {
-		dlogger.SugarLogger.Errorw("Response Write Error",
-			"Time", time.Now().Format("2006-01-02 15:04:05"),
-			"SpanId", spanId,
-			"errorInfo", err)
-		resp.WriteHeader(http.StatusInternalServerError)
+		trackMan.Resp.Header = resp.Header()
+		trackMan.Error = err
 		fmt.Fprint(resp, "")
 		return
 	}

@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
+	"encoding/json"
 )
 
 //过滤字段，map中只保留需要的键值对
@@ -36,4 +37,10 @@ func HmacMD5(input, key string) string {
 	mac := hmac.New(md5.New, []byte(key))
 	mac.Write([]byte(input))
 	return hex.EncodeToString(mac.Sum(nil))
+}
+
+// return json string
+func ToJsonString(data interface{}) string {
+	j, _ := json.Marshal(data)
+	return string(j)
 }
