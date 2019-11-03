@@ -7,7 +7,6 @@ import (
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
 	"dragon/ctrl"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"time"
@@ -44,9 +43,7 @@ func (notFoundHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	trackMan.Resp.Data = "<h2>Dragon Not Found</h2>"
 	trackMan.CostTime = time.Since(trackMan.StartTime).String()
 	dlogger.Info(trackMan) // 最后写日志跟踪
-
-	fmt.Fprintf(resp, "<h2>Dragon Not Found</h2>")
-	//baseCtrl.Json("not found", w)
+	resp.Write([]byte("<h2>Dragon Not Found</h2>"))
 }
 
 // all panic handler
@@ -62,6 +59,5 @@ func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) 
 	trackMan.Resp.Data = "<h2>500 Internal Server Error</h2>"
 	trackMan.Error = err
 	dlogger.Error(trackMan) // 写入日志跟踪
-
-	fmt.Fprintf(resp, "<h2>500 Internal Server Error</h2>")
+	resp.Write([]byte("<h2>500 Internal Server Error</h2>"))
 }
