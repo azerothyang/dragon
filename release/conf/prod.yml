@@ -12,7 +12,7 @@ database:
       charset: utf8
       timeout: 3s  #connect timeout time
       maxIdle: 20  #maxIdle connections, db will at least serve 20 idle connections; if you set 0, that means no limit。
-      maxConn: 40  #maxConn connections, db will have 40 connections limit; if you set 0, that means no limit。
+      maxConn: 100  #maxConn connections, db will have 40 connections limit; if you set 0, that means no limit。
   redis:
     host: 127.0.0.1
     port: 6379
@@ -20,5 +20,5 @@ database:
     timeout: 100 #redis dial timeout per millisecond. int type
     db: 0
 log:
-  dir: /Users/chengyang/Desktop/projects/go/dragon/log # don't end with /
+  dir: /Users/chengyang/Desktop/projects/go/dragon/release/log # don't end with /
 
