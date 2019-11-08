@@ -62,4 +62,5 @@ func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) 
 	dlogger.Error(trackMan) // 写入日志跟踪
 	resp.Write([]byte("<h2>500 Internal Server Error</h2>"))
 	log.Println(err)
+	recover()
 }
