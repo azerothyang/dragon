@@ -6,7 +6,6 @@ import (
 	"dragon/core/dragon/util/validate"
 	"dragon/dto"
 	"dragon/model"
-	"dragon/service"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -19,12 +18,22 @@ type Product struct {
 }
 
 func (p *Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	serv := service.Service{TrackWriter: resp}
-	serv.GET("https://www.baidu.com/", map[string]string{"test": "dragon", "test2": "dragon2"})
+	var products []model.TProduct
+	var conditions []map[string]interface{}
+	var cond = map[string]interface{}{
+		"product_id = ?":   1,
+		"create_time <= ?": "2019-08-01",
+	}
+	conditions = append(conditions, cond)
+	count := ProductModel.GetListAndCount(&products,
+		nil, "product_id desc", 0, 10, "*")
 	output := Output{
-		Code: 0,
-		Msg:  "",
-		Data: nil,
+		Code: http.StatusOK,
+		Msg:  "ok",
+		Data: map[string]interface{}{
+			"list":  products,
+			"count": count,
+		},
 	}
 	p.Json(&output, resp)
 }
@@ -52,21 +61,21 @@ func (p *Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		return
 	}
 	// 验证品牌是否有效
-	brandInfo := model.TBrand{}
-	BrandModel.GetOne(&brandInfo, map[string]interface{}{
-		"brand_code":   reqData["brand_code"],
-		"brand_status": model.BrandStatusOK,
-	}, "brand_id", "brand_id ASC")
-	if brandInfo.BrandId == 0 {
-		// 如果没有此品牌，提示品牌编码无效
-		res := Output{
-			Code:   http.StatusBadRequest,
-			Msg:    "品牌编码无效",
-			SpanId: reqData["SpanId"],
-		}
-		p.Json(&res, resp)
-		return
-	}
+	//brandInfo := model.TBrand{}
+	//BrandModel.GetOne(&brandInfo, {map[string]interface{}{
+	//	"brand_code":   reqData["brand_code"],
+	//	"brand_status": model.BrandStatusOK,
+	//}}, "brand_id", "brand_id ASC")
+	//if brandInfo.BrandId == 0 {
+	//	// 如果没有此品牌，提示品牌编码无效
+	//	res := Output{
+	//		Code:   http.StatusBadRequest,
+	//		Msg:    "品牌编码无效",
+	//		SpanId: reqData["SpanId"],
+	//	}
+	//	p.Json(&res, resp)
+	//	return
+	//}
 
 	productPrice, _ := strconv.ParseInt(reqData["product_price"], 10, 32)
 	stockNum, _ := strconv.ParseInt(reqData["stock_num"], 10, 64)

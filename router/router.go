@@ -8,6 +8,7 @@ import (
 	"dragon/core/dragon/tracker"
 	"dragon/ctrl"
 	"github.com/julienschmidt/httprouter"
+	"log"
 	"net/http"
 	"time"
 )
@@ -60,4 +61,5 @@ func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) 
 	trackMan.Error = err
 	dlogger.Error(trackMan) // 写入日志跟踪
 	resp.Write([]byte("<h2>500 Internal Server Error</h2>"))
+	log.Println(err)
 }
