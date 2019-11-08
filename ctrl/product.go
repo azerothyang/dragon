@@ -26,7 +26,7 @@ func (p *Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter
 	}
 	conditions = append(conditions, cond)
 	count := ProductModel.GetListAndCount(&products,
-		nil, "product_id desc", 0, 10, "*")
+		nil, "product_id desc", 0, 2, "*")
 	output := Output{
 		Code: http.StatusOK,
 		Msg:  "ok",
@@ -52,10 +52,9 @@ func (p *Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	if validator.HasErr {
 		// 校验不通过，直接返回
 		res := Output{
-			Code:   http.StatusBadRequest,
-			Msg:    "参数校验错误",
-			Data:   validator.ErrList,
-			SpanId: reqData["SpanId"],
+			Code: http.StatusBadRequest,
+			Msg:  "参数校验错误",
+			Data: validator.ErrList,
 		}
 		p.Json(&res, resp)
 		return
@@ -92,19 +91,17 @@ func (p *Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	if product.ProductId == 0 {
 		// 商品新建失败
 		res := Output{
-			Code:   http.StatusInternalServerError,
-			Msg:    "商品新建失败",
-			SpanId: reqData["SpanId"],
+			Code: http.StatusInternalServerError,
+			Msg:  "商品新建失败",
 		}
 		p.Json(&res, resp)
 		return
 	}
 
 	res := Output{
-		Code:   http.StatusOK,
-		Msg:    http.StatusText(http.StatusOK),
-		Data:   dto.TProduct2ProductOutput(&product),
-		SpanId: reqData["SpanId"],
+		Code: http.StatusOK,
+		Msg:  http.StatusText(http.StatusOK),
+		Data: dto.TProduct2ProductOutput(&product),
 	}
 	p.Json(&res, resp)
 	return

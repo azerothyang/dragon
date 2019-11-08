@@ -23,10 +23,15 @@ var (
 
 // output struct
 type Output struct {
-	Code   int         `json:"code"`
-	Msg    string      `json:"msg"`
-	Data   interface{} `json:"data"`
-	SpanId string      `json:"span_id"`
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
+
+// output data structure
+type OutData struct {
+	Output
+	SpanId string `json:"span_id"`
 }
 
 type Ctrl struct {
@@ -50,8 +55,11 @@ func (*Ctrl) Json(data *Output, resp http.ResponseWriter) {
 	trackMan := tracker.UnMarshal(trackInfo)
 	defer dlogger.Info(trackMan) // 最后写日志跟踪
 	trackMan.Resp.Header = resp.Header()
-	data.SpanId = trackMan.SpanId
-	js, err := json.Marshal(data)
+	outData := OutData{
+		Output: *data,
+		SpanId: trackMan.SpanId,
+	}
+	js, err := json.Marshal(outData)
 	// 生成耗时
 	trackMan.CostTime = time.Since(trackMan.StartTime).String()
 
