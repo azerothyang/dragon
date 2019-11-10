@@ -31,10 +31,10 @@ func writeLog(data interface{}, level string) {
 		logInfo = string(d)
 	}
 	// todo check if safe
-	go func() {
-		fmt.Fprintf(logFile, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
-		logFile.Close()
-	}()
+	go func(file *os.File, datetime string, level string, logInfo string) {
+		fmt.Fprintf(file, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
+		file.Close()
+	}(logFile, datetime, level, logInfo)
 }
 
 func Debug(data interface{}) {
