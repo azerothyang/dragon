@@ -17,16 +17,17 @@ type Product struct {
 	Ctrl
 }
 
-func (p *Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	// 初始化req
+	p.req = req
+
 	var products []model.TProduct
-	var conditions []map[string]interface{}
-	var cond = map[string]interface{}{
-		"product_id = ?":   1,
-		"create_time <= ?": "2019-08-01",
+	var conditions = []map[string]interface{}{
+		{"product_id = ?": 1},
+		//{"create_time <= ?": "2019-08-01"},
 	}
-	conditions = append(conditions, cond)
 	count := ProductModel.GetListAndCount(&products,
-		nil, "product_id desc", 0, 2, "*")
+		conditions, "product_id DESC", 0, 2, "*")
 	output := Output{
 		Code: http.StatusOK,
 		Msg:  "ok",
@@ -39,7 +40,10 @@ func (p *Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter
 }
 
 // 新增商品
-func (p *Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+func (p Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	// 初始化req
+	p.req = req
+
 	reqData := dragon.Parse(req)
 	// 数据校验
 	validator := validate.New()

@@ -10,12 +10,12 @@ import (
 const TrackKey = "dragonTrack"
 
 type Tracker struct {
-	SpanId string      `json:"span_id"`
-	Uri    string      `json:"uri"`
-	Method string      `json:"method"`
-	Header http.Header `json:"header"`
-	Body   string      `json:"body"`
-	Resp   struct {
+	SpanId    string      `json:"span_id"`
+	Uri       string      `json:"uri"`
+	Method    string      `json:"method"`
+	ReqHeader http.Header `json:"req_header"`
+	Body      string      `json:"body"`
+	Resp      struct {
 		Header http.Header `json:"header"`
 		Data   string      `json:"data"`
 	} `json:"resp"`

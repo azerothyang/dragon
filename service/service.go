@@ -9,7 +9,7 @@ import (
 )
 
 type Service struct {
-	TrackWriter http.ResponseWriter
+	TrackWriter *http.Request
 }
 
 // service response struct
@@ -46,7 +46,7 @@ func (s *Service) PATCH(url string, params map[string]string) *Response {
 
 func (s *Service) send(url string, params map[string]string, method string) (resp *Response) {
 	// 跟踪器
-	trackInfo := s.TrackWriter.Header().Get(tracker.TrackKey)
+	trackInfo := s.TrackWriter.Header.Get(tracker.TrackKey)
 	trackMan := tracker.UnMarshal(trackInfo)
 
 	paramsStr := ""
@@ -80,7 +80,7 @@ func (s *Service) send(url string, params map[string]string, method string) (res
 		}
 
 		trackMan.Error = err
-		s.TrackWriter.Header().Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
+		s.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
 	defer rsp.Body.Close()
@@ -96,7 +96,7 @@ func (s *Service) send(url string, params map[string]string, method string) (res
 		}
 
 		trackMan.Error = errR
-		s.TrackWriter.Header().Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
+		s.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
 	// service返回
@@ -106,7 +106,7 @@ func (s *Service) send(url string, params map[string]string, method string) (res
 		rsp.StatusCode,
 		errR,
 	}
-	s.TrackWriter.Header().Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
+	s.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 	return
 }
 
@@ -116,7 +116,7 @@ func (s *Service) POSTJson(url string, paramsStr string, spanId string, calleeSe
 	req, _ = http.NewRequest("POST", url, strings.NewReader(paramsStr))
 	req.Header.Add("Content-Type", "application/json")
 	// 跟踪器
-	trackInfo := s.TrackWriter.Header().Get(tracker.TrackKey)
+	trackInfo := s.TrackWriter.Header.Get(tracker.TrackKey)
 	trackMan := tracker.UnMarshal(trackInfo)
 
 	rsp, err := http.DefaultClient.Do(req)
@@ -128,7 +128,7 @@ func (s *Service) POSTJson(url string, paramsStr string, spanId string, calleeSe
 			err,
 		}
 		trackMan.Error = err
-		s.TrackWriter.Header().Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
+		s.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
 	defer rsp.Body.Close()
@@ -146,7 +146,7 @@ func (s *Service) POSTJson(url string, paramsStr string, spanId string, calleeSe
 		}
 
 		trackMan.Error = errR
-		s.TrackWriter.Header().Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
+		s.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
 
@@ -155,6 +155,6 @@ func (s *Service) POSTJson(url string, paramsStr string, spanId string, calleeSe
 		rsp.StatusCode,
 		errR,
 	}
-	s.TrackWriter.Header().Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
+	s.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 	return
 }

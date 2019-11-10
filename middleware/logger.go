@@ -19,13 +19,13 @@ func LogInfo(next http.Handler) http.Handler {
 			SpanId:    spanId,
 			Uri:       r.RequestURI,
 			Method:    r.Method,
-			Header:    r.Header,
+			ReqHeader: r.Header,
 			Body:      string(body),
 			StartTime: start,
 			CostTime:  "",
 		}
 		trackInfo := trackMan.Marshal()
-		w.Header().Set(tracker.TrackKey, trackInfo)
+		r.Header.Set(tracker.TrackKey, trackInfo)
 		next.ServeHTTP(w, r)
 	})
 }

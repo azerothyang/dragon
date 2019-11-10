@@ -35,6 +35,7 @@ type OutData struct {
 }
 
 type Ctrl struct {
+	req *http.Request
 }
 
 func init() {
@@ -42,7 +43,7 @@ func init() {
 }
 
 //return with json
-func (*Ctrl) Json(data *Output, resp http.ResponseWriter) {
+func (ctrl Ctrl) Json(data *Output, resp http.ResponseWriter) {
 	resp.Header().Set("content-type", "application/json; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
 	resp.Header().Set("Access-Control-Allow-Origin", "*")
@@ -50,10 +51,11 @@ func (*Ctrl) Json(data *Output, resp http.ResponseWriter) {
 	resp.Header().Set("Access-Control-Allow-Credentials", "true")
 	resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept-Encoding, Origin")
 
-	trackInfo := resp.Header().Get(tracker.TrackKey)
-	resp.Header().Del(tracker.TrackKey) // 清除Header中的track
+	trackInfo := ctrl.req.Header.Get(tracker.TrackKey)
 	trackMan := tracker.UnMarshal(trackInfo)
-	defer dlogger.Info(trackMan) // 最后写日志跟踪
+	defer func() {
+		dlogger.Info(trackMan) // 最后写日志跟踪
+	}()
 	trackMan.Resp.Header = resp.Header()
 	outData := OutData{
 		Output: *data,

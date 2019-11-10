@@ -18,7 +18,7 @@ type notFoundHandler struct {
 
 var (
 	Routes      *httprouter.Router
-	productCtrl = &ctrl.Product{} //product controller
+	productCtrl = ctrl.Product{} //product controller
 )
 
 func init() {
@@ -36,9 +36,7 @@ func init() {
 func (notFoundHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("content-type", "text/html; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
-
-	trackInfo := resp.Header().Get(tracker.TrackKey)
-	resp.Header().Del(tracker.TrackKey) // 清除Header中的track
+	trackInfo := req.Header.Get(tracker.TrackKey)
 	trackMan := tracker.UnMarshal(trackInfo)
 	trackMan.Resp.Header = resp.Header()
 	trackMan.Resp.Data = "<h2>Dragon Not Found</h2>"
@@ -52,15 +50,15 @@ func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) 
 	resp.Header().Set("content-type", "text/html; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
 	resp.WriteHeader(http.StatusInternalServerError)
-
-	trackInfo := resp.Header().Get(tracker.TrackKey)
-	resp.Header().Del(tracker.TrackKey) // 清除Header中的track
+	trackInfo := req.Header.Get(tracker.TrackKey)
 	trackMan := tracker.UnMarshal(trackInfo)
 	trackMan.Resp.Header = resp.Header()
 	trackMan.Resp.Data = "<h2>500 Internal Server Error</h2>"
 	trackMan.Error = err
 	dlogger.Error(trackMan) // 写入日志跟踪
 	resp.Write([]byte("<h2>500 Internal Server Error</h2>"))
-	log.Println(err)
+	if err != nil {
+		log.Println(err)
+	}
 	recover()
 }
