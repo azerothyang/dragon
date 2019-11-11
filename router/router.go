@@ -26,7 +26,7 @@ func init() {
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
 	// -----------------------------商品相关-----------------------------
-	Routes.GET("/test", productCtrl.Test)
+	Routes.POST("/test", productCtrl.Test)
 	// 新增商品
 	Routes.POST("/api/product", productCtrl.Add)
 	// -----------------------------商品相关-----------------------------

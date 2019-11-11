@@ -12,8 +12,6 @@ import (
 func LogInfo(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		// todo parse params will sometimes happen twice, because in controller will call it
-
 		spanId, _ := util.NewUUID()
 		// 读取
 		body, _ := ioutil.ReadAll(r.Body)

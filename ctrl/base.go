@@ -6,6 +6,8 @@ import (
 	"dragon/model"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 )
@@ -34,16 +36,65 @@ type OutData struct {
 	SpanId string `json:"span_id"`
 }
 
-type Ctrl struct {
-	req *http.Request
+// Controller interface
+type Controller interface {
+	InitReqAndResp(req *http.Request, resp http.ResponseWriter)
+	GetRequestParams() map[string]string
+	BindRequestJsonToStruct(data interface{}) error
+	Json(data *Output)
 }
 
-func init() {
+// Ctrl struct
+type Ctrl struct {
+	req  *http.Request
+	resp http.ResponseWriter
+}
 
+// init requests and response bind to ctrl struct
+func (ctrl *Ctrl) InitReqAndResp(req *http.Request, resp http.ResponseWriter) {
+	ctrl.req = req
+	ctrl.resp = resp
+}
+
+// get request params (get and post params)
+func (ctrl Ctrl) GetRequestParams() map[string]string {
+	requests := make(map[string]string)
+	var err error
+	err = ctrl.req.ParseForm()
+	if err != nil {
+		log.Println(err)
+		return requests
+	}
+
+	for k, v := range ctrl.req.Form {
+		if len(v) == 1 {
+			requests[k] = v[0]
+		}
+	}
+
+	return requests
+}
+
+//parse raw json bind to struct
+func (ctrl Ctrl) BindRequestJsonToStruct(data interface{}) error {
+	var body []byte
+	var err error
+	body, err = ioutil.ReadAll(ctrl.req.Body)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = json.Unmarshal(body, data)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }
 
 //return with json
-func (ctrl Ctrl) Json(data *Output, resp http.ResponseWriter) {
+func (ctrl Ctrl) Json(data *Output) {
+	resp := ctrl.resp
 	resp.Header().Set("content-type", "application/json; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
 	resp.Header().Set("Access-Control-Allow-Origin", "*")

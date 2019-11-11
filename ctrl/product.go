@@ -1,11 +1,11 @@
 package ctrl
 
 import (
-	"dragon/core/dragon"
 	"dragon/core/dragon/util"
 	"dragon/core/dragon/util/validate"
 	"dragon/dto"
 	"dragon/model"
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -19,7 +19,13 @@ type Product struct {
 
 func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// 初始化req
-	p.req = req
+	(&p).InitReqAndResp(req, resp)
+	type Info struct {
+		Name string
+		Age  int
+	}
+	reqData := p.GetRequestParams()
+	fmt.Println(reqData)
 
 	var products []model.TProduct
 	var conditions = []map[string]interface{}{
@@ -36,15 +42,15 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 			"count": count,
 		},
 	}
-	p.Json(&output, resp)
+	p.Json(&output)
 }
 
 // 新增商品
 func (p Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// 初始化req
-	p.req = req
+	(&p).InitReqAndResp(req, resp)
 
-	reqData := dragon.Parse(req)
+	reqData := p.GetRequestParams()
 	// 数据校验
 	validator := validate.New()
 	validator.Validate(&reqData, validate.Rules{
@@ -60,7 +66,7 @@ func (p Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.P
 			Msg:  "参数校验错误",
 			Data: validator.ErrList,
 		}
-		p.Json(&res, resp)
+		p.Json(&res)
 		return
 	}
 	// 验证品牌是否有效
@@ -98,7 +104,7 @@ func (p Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.P
 			Code: http.StatusInternalServerError,
 			Msg:  "商品新建失败",
 		}
-		p.Json(&res, resp)
+		p.Json(&res)
 		return
 	}
 
@@ -107,6 +113,6 @@ func (p Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.P
 		Msg:  http.StatusText(http.StatusOK),
 		Data: dto.TProduct2ProductOutput(&product),
 	}
-	p.Json(&res, resp)
+	p.Json(&res)
 	return
 }
