@@ -20,10 +20,6 @@ type Product struct {
 func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// 初始化req
 	(&p).InitReqAndResp(req, resp)
-	type Info struct {
-		Name string
-		Age  int
-	}
 	reqData := p.GetRequestParams()
 	fmt.Println(reqData)
 
