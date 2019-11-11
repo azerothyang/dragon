@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"bytes"
 	"dragon/core/dragon/tracker"
 	"dragon/core/dragon/util"
 	"io/ioutil"
@@ -14,7 +15,10 @@ func LogInfo(next http.Handler) http.Handler {
 		// todo parse params will sometimes happen twice, because in controller will call it
 
 		spanId, _ := util.NewUUID()
+		// 读取
 		body, _ := ioutil.ReadAll(r.Body)
+		// 把刚刚读出来的再写进去
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 		trackMan := &tracker.Tracker{
 			SpanId:    spanId,
 			Uri:       r.RequestURI,
