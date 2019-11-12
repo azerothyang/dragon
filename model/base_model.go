@@ -29,6 +29,24 @@ type BaseModel struct {
 	TableName string //表名称
 }
 
+// todo 拼接sql的insert方法，看是否采用。 优点：可以极大的缩减代码量，将请求的参数直接写入数据库。 缺点，需要将请求的参数做参数过滤，同时前端传入的参数直接写入数据库，安全性没有结构体struct检测后更可靠。
+//func (b *BaseModel) Add(data map[string]string) error {
+//	var values []string
+//	var fields []string
+//	for field, value := range data {
+//		fields = append(fields, field)
+//		values = append(values, value)
+//	}
+//	sql := "INSERT INTO " + b.TableName + " ("
+//	var sql2 = " VALUES (?)"
+//	for _, field := range fields {
+//		sql += field + ","
+//	}
+//	sql = sql[:len(sql)-1] + ")" + sql2
+//	err := db.Exec(sql, values).Error
+//	return err
+//}
+
 // 新增
 func (b *BaseModel) Add(data interface{}) {
 	db.Create(data)
