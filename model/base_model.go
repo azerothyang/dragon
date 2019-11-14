@@ -2,6 +2,7 @@ package model
 
 import (
 	"dragon/core/dragon/conf"
+	"dragon/core/dragon/dlogger"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" //导入mysql驱动
 	"github.com/jinzhu/gorm"
@@ -159,9 +160,11 @@ func (b *BaseModel) GetListAndCount(list interface{}, conditions []map[string]in
 type Logger struct {
 }
 
-func (Logger) Print(v ...interface{}) {
+func (Logger) Print(values ...interface{}) {
 	// todo 更好的日志打印方案
-	log.Println(v...)
+	logInfo := fmt.Sprint(values)
+	dlogger.Info(logInfo)
+	log.Println(values...)
 }
 
 //init db
