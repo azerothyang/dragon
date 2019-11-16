@@ -49,12 +49,12 @@ type BaseModel struct {
 //}
 
 // 新增
-func (b *BaseModel) Add(data interface{}) {
+func (b BaseModel) Add(data interface{}) {
 	db.Create(data)
 }
 
 // 软删除通过条件
-func (b *BaseModel) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) bool {
+func (b BaseModel) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) bool {
 	queryDb := db.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -69,7 +69,7 @@ func (b *BaseModel) SoftDelete(conditions []map[string]interface{}, field string
 }
 
 // 真删除
-func (b *BaseModel) Delete(conditions []map[string]interface{}, model interface{}) bool {
+func (b BaseModel) Delete(conditions []map[string]interface{}, model interface{}) bool {
 	queryDb := db
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -84,7 +84,7 @@ func (b *BaseModel) Delete(conditions []map[string]interface{}, model interface{
 }
 
 // 更新通过条件
-func (b *BaseModel) Updates(conditions []map[string]interface{}, data interface{}) bool {
+func (b BaseModel) Updates(conditions []map[string]interface{}, data interface{}) bool {
 	queryDb := db.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -99,7 +99,7 @@ func (b *BaseModel) Updates(conditions []map[string]interface{}, data interface{
 }
 
 // 获取列表, limit=-1 拉取全部
-func (b *BaseModel) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) {
+func (b BaseModel) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) {
 	queryDb := db.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -116,7 +116,7 @@ func (b *BaseModel) GetList(list interface{}, conditions []map[string]interface{
 }
 
 // 获取单个信息
-func (b *BaseModel) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) {
+func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) {
 	queryDb := db.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -127,7 +127,7 @@ func (b *BaseModel) GetOne(data interface{}, conditions []map[string]interface{}
 }
 
 // 获取总数
-func (b *BaseModel) GetCount(conditions []map[string]interface{}) int64 {
+func (b BaseModel) GetCount(conditions []map[string]interface{}) int64 {
 	var count int64
 	queryDb := db.Table(b.TableName)
 	for _, condition := range conditions {
@@ -140,7 +140,7 @@ func (b *BaseModel) GetCount(conditions []map[string]interface{}) int64 {
 }
 
 // 获取列表和总数
-func (b *BaseModel) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) int64 {
+func (b BaseModel) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) int64 {
 	var wg sync.WaitGroup
 	var count int64
 	wg.Add(2)

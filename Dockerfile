@@ -3,7 +3,7 @@ LABEL maintainer = "holmescheng"
 ENV PROJECT_DIR ./release/
 ENV BINARY_NAME linux_linux
 
-# dragon 运行环境，默认为生成环境
+# dragon 运行环境变量，默认为生成环境，可以设置为debug/production分别对应不同的配置文件
 ENV DRAGON production
 
 # copy release project to docker container, then just run binary file
