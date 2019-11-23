@@ -25,7 +25,7 @@ func (dragon *Dragon) Fly() {
 
 	//dragon fly
 	log.Println("env: " + conf.Env)
-	log.Println("set environment variable DRAGON debug or production 😄🐲😄")
+	log.Println("set environment variable DRAGON debug or production 🐲🐲🐲")
 	log.Println("start server on " + conf.Conf.Server.Host + ":" + conf.Conf.Server.Port)
 	log.Fatal(http.ListenAndServe(conf.Conf.Server.Host+":"+conf.Conf.Server.Port, dragon.Handler))
 }
