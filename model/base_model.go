@@ -182,7 +182,6 @@ func (Logger) Print(values ...interface{}) {
 func InitDB() {
 	var err error
 	var dsnMaster string
-	var masterMaxIdle, masterMaxConn int
 
 	//mysql master
 	dsnMaster = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&timeout=%s&parseTime=True&loc=Local", //loc set the timezone
@@ -194,8 +193,8 @@ func InitDB() {
 		log.Fatalln(err)
 	}
 
-	db.DB().SetMaxIdleConns(masterMaxIdle)
-	db.DB().SetMaxOpenConns(masterMaxConn)
+	db.DB().SetMaxIdleConns(conf.Conf.Database.Mysql.Master.MaxIdle)
+	db.DB().SetMaxOpenConns(conf.Conf.Database.Mysql.Master.MaxConn)
 
 	//如果是debug模式则开启彩色sql调试模式, 否则为文本模式
 	db.LogMode(true)
