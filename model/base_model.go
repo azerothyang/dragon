@@ -14,6 +14,11 @@ var (
 	db *gorm.DB //master db
 )
 
+const (
+	StatusDelete = 0 //0表示删除
+	StatusOK     = 1 //1表示正常
+)
+
 // 模型处理接口
 type HandleModel interface {
 	Add(data interface{})                                                                                                            // 新增
@@ -123,6 +128,12 @@ func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{},
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
+	// orderBy空字符，则无需加入Order条件
+	if orderBy == "" {
+		queryDb.Find(data)
+		return
+	}
+
 	queryDb.Order(orderBy).First(data)
 }
 
