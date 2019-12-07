@@ -16,6 +16,7 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 #update application timezone
 RUN echo "Asia/Shanghai" >> /etc/timezone
 
-WORKDIR /data/release
 COPY "${PROJECT_DIR}" /data/release
-CMD /data/release/"${BINARY_NAME}"
+
+WORKDIR /data/release
+CMD "${BINARY_NAME}"

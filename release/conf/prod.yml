@@ -17,8 +17,8 @@ database:
     host: 127.0.0.1
     port: 6379
     auth: dragon
-    timeout: 100 #redis dial timeout per millisecond. int type
+    timeout: 3000 #redis dial timeout per millisecond. int type
     db: 0
 log:
-  dir: /Users/chengyang/Desktop/projects/go/dragon/release/log # don't end with /
+  dir: ./log # don't end with /
 

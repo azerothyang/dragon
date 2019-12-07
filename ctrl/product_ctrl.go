@@ -28,8 +28,21 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		{"product_id = ?": 1},
 		//{"create_time <= ?": "2019-08-01"},
 	}
-	count := ProductModel.GetListAndCount(&products,
+	_, listErr, count, countErr := ProductModel.GetListAndCount(&products,
 		conditions, "product_id DESC", 0, 2, "*")
+	if listErr != nil || countErr != nil {
+		output := Output{
+			Code: http.StatusInternalServerError,
+			Msg:  http.StatusText(http.StatusInternalServerError),
+			Data: map[string]interface{}{
+				"listErr":  listErr,
+				"countErr": countErr,
+			},
+		}
+		p.Json(&output)
+		return
+	}
+
 	output := Output{
 		Code: http.StatusOK,
 		Msg:  "ok",
@@ -39,6 +52,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		},
 	}
 	p.Json(&output)
+	return
 }
 
 // 新增商品
