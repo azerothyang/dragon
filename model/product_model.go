@@ -11,15 +11,15 @@ type ProductModel struct {
 }
 
 type TProduct struct {
-	ProductId     int64 `gorm:"primary_key;AUTO_INCREMENT"`
-	ProductCode   string
-	ProductName   string
-	BrandCode     string
-	ProductPrice  int64
-	StockNum      int64
-	ProductStatus int8 `gorm:"default:1"` // 商品状态: 0删除, 1正常
-	CreateTime    string
-	UpdateTime    string
+	ProductId     int64  `gorm:"primary_key;AUTO_INCREMENT" json:"product_id"`
+	ProductCode   string `json:"product_code"`
+	ProductName   string `json:"product_name"`
+	BrandCode     string `json:"brand_code"`
+	ProductPrice  int64  `json:"product_price"`
+	StockNum      int64  `json:"stock_num"`
+	ProductStatus int8   `gorm:"default:1" json:"product_status"` // 商品状态: 0删除, 1正常
+	CreateTime    string `json:"create_time"`
+	UpdateTime    string `json:"update_time"`
 }
 
 //set orm table name

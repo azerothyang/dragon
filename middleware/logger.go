@@ -3,7 +3,7 @@ package middleware
 import (
 	"bytes"
 	"dragon/core/dragon/tracker"
-	"dragon/core/dragon/util"
+	"dragon/tools/util"
 	"io/ioutil"
 	"net/http"
 	"time"
