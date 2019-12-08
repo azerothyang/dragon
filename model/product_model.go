@@ -1,9 +1,5 @@
 package model
 
-import (
-	"time"
-)
-
 const (
 	ProductStatusDelete = 0
 	ProductStatusOK     = 1
@@ -22,8 +18,8 @@ type TProduct struct {
 	ProductPrice  int64
 	StockNum      int64
 	ProductStatus int8 `gorm:"default:1"` // 商品状态: 0删除, 1正常
-	CreateTime    time.Time
-	UpdateTime    time.Time
+	CreateTime    string
+	UpdateTime    string
 }
 
 //set orm table name

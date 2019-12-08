@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 const (
 	BrandStatusDelete = 0
 	BrandStatusOK     = 1
@@ -20,8 +18,8 @@ type TBrand struct {
 	AppId        string
 	AppSecret    string
 	BrandStatus  int8 `gorm:"default:1"` //品牌状态: 0删除, 1正常
-	CreateTime   time.Time
-	UpdateTime   time.Time
+	CreateTime   string
+	UpdateTime   string
 }
 
 //set orm table name

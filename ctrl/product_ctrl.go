@@ -25,11 +25,11 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 
 	var product model.TProduct
 	var conditions = []map[string]interface{}{
-		{"product_id = ?": 2000},
+		{"product_id = ?": 1},
 		//{"create_time <= ?": "2019-08-01"},
 	}
 	resData, err := ProductModel.GetOne(&product,
-		conditions, "product_name", "")
+		conditions, "product_name,create_time", "")
 	if err != nil {
 		output := Output{
 			Code: http.StatusBadRequest,
@@ -98,8 +98,8 @@ func (p Product) Add(resp http.ResponseWriter, req *http.Request, _ httprouter.P
 		BrandCode:    reqData["brand_code"],
 		ProductPrice: productPrice,
 		StockNum:     stockNum,
-		CreateTime:   time.Now(),
-		UpdateTime:   time.Now(),
+		CreateTime:   time.Now().Format("2006-01-02 15:04:05"),
+		UpdateTime:   time.Now().Format("2006-01-02 15:04:05"),
 	}
 	ProductModel.Add(&product)
 	if product.ProductId == 0 {

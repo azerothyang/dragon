@@ -25,8 +25,8 @@ func TProduct2ProductOutput(tProduct *model.TProduct) *ProductOutput {
 		BrandCode:    tProduct.BrandCode,
 		ProductPrice: tProduct.ProductPrice,
 		StockNum:     tProduct.StockNum,
-		CreateTime:   tProduct.CreateTime.Format("2006-01-02 15:04:05"),
-		UpdateTime:   tProduct.UpdateTime.Format("2006-01-02 15:04:05"),
+		CreateTime:   tProduct.CreateTime,
+		UpdateTime:   tProduct.UpdateTime,
 	}
 	return &output
 }
