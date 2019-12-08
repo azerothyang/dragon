@@ -23,21 +23,18 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	reqData := p.GetRequestParams()
 	fmt.Println(reqData)
 
-	var products []model.TProduct
+	var product model.TProduct
 	var conditions = []map[string]interface{}{
-		{"product_id = ?": 1},
+		{"product_id = ?": 2000},
 		//{"create_time <= ?": "2019-08-01"},
 	}
-	_, listErr, count, countErr := ProductModel.GetListAndCount(&products,
-		conditions, "product_id DESC", 0, 2, "*")
-	if listErr != nil || countErr != nil {
+	resData, err := ProductModel.GetOne(&product,
+		conditions, "product_name", "")
+	if err != nil {
 		output := Output{
-			Code: http.StatusInternalServerError,
-			Msg:  http.StatusText(http.StatusInternalServerError),
-			Data: map[string]interface{}{
-				"listErr":  listErr,
-				"countErr": countErr,
-			},
+			Code: http.StatusBadRequest,
+			Msg:  http.StatusText(http.StatusBadRequest),
+			Data: err,
 		}
 		p.Json(&output)
 		return
@@ -46,10 +43,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	output := Output{
 		Code: http.StatusOK,
 		Msg:  "ok",
-		Data: map[string]interface{}{
-			"list":  products,
-			"count": count,
-		},
+		Data: resData,
 	}
 	p.Json(&output)
 	return

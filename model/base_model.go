@@ -21,14 +21,14 @@ const (
 
 // 模型处理接口
 type HandleModel interface {
-	Add(data interface{}) error                                                                                                                                                                     // 新增
-	SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (rowsAffected int64, err error)                                                                                  // 软删除
-	Delete(conditions []map[string]interface{}, model interface{}) (rowsAffected int64, err error)                                                                                                  // 真删除
-	Updates(conditions []map[string]interface{}, data interface{}) (rowsAffected int64, err error)                                                                                                  // 通过编码伪删除
-	GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (rowsAffected int64, err error)                                              // 查询列表
-	GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (rowsAffected int64, err error)                                                                      // 查询一条
-	GetCount(conditions []map[string]interface{}) (count int64, err error)                                                                                                                          // 获取总数
-	GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (listRowsAffected int64, listErr error, count int64, countErr error) // 获取总数
+	Add(data interface{}) error                                                                                                                                                                  // 新增
+	SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (err error)                                                                                                   // 软删除
+	Delete(conditions []map[string]interface{}, model interface{}) (err error)                                                                                                                   // 真删除
+	Updates(conditions []map[string]interface{}, data interface{}) (err error)                                                                                                                   // 通过编码伪删除
+	GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, err error)                                          // 查询列表
+	GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (resData interface{}, err error)                                                                  // 查询一条
+	GetCount(conditions []map[string]interface{}) (count int64, err error)                                                                                                                       // 获取总数
+	GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, count int64, listErr error, countErr error) // 获取总数
 }
 
 type BaseModel struct {
@@ -59,7 +59,7 @@ func (b BaseModel) Add(data interface{}) error {
 }
 
 // 软删除通过条件
-func (b BaseModel) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (rowsAffected int64, err error) {
+func (b BaseModel) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (err error) {
 	queryDb := db.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -67,11 +67,11 @@ func (b BaseModel) SoftDelete(conditions []map[string]interface{}, field string,
 		}
 	}
 	res := db.Update(field, val)
-	return res.RowsAffected, res.Error
+	return res.Error
 }
 
 // 真删除
-func (b BaseModel) Delete(conditions []map[string]interface{}, model interface{}) (rowsAffected int64, err error) {
+func (b BaseModel) Delete(conditions []map[string]interface{}, model interface{}) (err error) {
 	queryDb := db
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -79,11 +79,11 @@ func (b BaseModel) Delete(conditions []map[string]interface{}, model interface{}
 		}
 	}
 	res := queryDb.Delete(model)
-	return res.RowsAffected, res.Error
+	return res.Error
 }
 
 // 更新通过条件
-func (b BaseModel) Updates(conditions []map[string]interface{}, data interface{}) (rowsAffected int64, err error) {
+func (b BaseModel) Updates(conditions []map[string]interface{}, data interface{}) (err error) {
 	queryDb := db.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -91,11 +91,11 @@ func (b BaseModel) Updates(conditions []map[string]interface{}, data interface{}
 		}
 	}
 	res := queryDb.Updates(data)
-	return res.RowsAffected, res.Error
+	return res.Error
 }
 
 // 获取列表, limit=-1 拉取全部
-func (b BaseModel) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (rowsAffected int64, err error) {
+func (b BaseModel) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, err error) {
 	queryDb := db.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -105,14 +105,22 @@ func (b BaseModel) GetList(list interface{}, conditions []map[string]interface{}
 	queryDb = queryDb.Order(orderBy).Offset(offset)
 	if limit == -1 {
 		res := queryDb.Find(list)
-		return res.RowsAffected, res.Error
+		if res.Error == gorm.ErrRecordNotFound {
+			// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
+			return nil, nil
+		}
+		return list, res.Error
 	}
 	res := queryDb.Limit(limit).Find(list)
-	return res.RowsAffected, res.Error
+	if res.Error == gorm.ErrRecordNotFound {
+		// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
+		return nil, nil
+	}
+	return list, res.Error
 }
 
 // 获取单个信息
-func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (rowsAffected int64, err error) {
+func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (resData interface{}, err error) {
 	queryDb := db.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -122,11 +130,19 @@ func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{},
 	// orderBy空字符，则无需加入Order条件
 	if orderBy == "" {
 		res := queryDb.Find(data)
-		return res.RowsAffected, res.Error
+		if res.Error == gorm.ErrRecordNotFound {
+			// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
+			return nil, nil
+		}
+		return data, res.Error
 	}
 
 	res := queryDb.Order(orderBy).First(data)
-	return res.RowsAffected, res.Error
+	if res.Error == gorm.ErrRecordNotFound {
+		// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
+		return nil, nil
+	}
+	return data, res.Error
 }
 
 // 获取总数
@@ -143,11 +159,11 @@ func (b BaseModel) GetCount(conditions []map[string]interface{}) (count int64, e
 }
 
 // 获取列表和总数
-func (b BaseModel) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (listRowsAffected int64, listErr error, count int64, countErr error) {
+func (b BaseModel) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, count int64, listErr error, countErr error) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
-		listRowsAffected, listErr = b.GetList(list, conditions, orderBy, offset, limit, cols)
+		resData, listErr = b.GetList(list, conditions, orderBy, offset, limit, cols)
 		wg.Done()
 	}()
 	go func() {
