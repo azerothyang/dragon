@@ -1,7 +1,7 @@
 package test
 
 import (
-	"dragon/tools/util/validate"
+	"dragon/tools/validate"
 	"log"
 	"testing"
 )

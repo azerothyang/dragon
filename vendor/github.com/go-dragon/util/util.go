@@ -6,6 +6,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
+	"reflect"
 	"strings"
 )
 
@@ -71,4 +72,27 @@ func SliceAndTrim(str string) []string {
 		res = append(res, strings.Trim(s, " "))
 	}
 	return res
+}
+
+// obj 不能为指针
+func StructJsonTagToMap(obj interface{}) map[string]interface{} {
+	t := reflect.TypeOf(obj)
+	v := reflect.ValueOf(obj)
+
+	var data = make(map[string]interface{})
+	for i := 0; i < t.NumField(); i++ {
+		data[t.Field(i).Tag.Get("json")] = v.Field(i).Interface()
+	}
+	return data
+}
+
+func StructToMap(obj interface{}) map[string]interface{} {
+	t := reflect.TypeOf(obj)
+	v := reflect.ValueOf(obj)
+
+	var data = make(map[string]interface{})
+	for i := 0; i < t.NumField(); i++ {
+		data[t.Field(i).Name] = v.Field(i).Interface()
+	}
+	return data
 }
