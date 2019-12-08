@@ -46,7 +46,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		return
 	}
 
-	res := dto.TStructToData(*(productInfo.(*model.TProduct)), []string{"product_id", "product_name", "create_time"})
+	res := dto.TStructToData(product, []string{"product_id", "product_name", "create_time"})
 
 	output := Output{
 		Code: http.StatusOK,
