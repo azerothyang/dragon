@@ -12,8 +12,7 @@ type ListData []Data
 
 func TStructToData(obj interface{}, keys []string) Data {
 	res := util.StructJsonTagToMap(obj)
-	util.OnlyColumns(keys, res)
-	return res
+	return util.OnlyColumns(keys, res)
 }
 
 func TStructsToListData(objs []interface{}, keys []string) ListData {
