@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"dragon/tools/util"
 	"encoding/json"
 )
 
@@ -13,15 +14,9 @@ type ListData []Data
 func TStructToData(tStruct interface{}, keys []string) Data {
 	bt, _ := json.Marshal(tStruct)
 	var res Data
-	output := make(Data)
 	json.Unmarshal(bt, &res)
-	for _, key := range keys {
-		if v, ok := res[key]; ok {
-			// 如果数据库查询值在搜索字段中，则写入输出
-			output[key] = v
-		}
-	}
-	return output
+	util.OnlyColumns(keys, res)
+	return res
 }
 
 func TStructsToListData(tStructs []interface{}, keys []string) ListData {
