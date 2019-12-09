@@ -19,4 +19,6 @@ RUN echo "Asia/Shanghai" >> /etc/timezone
 COPY "${PROJECT_DIR}" /data/release
 
 WORKDIR /data/release
-CMD "${BINARY_NAME}"
+# expose default 1130 port
+EXPOSE 1130
+CMD "./${BINARY_NAME}"
