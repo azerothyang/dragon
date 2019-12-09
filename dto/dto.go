@@ -15,10 +15,11 @@ func TStructToData(obj interface{}, keys []string) Data {
 	return util.OnlyColumns(keys, res)
 }
 
-func TStructsToListData(objs []interface{}, keys []string) ListData {
-	output := ListData{}
-	for _, v := range objs {
-		output = append(output, TStructToData(v, keys))
-	}
-	return output
-}
+// todo 一般遍历自己转换
+//func TStructsToListData(objs []interface{}, keys []string) ListData {
+//	output := ListData{}
+//	for _, v := range objs {
+//		output = append(output, TStructToData(v, keys))
+//	}
+//	return output
+//}
