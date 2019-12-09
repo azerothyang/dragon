@@ -1,9 +1,9 @@
 module dragon
 
-go 1.12
+go 1.13
 
 require (
-	github.com/go-dragon/util v0.0.0-20191208151534-47a1b750de9f
+	github.com/go-dragon/util v0.0.0-20191209064153-250d1587f3e3
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/jinzhu/gorm v1.9.11
