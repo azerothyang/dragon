@@ -182,7 +182,6 @@ func (Logger) Print(values ...interface{}) {
 	// todo 更好的日志打印方案
 	logInfo := fmt.Sprint(values)
 	dlogger.Info(logInfo)
-	log.Println(values...)
 }
 
 //init db
