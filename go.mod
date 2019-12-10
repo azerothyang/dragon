@@ -3,7 +3,7 @@ module dragon
 go 1.13
 
 require (
-	github.com/go-dragon/util v0.0.0-20191209064153-250d1587f3e3
+	github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/jinzhu/gorm v1.9.11
