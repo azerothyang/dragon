@@ -47,7 +47,7 @@ type ConfS struct {
 
 var (
 	Conf ConfS
-	Env  = "debug"
+	Env  = "dev"
 )
 
 //init config
@@ -69,14 +69,13 @@ func InitConf() {
 		log.Fatal(err)
 	}
 
+	Env = string(envb)
 	var config []byte
-	//check release/.env, if .env 's content == debug
-	if string(envb) != "debug" {
-		Env = "production"
-		config, err = ioutil.ReadFile(dir + FmtSlash("conf/prod.yml"))
-	} else {
-		Env = "debug"
-		config, err = ioutil.ReadFile(dir + FmtSlash("conf/dev.yml"))
+	config, err = ioutil.ReadFile(dir + FmtSlash("conf/"+Env+".yml"))
+	//check env DRAGON or release/.env
+	if err != nil {
+		// read yml config fail, return fail
+		panic("release/conf/" + Env + ".yml not found")
 	}
 	err = yaml.Unmarshal(config, &Conf)
 	if err != nil {
