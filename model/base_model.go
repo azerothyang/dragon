@@ -205,7 +205,7 @@ func InitDB() {
 	//如果是debug模式则开启彩色sql调试模式, 否则为文本模式
 	db.LogMode(true)
 	logger := Logger{}
-	if conf.Env != "debug" {
+	if conf.Env != "dev" {
 		db.SetLogger(logger)
 	}
 }

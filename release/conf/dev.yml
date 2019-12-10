@@ -9,7 +9,7 @@ database:
       user: root
       password: dragon123
       database: dragon
-      charset: utf8
+      charset: utf8mb4,utf8
       timeout: 3s  #connect timeout time
       maxIdle: 20  #maxIdle connections, db will at least serve 20 idle connections; if you set 0, that means no limit。
       maxConn: 100  #maxConn connections, db will have 40 connections limit; if you set 0, that means no limit。
