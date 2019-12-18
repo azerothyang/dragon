@@ -20,31 +20,31 @@ type Response struct {
 }
 
 //send get request
-func (s *Service) GET(url string, params map[string]string) *Response {
-	return s.send(url, params, "GET")
+func (s *Service) GET(url string, params map[string]string, headers map[string]string) *Response {
+	return s.send(url, params, "GET", headers)
 }
 
 //send post request
-func (s *Service) POST(url string, params map[string]string) *Response {
-	return s.send(url, params, "POST")
+func (s *Service) POST(url string, params map[string]string, headers map[string]string) *Response {
+	return s.send(url, params, "POST", headers)
 }
 
 //send put request
-func (s *Service) PUT(url string, params map[string]string) *Response {
-	return s.send(url, params, "PUT")
+func (s *Service) PUT(url string, params map[string]string, headers map[string]string) *Response {
+	return s.send(url, params, "PUT", headers)
 }
 
 //send delete request
-func (s *Service) DELETE(url string, params map[string]string) *Response {
-	return s.send(url, params, "DELETE")
+func (s *Service) DELETE(url string, params map[string]string, headers map[string]string) *Response {
+	return s.send(url, params, "DELETE", headers)
 }
 
 //send patch request
-func (s *Service) PATCH(url string, params map[string]string) *Response {
-	return s.send(url, params, "PATCH")
+func (s *Service) PATCH(url string, params map[string]string, headers map[string]string) *Response {
+	return s.send(url, params, "PATCH", headers)
 }
 
-func (s *Service) send(url string, params map[string]string, method string) (resp *Response) {
+func (s *Service) send(url string, params map[string]string, method string, headers map[string]string) (resp *Response) {
 	// 跟踪器
 	trackInfo := s.TrackWriter.Header.Get(tracker.TrackKey)
 	trackMan := tracker.UnMarshal(trackInfo)
@@ -66,6 +66,11 @@ func (s *Service) send(url string, params map[string]string, method string) (res
 		req, _ = http.NewRequest(method, url, strings.NewReader(paramsStr))
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
+	// add req headers
+	for k, v := range headers {
+		req.Header.Add(k, v)
+	}
+
 	//trackMan.Service.Req = req todo req直接结构体不行
 	trackMan.Service.Req.Uri = req.URL.String()
 	trackMan.Service.Req.Body = paramsStr // 记录请求内容

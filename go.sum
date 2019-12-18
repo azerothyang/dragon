@@ -24,6 +24,8 @@ github.com/go-dragon/util v0.0.0-20191209064153-250d1587f3e3 h1:qRw66ua2qqhXP+Vp
 github.com/go-dragon/util v0.0.0-20191209064153-250d1587f3e3/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
 github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd h1:6KtENF0ikNhslcYFoPMC0EM01ATd5kdWqWC7ahtkyCU=
 github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
+github.com/go-dragon/util v0.0.0-20191218092728-1bd521b0fe2c h1:8BdQlau0mMgwrf5hbAk8lETW2dFShAvoXuyMscmFXu4=
+github.com/go-dragon/util v0.0.0-20191218092728-1bd521b0fe2c/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-redis/redis v6.15.2+incompatible h1:9SpNVG76gr6InJGxoZ6IuuxaCOQwDAhzyXg+Bs+0Sb4=

@@ -1,4 +1,4 @@
-# github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd
+# github.com/go-dragon/util v0.0.0-20191218092728-1bd521b0fe2c
 github.com/go-dragon/util
 # github.com/go-redis/redis v6.15.2+incompatible
 github.com/go-redis/redis
