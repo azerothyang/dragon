@@ -1,4 +1,4 @@
-package validate
+package validator
 
 import (
 	"regexp"
@@ -30,8 +30,8 @@ rules参数形式:, map[string]string{
 	"param1": "numeric|min:10",
 }
 */
-func (validator *Validator) Validate(form *map[string]string, rules Rules) *Validator {
-	validator.HasErr = false //单个字段校验结果是否有错
+func (v *Validator) Validate(form *map[string]string, rules Rules) *Validator {
+	v.HasErr = false //单个字段校验结果是否有错
 	for field, rule := range rules {
 		valis := strings.Split(rule, "|")
 		for _, vali := range valis {
@@ -48,126 +48,126 @@ func (validator *Validator) Validate(form *map[string]string, rules Rules) *Vali
 				arg = subValis[1]
 			}
 			if method == "notEmpty" {
-				if validator.notEmpty(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "不能为空"
+				if v.notEmpty(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "不能为空"
 					continue
 				}
 			}
 			if method == "mobile" {
-				if validator.mobile(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "格式错误"
+				if v.mobile(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "格式错误"
 					continue
 				}
 			}
 			if method == "password" {
-				if validator.password(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "格式错误"
+				if v.password(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "格式错误"
 					continue
 				}
 			}
 			if method == "nick" {
-				if validator.nick(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "格式错误"
+				if v.nick(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "格式错误"
 					continue
 				}
 			}
 			if method == "regex" {
-				if validator.regex(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "格式错误"
+				if v.regex(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "格式错误"
 					continue
 				}
 			}
 			if method == "min" {
-				if validator.min(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "值小于规定值:" + arg
+				if v.min(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "值小于规定值:" + arg
 					continue
 				}
 			}
 
 			// max:3
 			if method == "max" {
-				if validator.max(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "大于规定值:" + arg
+				if v.max(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "大于规定值:" + arg
 					continue
 				}
 			}
 
 			// minLength
 			if method == "minLength" {
-				if validator.minLength(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "小于最小长度:" + arg
+				if v.minLength(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "小于最小长度:" + arg
 					continue
 				}
 			}
 
 			// maxLength
 			if method == "maxLength" {
-				if validator.maxLength(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "超过最大长度:" + arg
+				if v.maxLength(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "超过最大长度:" + arg
 					continue
 				}
 			}
 
 			// numeric
 			if method == "numeric" {
-				if validator.numeric(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "非数值型"
+				if v.numeric(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "非数值型"
 					continue
 				}
 			}
 
 			if method == "int64" {
-				if validator.int64(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "非64位整型"
+				if v.int64(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "非64位整型"
 					continue
 				}
 			}
 
 			if method == "int32" {
-				if validator.int32(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "非32位整型"
+				if v.int32(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "非32位整型"
 					continue
 				}
 			}
 
 			if method == "datetime" {
-				if validator.datetime(field, form) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "格式不正确, 正确格式需要: 2006-01-02 15:04:05"
+				if v.datetime(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "格式不正确, 正确格式需要: 2006-01-02 15:04:05"
 					continue
 				}
 			}
 
 			if method == "in" {
-				if validator.in(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "参数不正确，没有在规定范围内"
+				if v.in(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "参数不正确，没有在规定范围内"
 					continue
 				}
 			}
 
 			if method == "notIn" {
-				if validator.notIn(field, form, arg) == false {
-					validator.HasErr = true
-					validator.ErrList[field] = "参数不正确，没有在规定范围内"
+				if v.notIn(field, form, arg) == false {
+					v.HasErr = true
+					v.ErrList[field] = "参数不正确，没有在规定范围内"
 					continue
 				}
 			}
 		}
 	}
-	return validator
+	return v
 }
 
 //判断参数是否为空

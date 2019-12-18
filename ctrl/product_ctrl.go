@@ -4,6 +4,7 @@ import (
 	"dragon/dto"
 	"dragon/model"
 	"fmt"
+	"github.com/go-dragon/validator"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -18,7 +19,18 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	(&p).InitReqAndResp(req, resp)
 	reqData := p.GetRequestParams()
 	fmt.Println(reqData)
-
+	v := validator.New()
+	v.Validate(&reqData, validator.Rules{
+		"test": "notEmpty",
+	})
+	if v.HasErr {
+		p.Json(&Output{
+			Code: http.StatusOK,
+			Msg:  "",
+			Data: v.ErrList,
+		})
+		return
+	}
 	var product model.TProduct
 	var conditions = []map[string]interface{}{
 		{"product_id = ?": 1},
