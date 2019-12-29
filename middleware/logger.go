@@ -28,6 +28,13 @@ func LogInfo(next http.Handler) http.Handler {
 		}
 		trackInfo := trackMan.Marshal()
 		r.Header.Set(tracker.TrackKey, trackInfo)
+
+		// before_req hook
+		beforeReq(r, w)
+
 		next.ServeHTTP(w, r)
+
+		// after_req hook
+		afterReq(r, w)
 	})
 }
