@@ -13,10 +13,6 @@ import (
 )
 
 var (
-	//品牌模型
-	BrandModel = model.BrandModel{
-		BaseModel: model.BaseModel{TableName: model.TBrand{}.TableName()},
-	}
 	//商品模型
 	ProductModel = model.ProductModel{
 		BaseModel: model.BaseModel{TableName: model.TProduct{}.TableName()}, // 传入表名
