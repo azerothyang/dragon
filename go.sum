@@ -20,6 +20,8 @@ github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 h1:Yzb9+7DP
 github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5/go.mod h1:a2zkGnVExMxdzMo3M0Hi/3sEU+cWnZpSni0O6/Yb/P0=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
+github.com/go-dragon/erro v0.0.2 h1:67C1hNLkSVe/zVeHx4us0dJz7YYiXBUD6k+D2fX7RMY=
+github.com/go-dragon/erro v0.0.2/go.mod h1:3yP4vVpOmws0/mSOHLkzIRFuO4YOnArN3mbkejCoMjY=
 github.com/go-dragon/util v0.0.0-20191209064153-250d1587f3e3 h1:qRw66ua2qqhXP+VpJju9rJ7Y1QaLUb/m+xDeSY2lmqY=
 github.com/go-dragon/util v0.0.0-20191209064153-250d1587f3e3/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
 github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd h1:6KtENF0ikNhslcYFoPMC0EM01ATd5kdWqWC7ahtkyCU=

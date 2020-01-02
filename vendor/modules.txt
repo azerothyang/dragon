@@ -1,3 +1,5 @@
+# github.com/go-dragon/erro v0.0.2
+github.com/go-dragon/erro
 # github.com/go-dragon/util v0.0.0-20191218092728-1bd521b0fe2c
 github.com/go-dragon/util
 # github.com/go-dragon/validator v0.0.0-20191218131217-6e0c96b35e83

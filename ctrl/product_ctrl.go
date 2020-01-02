@@ -1,9 +1,11 @@
 package ctrl
 
 import (
+	"dragon/core/dragon/dlogger"
 	"dragon/dto"
 	"dragon/model"
 	"fmt"
+	"github.com/go-dragon/erro"
 	"github.com/go-dragon/validator"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -39,6 +41,8 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	productInfo, err := ProductModel.GetOne(&product,
 		conditions, "product_name,create_time", "")
 	if err != nil {
+		// new client失败
+		dlogger.Error(erro.NewError(err))
 		output := Output{
 			Code: http.StatusBadRequest,
 			Msg:  http.StatusText(http.StatusBadRequest),
