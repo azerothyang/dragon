@@ -46,13 +46,15 @@ type ConfS struct {
 }
 
 var (
-	Conf ConfS
-	Env  = "dev"
+	Conf    ConfS
+	Env     = "dev"
+	ExecDir = "" // current exec file path
 )
 
 //init config
 func InitConf() {
 	dir, err := GetCurrentPath()
+	ExecDir = dir
 	if err != nil {
 		log.Fatal(err)
 	}
