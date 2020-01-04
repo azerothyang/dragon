@@ -16,7 +16,6 @@
 # components 
 1. [httprouter](https://github.com/julienschmidt/httprouter). HttpRouter is a lightweight high performance HTTP request router.
 2. [GORM](https://github.com/jinzhu/gorm). The fantastic ORM library for Golang, aims to be developer friendly.
-3. [zap](https://github.com/uber-go/zap). Blazing fast, structured, leveled logging in Go.
 
 # start dragon
  dragon is mvc go framework. So you can hack with controller and model. 
