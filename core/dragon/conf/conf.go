@@ -72,6 +72,10 @@ func InitConf() {
 	}
 
 	Env = string(envb)
+	// check Env != dev,prod,test
+	if (Env != "dev") && (Env != "test") && (Env != "prod") {
+		panic("environment variable DRAGON can only be dev,test or prod")
+	}
 	var config []byte
 	config, err = ioutil.ReadFile(dir + FmtSlash("conf/"+Env+".yml"))
 	//check env DRAGON or release/.env

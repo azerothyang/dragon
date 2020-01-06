@@ -105,5 +105,5 @@
 
  ```
 
-app will read DRAGON env first to check production,dev or test mode
+app will read DRAGON env first to check prod,dev or test mode
 
