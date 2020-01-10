@@ -28,6 +28,8 @@ github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd h1:6KtENF0ikNhslcYF
 github.com/go-dragon/util v0.0.0-20191210075826-0b860e91e7fd/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
 github.com/go-dragon/util v0.0.0-20191218092728-1bd521b0fe2c h1:8BdQlau0mMgwrf5hbAk8lETW2dFShAvoXuyMscmFXu4=
 github.com/go-dragon/util v0.0.0-20191218092728-1bd521b0fe2c/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
+github.com/go-dragon/util v0.0.1 h1:wE1ziktrHDTPZekpTkQd4dO17FU/fZblAh7Tb1uRplA=
+github.com/go-dragon/util v0.0.1/go.mod h1:QVYzyOrcMLQvz8K0LmMf9Xi0fNDChuw3UjxvhF/dlQc=
 github.com/go-dragon/validator v0.0.0-20191218131217-6e0c96b35e83 h1:g85tOExdmix7ABsAkGcolqhnoO8mBpd1Tg7rWBBWf2g=
 github.com/go-dragon/validator v0.0.0-20191218131217-6e0c96b35e83/go.mod h1:5N5hSsg9VjoOIWhbm/ixuKqsZN/fT2tpu5pNYbrRx24=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
