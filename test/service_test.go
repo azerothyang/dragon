@@ -9,11 +9,12 @@ import (
 
 // test GET
 func TestGET(t *testing.T) {
-	res := service.GET("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
+	srv := &service.Service{}
+	res := srv.GET("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	}, "")
+	}, nil)
 
 	if res.Err != nil {
 		log.Println(res.Err)
@@ -24,11 +25,12 @@ func TestGET(t *testing.T) {
 
 // test POST
 func TestPOST(t *testing.T) {
-	res := service.POST("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
+	srv := &service.Service{}
+	res := srv.POST("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	}, "")
+	}, nil)
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
@@ -37,11 +39,12 @@ func TestPOST(t *testing.T) {
 }
 
 func TestPUT(t *testing.T) {
-	res := service.PUT("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
+	srv := &service.Service{}
+	res := srv.PUT("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	}, "")
+	}, nil)
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
@@ -50,11 +53,12 @@ func TestPUT(t *testing.T) {
 }
 
 func TestPATCH(t *testing.T) {
-	res := service.PATCH("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
+	srv := &service.Service{}
+	res := srv.PATCH("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	}, "")
+	}, nil)
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
@@ -63,11 +67,12 @@ func TestPATCH(t *testing.T) {
 }
 
 func TestDELETE(t *testing.T) {
-	res := service.DELETE("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
+	srv := &service.Service{}
+	res := srv.DELETE("http://talent.qh-1.cn/pc/service/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
-	}, "")
+	}, nil)
 	if res.Err != nil {
 		log.Println(res.Err)
 	}
