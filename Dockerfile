@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:centos7.6.1810
 LABEL maintainer = "holmescheng"
 ENV PROJECT_DIR ./release/
 ENV BINARY_NAME linux_linux
