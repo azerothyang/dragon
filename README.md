@@ -63,6 +63,16 @@
  __config__:
 > dragon/release/conf/  
 
+# set ide env
+if you use goland ide, can set
+```
+Output directory: <project_dir>/release
+Working directory: <project_dir>/release
+```
+>Because default dragon exec file is output in release dir, so the dirs are resolved according to release dir.
+
+>After that, feel free to run your app and start hacking :)
+
 # ab performance
  ``` 
  cpu: 1 core, ram: 1 G
