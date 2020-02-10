@@ -18,7 +18,6 @@ func main() {
 
 	// init pprof
 	// check if pprof is enabled, then listen port
-
 	if conf.Conf.Server.Pprof.Enabled {
 		go func() {
 			err := http.ListenAndServe(conf.Conf.Server.Pprof.Host+":"+conf.Conf.Server.Pprof.Port, nil)
