@@ -15,8 +15,13 @@ import (
 //config struct
 type ConfS struct {
 	Server struct {
-		Host string
-		Port string
+		Host  string
+		Port  string
+		Pprof struct {
+			Enabled bool
+			Host   string
+			Port   string
+		}
 	}
 	Database struct {
 		Mysql struct {

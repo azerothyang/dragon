@@ -7,11 +7,27 @@ import (
 	"dragon/middleware"
 	"dragon/model"
 	"dragon/router"
+	"log"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 func main() {
 	//init config
 	conf.InitConf()
+
+	// init pprof
+	// check if pprof is enabled, then listen port
+
+	if conf.Conf.Server.Pprof.Enabled {
+		go func() {
+			err := http.ListenAndServe(conf.Conf.Server.Pprof.Host+":"+conf.Conf.Server.Pprof.Port, nil)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}()
+	}
+
 
 	//init dragon
 	dr := dragon.New()
