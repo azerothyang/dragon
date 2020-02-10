@@ -2,7 +2,7 @@ server:
   host:
   port: 1130
   pprof:
-    enabled: true
+    enabled: false
     host:
     port: 8080
 database:
