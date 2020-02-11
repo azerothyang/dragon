@@ -27,7 +27,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	})
 	if v.HasErr {
 		p.Json(&Output{
-			Code: http.StatusOK,
+			Code: http.StatusBadRequest,
 			Msg:  "",
 			Data: v.ErrList,
 		})
