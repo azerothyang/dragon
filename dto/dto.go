@@ -4,13 +4,8 @@ import (
 	"github.com/go-dragon/util"
 )
 
-// 单个信息输出格式
-type Data map[string]interface{}
-
-// 输出列表
-type ListData []Data
-
-func TStructToData(obj interface{}, keys []string) Data {
+// 根据结构体的json标签将结构体转为map
+func TStructToData(obj interface{}, keys []string) map[string]interface{} {
 	res := util.StructJsonTagToMap(obj)
 	return util.OnlyColumns(keys, res)
 }
