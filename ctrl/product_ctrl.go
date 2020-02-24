@@ -1,13 +1,18 @@
 package ctrl
 
 import (
+	"context"
 	"dragon/core/dragon/dlogger"
 	"dragon/dto"
 	"dragon/model"
+	"dragon/tools/dmongo"
+	"encoding/hex"
 	"fmt"
 	"github.com/go-dragon/erro"
 	"github.com/go-dragon/validator"
 	"github.com/julienschmidt/httprouter"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
 
@@ -20,7 +25,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 	// 初始化req
 	(&p).InitReqAndResp(req, resp)
 	reqData := p.GetRequestParams()
-	fmt.Println(reqData)
+	fmt.Println("reqData", reqData)
 	v := validator.New()
 	v.Validate(&reqData, validator.Rules{
 		"test": "notEmpty",
@@ -33,6 +38,17 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		})
 		return
 	}
+	// mongodb example
+	mongoRes, err := dmongo.DefaultDB().Collection("c_device_log").InsertOne(context.Background(), bson.M{
+		"device_name": "golang",
+	})
+	if err != nil {
+		fmt.Println("mongoErr", err)
+	}
+	objectId := mongoRes.InsertedID.(primitive.ObjectID)
+	fmt.Println("mongoRes", hex.EncodeToString(objectId[:]))
+
+	// mysql example
 	var product model.TProduct
 	var conditions = []map[string]interface{}{
 		{"product_id = ?": 1},

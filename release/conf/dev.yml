@@ -2,7 +2,7 @@ server:
   host:
   port: 1130
   pprof:
-    enabled: false
+    enabled: true
     host:
     port: 8080
 database:
@@ -23,6 +23,13 @@ database:
     auth: dragon
     timeout: 3000 #redis dial timeout per millisecond. int type
     db: 0
+  mongodb:
+    host: 127.0.0.1
+    port: 27017
+    username: dragon
+    password: dragon
+    database: dragon
+    timeout: 3 # timeout second
 log:
-  dir: log # don't end with /
+  dir: log # don't end with / , !!! release is root dir
 

@@ -19,8 +19,8 @@ type ConfS struct {
 		Port  string
 		Pprof struct {
 			Enabled bool
-			Host   string
-			Port   string
+			Host    string
+			Port    string
 		}
 	}
 	Database struct {
@@ -43,6 +43,14 @@ type ConfS struct {
 			Auth    string
 			Timeout string
 			Db      int
+		}
+		Mongodb struct {
+			Host     string
+			Port     string
+			Username string
+			Password string
+			Database string
+			Timeout  uint8
 		}
 	}
 	Log struct {

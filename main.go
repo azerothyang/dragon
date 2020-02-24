@@ -7,6 +7,7 @@ import (
 	"dragon/middleware"
 	"dragon/model"
 	"dragon/router"
+	"dragon/tools/dmongo"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
@@ -27,7 +28,6 @@ func main() {
 		}()
 	}
 
-
 	//init dragon
 	dr := dragon.New()
 
@@ -39,6 +39,9 @@ func main() {
 
 	//init redis
 	dredis.InitRedis()
+
+	// init mongodb
+	dmongo.InitDB()
 
 	//dragon fly
 	dr.Fly()
