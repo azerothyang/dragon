@@ -22,6 +22,15 @@ type Product struct {
 }
 
 func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+
+	// redis ZRangeByScoreWithScores
+	//orders, err := dredis.Redis.ZRangeByScoreWithScores("order", redis.ZRangeBy{
+	//	Min:    "0",
+	//	Max:    "10",
+	//	Offset: 0,
+	//	Count:  3,
+	//}).Result()
+	//fmt.Println(err, orders)
 	// 初始化req
 	(&p).InitReqAndResp(req, resp)
 	reqData := p.GetRequestParams()
