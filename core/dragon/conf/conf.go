@@ -77,6 +77,11 @@ func InitConf() {
 	env := os.Getenv("DRAGON")
 	if env == "" {
 		envb, err = ioutil.ReadFile(dir + FmtSlash("conf/.env"))
+
+		// check last char is LF (\n)
+		if envb[len(envb)-1] == 10 {
+			envb = envb[:len(envb)-1]
+		}
 	} else {
 		envb = []byte(env)
 	}
