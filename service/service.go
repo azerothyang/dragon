@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	url2 "net/url"
 	"strings"
 )
 
@@ -54,7 +55,7 @@ func (s *Service) send(url string, params map[string]string, method string, head
 
 	paramsStr := ""
 	for k, v := range params {
-		paramsStr += k + "=" + v + "&"
+		paramsStr += k + "=" + url2.QueryEscape(v) + "&"
 	}
 	if paramsStr != "" {
 		paramsStr = paramsStr[:len(paramsStr)-1]
