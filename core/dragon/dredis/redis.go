@@ -26,5 +26,7 @@ func InitRedis() {
 		ReadTimeout:  time.Duration(timeout) * time.Millisecond,
 		WriteTimeout: time.Duration(timeout) * time.Millisecond,
 		DialTimeout:  time.Duration(timeout) * time.Millisecond,
+		PoolSize:     300,
+		MinIdleConns: 50,
 	})
 }
