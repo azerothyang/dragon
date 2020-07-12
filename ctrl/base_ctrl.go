@@ -88,8 +88,9 @@ func (ctrl Ctrl) BindRequestJsonToStruct(data interface{}) error {
 	return nil
 }
 
+// statusCode with httpStatus code
 //return with json
-func (ctrl Ctrl) Json(data *Output) {
+func (ctrl Ctrl) Json(data *Output, statusCode int) {
 	resp := ctrl.resp
 	resp.Header().Set("content-type", "application/json; charset=utf-8")
 	resp.Header().Set("x-server", "dragon")
@@ -118,6 +119,7 @@ func (ctrl Ctrl) Json(data *Output) {
 		return
 	}
 	// trackMan data log
+	resp.WriteHeader(statusCode)
 	trackMan.Resp.Data = string(js)
 
 	// output

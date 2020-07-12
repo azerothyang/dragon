@@ -44,7 +44,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 			Code: http.StatusBadRequest,
 			Msg:  "",
 			Data: v.ErrList,
-		})
+		}, http.StatusBadRequest)
 		return
 	}
 	// mongodb example
@@ -73,7 +73,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 			Msg:  http.StatusText(http.StatusBadRequest),
 			Data: err,
 		}
-		p.Json(&output)
+		p.Json(&output, http.StatusInternalServerError)
 		return
 	}
 
@@ -83,7 +83,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 			Code: http.StatusOK,
 			Msg:  http.StatusText(http.StatusOK),
 		}
-		p.Json(&output)
+		p.Json(&output, http.StatusOK)
 		return
 	}
 
@@ -94,6 +94,6 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		Msg:  "ok",
 		Data: res,
 	}
-	p.Json(&output)
+	p.Json(&output, http.StatusOK)
 	return
 }
