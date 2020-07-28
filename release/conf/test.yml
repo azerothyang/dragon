@@ -30,5 +30,7 @@ database:
     password: dragon
     database: dragon
     timeout: 3 # timeout second
+kafka:
+  broker: 127.0.0.1:9092
 log:
   dir: log # don't end with /

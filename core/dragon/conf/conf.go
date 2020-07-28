@@ -53,6 +53,9 @@ type ConfS struct {
 			Timeout  uint8
 		}
 	}
+	Kafka struct {
+		Broker string
+	}
 	Log struct {
 		Dir string
 	}
