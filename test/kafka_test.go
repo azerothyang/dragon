@@ -12,7 +12,7 @@ import (
 // test produce
 func TestProduce(t *testing.T) {
 	conf.InitConf()
-	err := kafka.Produce("test", "hello kafka~")
+	err := kafka.Produce("test", "hello kafka~", "hello key")
 	log.Println("kafka.Produce err", err)
 }
 

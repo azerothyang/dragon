@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// produce content
-func Produce(topic string, content string) error {
+// produce content, if key = "" then kafka key is nil
+func Produce(topic string, content string, key string) error {
 	// to produce messages
 	partition := 0
 
@@ -17,8 +17,14 @@ func Produce(topic string, content string) error {
 		conn.Close()
 	}()
 	conn.SetWriteDeadline(time.Now().Add(3 * time.Second))
+	msg := kafka.Message{
+		Value: []byte(content),
+	}
+	if key != "" {
+		msg.Key = []byte(key)
+	}
 	_, err := conn.WriteMessages(
-		kafka.Message{Value: []byte(content)},
+		msg,
 	)
 	return err
 }
