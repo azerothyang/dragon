@@ -17,9 +17,10 @@ func TestProduce(t *testing.T) {
 
 // test Consumer
 func TestConsume(t *testing.T) {
-	// todo 本地业务处理时要注意记录offset,下次启动从offset开始
+	// todo 本地业务处理时要注意固化记录offset,下次启动从offset开始
 	conf.InitConf()
-	r := kafka.GetConsumerConn("test", 25)
+	var offset int64 = 25
+	r := kafka.GetConsumerConn("test", offset)
 	for {
 		m, err := r.ReadMessage(context.Background())
 		log.Println(22222)
@@ -28,6 +29,7 @@ func TestConsume(t *testing.T) {
 			continue
 		}
 		fmt.Printf("message at topic/partition/offset %v/%v/%v: %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
+		offset = m.Offset
 	}
 
 	r.Close()
