@@ -21,6 +21,9 @@ func TestConsume(t *testing.T) {
 	conf.InitConf()
 	var offset int64 = 25
 	r := kafka.GetConsumerConn("test", offset)
+	defer func() {
+		r.Close()
+	}()
 	for {
 		m, err := r.ReadMessage(context.Background())
 		log.Println(22222)
@@ -31,6 +34,4 @@ func TestConsume(t *testing.T) {
 		fmt.Printf("message at topic/partition/offset %v/%v/%v: %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
 		offset = m.Offset
 	}
-
-	r.Close()
 }
