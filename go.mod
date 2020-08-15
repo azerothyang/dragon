@@ -11,6 +11,7 @@ require (
 	github.com/jinzhu/gorm v1.9.11
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/segmentio/kafka-go v0.3.7
+	github.com/smartwalle/alipay/v3 v3.1.3 // indirect
 	go.mongodb.org/mongo-driver v1.3.0
 	gopkg.in/yaml.v2 v2.2.2
 )
