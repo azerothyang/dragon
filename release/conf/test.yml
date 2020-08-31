@@ -15,8 +15,8 @@ database:
       database: dragon
       charset: utf8mb4,utf8
       timeout: 3s  #connect timeout time
-      maxIdle: 20  #maxIdle connections, db will at least serve 20 idle connections; if you set 0, that means no limit。
-      maxConn: 100  #maxConn connections, db will have 40 connections limit; if you set 0, that means no limit。
+      maxidle: 20  #maxIdle connections, db will at least serve 20 idle connections; if you set 0, that means no limit。
+      maxconn: 100  #maxConn connections, db will have 40 connections limit; if you set 0, that means no limit。
   redis:
     host: 127.0.0.1
     port: 6379
@@ -34,3 +34,5 @@ kafka:
   broker: 127.0.0.1:9092
 log:
   dir: log # don't end with /
+
+# this config key only use lower letter 此配置的key都强制使用全部小写

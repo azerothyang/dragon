@@ -33,8 +33,8 @@ type ConfS struct {
 				Database string
 				Charset  string
 				Timeout  string
-				MaxIdle  int
-				MaxConn  int
+				Maxidle  int
+				Maxconn  int
 			}
 		}
 		Redis struct {

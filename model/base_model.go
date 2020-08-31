@@ -199,8 +199,8 @@ func InitDB() {
 		log.Fatalln(err)
 	}
 
-	db.DB().SetMaxIdleConns(conf.Conf.Database.Mysql.Master.MaxIdle)
-	db.DB().SetMaxOpenConns(conf.Conf.Database.Mysql.Master.MaxConn)
+	db.DB().SetMaxIdleConns(conf.Conf.Database.Mysql.Master.Maxidle)
+	db.DB().SetMaxOpenConns(conf.Conf.Database.Mysql.Master.Maxconn)
 
 	//如果是debug模式则开启彩色sql调试模式, 否则为文本模式
 	db.LogMode(true)
