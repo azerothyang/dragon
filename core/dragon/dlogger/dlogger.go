@@ -12,6 +12,10 @@ import (
 
 // write log
 func writeLog(data interface{}, level string) {
+	if data == nil {
+		// 如果data为空，不进行打印
+		return
+	}
 	// 根据data类型删除json或者字符串
 	now := time.Now()
 	datetime := now.Format("2006-01-02 15:04:05")
