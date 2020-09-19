@@ -3,15 +3,20 @@ package model
 import (
 	"dragon/core/dragon/conf"
 	"dragon/core/dragon/dlogger"
+	"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql" //导入mysql驱动
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/mysql" //导入mysql驱动
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
+	"os"
+	"regexp"
 	"sync"
+	"time"
 )
 
 var (
-	db *gorm.DB //master db
+	gormDB *gorm.DB //master db
 )
 
 const (
@@ -55,24 +60,24 @@ type BaseModel struct {
 
 // 新增
 func (b BaseModel) Add(data interface{}) error {
-	return db.Create(data).Error
+	return gormDB.Create(data).Error
 }
 
 // 软删除通过条件
 func (b BaseModel) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (err error) {
-	queryDb := db.Table(b.TableName)
+	queryDb := gormDB.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
-	res := db.Update(field, val)
+	res := gormDB.Update(field, val)
 	return res.Error
 }
 
 // 真删除
 func (b BaseModel) Delete(conditions []map[string]interface{}, model interface{}) (err error) {
-	queryDb := db
+	queryDb := gormDB
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
@@ -84,7 +89,7 @@ func (b BaseModel) Delete(conditions []map[string]interface{}, model interface{}
 
 // 更新通过条件
 func (b BaseModel) Updates(conditions []map[string]interface{}, data interface{}) (err error) {
-	queryDb := db.Table(b.TableName)
+	queryDb := gormDB.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
@@ -96,7 +101,7 @@ func (b BaseModel) Updates(conditions []map[string]interface{}, data interface{}
 
 // 获取列表, limit=-1 拉取全部
 func (b BaseModel) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, err error) {
-	queryDb := db.Select(cols)
+	queryDb := gormDB.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
@@ -121,7 +126,7 @@ func (b BaseModel) GetList(list interface{}, conditions []map[string]interface{}
 
 // 获取单个信息
 func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (resData interface{}, err error) {
-	queryDb := db.Select(cols)
+	queryDb := gormDB.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
@@ -129,8 +134,8 @@ func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{},
 	}
 	// orderBy空字符，则无需加入Order条件
 	if orderBy == "" {
-		res := queryDb.Find(data)
-		if res.Error == gorm.ErrRecordNotFound {
+		res := queryDb.First(data)
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
 			return nil, nil
 		}
@@ -147,7 +152,7 @@ func (b BaseModel) GetOne(data interface{}, conditions []map[string]interface{},
 
 // 获取总数
 func (b BaseModel) GetCount(conditions []map[string]interface{}) (count int64, err error) {
-	queryDb := db.Table(b.TableName)
+	queryDb := gormDB.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
@@ -178,34 +183,79 @@ func (b BaseModel) GetListAndCount(list interface{}, conditions []map[string]int
 type Logger struct {
 }
 
-func (Logger) Print(values ...interface{}) {
-	// todo 更好的日志打印方案
-	logInfo := fmt.Sprint(values)
-	dlogger.Info(logInfo)
+func (l Logger) Write(p []byte) (n int, err error) {
+	// 日志打印
+	str := string(p)
+	res, _ := regexp.MatchString("Error", str)
+	// if sql error
+	if res {
+		dlogger.SqlError(str)
+	} else {
+		dlogger.SqlInfo(string(p))
+	}
+	return len(p), nil
 }
 
 //init db
 func InitDB() {
 	var err error
 	var dsnMaster string
+	var logHandler logger.Interface
+	if conf.Env == "dev" {
+		logHandler = logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
+			SlowThreshold: 100 * time.Millisecond,
+			Colorful:      true,
+			LogLevel:      logger.Info,
+		})
+	} else {
+		// other env write log
+		logHandler = logger.New(log.New(Logger{}, "\r\n", log.LstdFlags), logger.Config{
+			SlowThreshold: 100 * time.Millisecond,
+			Colorful:      false,
+			LogLevel:      logger.Info,
+		})
+	}
 
 	//mysql master
 	dsnMaster = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&timeout=%s&loc=Local", //loc set the timezone
 		conf.Conf.Database.Mysql.Master.User, conf.Conf.Database.Mysql.Master.Password, conf.Conf.Database.Mysql.Master.Host, conf.Conf.Database.Mysql.Master.Port, conf.Conf.Database.Mysql.Master.Database, conf.Conf.Database.Mysql.Master.Charset, conf.Conf.Database.Mysql.Master.Timeout)
 
 	//gorm realizes mysql reconnect
-	db, err = gorm.Open("mysql", dsnMaster)
+	gormDB, err = gorm.Open(mysql.New(mysql.Config{
+		DriverName:                "mysql",
+		DSN:                       dsnMaster,
+		Conn:                      nil,
+		SkipInitializeWithVersion: false,
+		DefaultStringSize:         0,
+		DisableDatetimePrecision:  false,
+		DontSupportRenameIndex:    false,
+		DontSupportRenameColumn:   false,
+	}), &gorm.Config{
+		SkipDefaultTransaction:                   true,
+		NamingStrategy:                           nil,
+		Logger:                                   logHandler,
+		NowFunc:                                  nil,
+		DryRun:                                   false,
+		PrepareStmt:                              false,
+		DisableAutomaticPing:                     false,
+		DisableForeignKeyConstraintWhenMigrating: false,
+		AllowGlobalUpdate:                        false,
+		ClauseBuilders:                           nil,
+		ConnPool:                                 nil,
+		Dialector:                                nil,
+		Plugins:                                  nil,
+	})
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	db.DB().SetMaxIdleConns(conf.Conf.Database.Mysql.Master.Maxidle)
-	db.DB().SetMaxOpenConns(conf.Conf.Database.Mysql.Master.Maxconn)
-
-	//如果是debug模式则开启彩色sql调试模式, 否则为文本模式
-	db.LogMode(true)
-	logger := Logger{}
-	if conf.Env != "dev" {
-		db.SetLogger(logger)
+	sqlDb, err := gormDB.DB()
+	if err != nil {
+		log.Fatalln(err)
 	}
+	log.Println("mysql maxIdle conns:", conf.Conf.Database.Mysql.Master.Maxidle)
+	log.Println("mysql maxOpenConn conns:", conf.Conf.Database.Mysql.Master.Maxconn)
+	sqlDb.SetMaxIdleConns(conf.Conf.Database.Mysql.Master.Maxidle)
+	sqlDb.SetMaxOpenConns(conf.Conf.Database.Mysql.Master.Maxconn)
+	// SetConnMaxLifetime 设置了连接可复用的最大时间。
+	//sqlDb.SetConnMaxLifetime(time.Hour * 1)
 }

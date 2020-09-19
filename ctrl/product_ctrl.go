@@ -1,18 +1,13 @@
 package ctrl
 
 import (
-	"context"
 	"dragon/core/dragon/dlogger"
 	"dragon/dto"
 	"dragon/model"
-	"dragon/tools/dmongo"
-	"encoding/hex"
 	"fmt"
 	"github.com/go-dragon/erro"
 	"github.com/go-dragon/validator"
 	"github.com/julienschmidt/httprouter"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
 
@@ -48,14 +43,14 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		return
 	}
 	// mongodb example
-	mongoRes, err := dmongo.DefaultDB().Collection("c_device_log").InsertOne(context.Background(), bson.M{
-		"device_name": "golang",
-	})
-	if err != nil {
-		fmt.Println("mongoErr", err)
-	}
-	objectId := mongoRes.InsertedID.(primitive.ObjectID)
-	fmt.Println("mongoRes", hex.EncodeToString(objectId[:]))
+	//mongoRes, err := dmongo.DefaultDB().Collection("c_device_log").InsertOne(context.Background(), bson.M{
+	//	"device_name": "golang",
+	//})
+	//if err != nil {
+	//	fmt.Println("mongoErr", err)
+	//}
+	//objectId := mongoRes.InsertedID.(primitive.ObjectID)
+	//fmt.Println("mongoRes", hex.EncodeToString(objectId[:]))
 
 	// mysql example
 	var product model.TProduct
@@ -64,7 +59,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 		//{"create_time <= ?": "2019-08-01"},
 	}
 	productInfo, err := ProductModel.GetOne(&product,
-		conditions, "product_name,create_time", "")
+		conditions, "product_id,product_name,create_time", "")
 	if err != nil {
 		// new client失败
 		dlogger.Error(erro.NewError(err))

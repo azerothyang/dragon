@@ -11,7 +11,7 @@ type ProductModel struct {
 }
 
 type TProduct struct {
-	ProductId     int64  `gorm:"primary_key;AUTO_INCREMENT" json:"product_id"`
+	ProductId     int64  `gorm:"primaryKey;AUTO_INCREMENT" json:"product_id"`
 	ProductCode   string `json:"product_code"`
 	ProductName   string `json:"product_name"`
 	BrandCode     string `json:"brand_code"`

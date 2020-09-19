@@ -56,3 +56,11 @@ func Warn(data interface{}) {
 func Error(data interface{}) {
 	writeLog(data, "error")
 }
+
+func SqlInfo(data interface{}) {
+	writeLog(data, "sql")
+}
+
+func SqlError(data interface{}) {
+	writeLog(data, "sql.error")
+}
