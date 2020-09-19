@@ -181,19 +181,19 @@ func (b BaseModel) GetListAndCount(list interface{}, conditions []map[string]int
 
 // sql logger
 type Logger struct {
+	logger.Writer
 }
 
-func (l Logger) Write(p []byte) (n int, err error) {
+func (l Logger) Printf(s string, i ...interface{}) {
+	s = fmt.Sprintf(s, i...)
 	// 日志打印
-	str := string(p)
-	res, _ := regexp.MatchString("Error", str)
+	res, _ := regexp.MatchString("Error", s)
 	// if sql error
 	if res {
-		dlogger.SqlError(str)
+		dlogger.SqlError(s)
 	} else {
-		dlogger.SqlInfo(string(p))
+		dlogger.SqlInfo(s)
 	}
-	return len(p), nil
 }
 
 //init db
@@ -209,7 +209,7 @@ func InitDB() {
 		})
 	} else {
 		// other env write log
-		logHandler = logger.New(log.New(Logger{}, "\r\n", log.LstdFlags), logger.Config{
+		logHandler = logger.New(Logger{}, logger.Config{
 			SlowThreshold: 100 * time.Millisecond,
 			Colorful:      false,
 			LogLevel:      logger.Info,
