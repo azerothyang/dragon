@@ -12,7 +12,8 @@ func TestPublish(t *testing.T) {
 	mq := rabbitmq.New("amqp://guest:guest@127.0.0.1:5672/", "testgo")
 	msg := "hello testgo " + util.RandomStr(4)
 	log.Println("发送信息:", msg)
-	mq.Publish(msg)
+	ch , _ := mq.Publish(msg)
+	log.Println("消息发布结果:", (<-ch).Ack)
 }
 
 // test produce
@@ -23,9 +24,7 @@ func TestGetConsumer(t *testing.T) {
 		log.Fatal(err)
 	}
 	for msg := range consumer {
-		log.Println("msg",string(msg.Body))
+		log.Println("msg", string(msg.Body))
 		msg.Ack(false)
 	}
 }
-
-

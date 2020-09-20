@@ -30,6 +30,12 @@ func New(dsn string, queueName string) *Rabbit {
 		log.Fatal(err)
 	}
 
+	// default publish msg with confirm
+	err = ch.Confirm(false)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// queue
 	q, err := ch.QueueDeclare(
 		queueName,
@@ -59,13 +65,16 @@ func (r *Rabbit) Close() {
 }
 
 // Publish
-func (r *Rabbit) Publish(body string) error {
+func (r *Rabbit) Publish(body string) (<-chan amqp.Confirmation, error) {
+	confirmCh := make(chan amqp.Confirmation, 1)
+	r.Channel.NotifyPublish(confirmCh)
+
 	err := r.Channel.Publish("", r.QueueName, false, false, amqp.Publishing{
 		ContentType:  "text/plain",
 		DeliveryMode: amqp.Persistent,
 		Body:         []byte(body),
 	})
-	return err
+	return confirmCh, err
 }
 
 // Consumer, msg need to ack
