@@ -236,7 +236,7 @@ func InitDB() {
 		Logger:                                   logHandler,
 		NowFunc:                                  nil,
 		DryRun:                                   false,
-		PrepareStmt:                              false,
+		PrepareStmt:                              true,
 		DisableAutomaticPing:                     false,
 		DisableForeignKeyConstraintWhenMigrating: false,
 		AllowGlobalUpdate:                        false,
@@ -256,6 +256,6 @@ func InitDB() {
 	log.Println("mysql maxOpenConn conns:", conf.Conf.Database.Mysql.Master.Maxconn)
 	sqlDb.SetMaxIdleConns(conf.Conf.Database.Mysql.Master.Maxidle)
 	sqlDb.SetMaxOpenConns(conf.Conf.Database.Mysql.Master.Maxconn)
-	// SetConnMaxLifetime 设置了连接可复用的最大时间。
-	//sqlDb.SetConnMaxLifetime(time.Hour * 1)
+	sqlDb.SetConnMaxIdleTime(time.Hour)
+	sqlDb.SetConnMaxLifetime(24 * time.Hour)
 }
