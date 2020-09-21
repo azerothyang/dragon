@@ -14,6 +14,7 @@ func TestPublish(t *testing.T) {
 	log.Println("发送信息:", msg)
 	ch , _ := mq.Publish(msg)
 	log.Println("消息发布结果:", (<-ch).Ack)
+	close(ch)
 }
 
 // test produce
