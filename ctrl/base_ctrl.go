@@ -3,20 +3,12 @@ package ctrl
 import (
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
-	"dragon/model"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
-)
-
-var (
-	//商品模型
-	ProductModel = model.ProductModel{
-		BaseModel: model.BaseModel{TableName: model.TProduct{}.TableName()}, // 传入表名
-	}
 )
 
 // output struct

@@ -5,7 +5,7 @@ import (
 	"dragon/core/dragon/conf"
 	"dragon/core/dragon/dredis"
 	"dragon/middleware"
-	"dragon/model"
+	"dragon/repository"
 	"dragon/router"
 	"dragon/tools/dmongo"
 	"log"
@@ -35,7 +35,7 @@ func main() {
 	dr.InitRoute(middleware.LogInfo(router.Routes))
 
 	//init db
-	model.InitDB()
+	repository.InitDB()
 
 	//init redis
 	dredis.InitRedis()

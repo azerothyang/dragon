@@ -19,14 +19,14 @@ type Tracker struct {
 		Header http.Header `json:"header"`
 		Data   string      `json:"data"`
 	} `json:"resp"`
-	Service struct {
+	HttpClient struct {
 		Req struct {
 			Uri  string `json:"uri"`
 			Body string `json:"body"`
 		} `json:"req"`
 		//Req *http.Request `json:"req"`
 		Resp string `json:"resp"`
-	} `json:"service"`
+	} `json:"httpclient"`
 	StartTime time.Time   `json:"start_time"`
 	CostTime  string      `json:"cost_time"`
 	Error     interface{} `json:"error"`

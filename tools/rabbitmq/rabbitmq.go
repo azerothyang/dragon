@@ -66,7 +66,7 @@ func (r *Rabbit) Close() {
 
 // Publish
 func (r *Rabbit) Publish(body string) (chan amqp.Confirmation, error) {
-	confirmCh := make(chan amqp.Confirmation, 1)
+	confirmCh := make(chan amqp.Confirmation)
 	r.Channel.NotifyPublish(confirmCh)
 
 	err := r.Channel.Publish("", r.QueueName, false, false, amqp.Publishing{
