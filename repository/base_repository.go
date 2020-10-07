@@ -42,6 +42,7 @@ func NewDefaultTx() *gorm.DB {
 		PrepareStmt:            true,
 		WithConditions:         true,
 		SkipDefaultTransaction: true,
+		Context: GormDB.Statement.Context,
 	})
 }
 
