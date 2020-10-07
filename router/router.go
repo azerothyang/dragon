@@ -4,6 +4,7 @@ package router
  * @link https://github.com/julienschmidt/httprouter
  */
 import (
+	"dragon/core/dragon"
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
 	"dragon/ctrl"
@@ -26,7 +27,7 @@ func init() {
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
 	// -----------------------------商品相关-----------------------------
-	Routes.GET("/test", productCtrl.Test)
+	Routes.GET("/test", dragon.WrapController(productCtrl.Test))
 	// -----------------------------商品相关-----------------------------
 }
 
