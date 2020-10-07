@@ -2,6 +2,7 @@ package test
 
 import (
 	"dragon/tools"
+	"fmt"
 	"log"
 	"sync"
 	"testing"
@@ -49,4 +50,13 @@ func BenchmarkFastJson(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tools.FastJson.Marshal(&data)
 	}
+}
+
+func BenchmarkFastJsonDecode(b *testing.B) {
+	data := `{"x":1, "y":"hello world"}`
+	var res map[string]interface{}
+	for i := 0; i < b.N; i++ {
+		tools.FastJson.Unmarshal([]byte(data), &res)
+	}
+	log.Println("res", fmt.Sprintf("%+v", res))
 }
