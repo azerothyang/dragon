@@ -1,6 +1,6 @@
 # github.com/go-dragon/erro v0.0.2
 ## explicit
-# github.com/go-dragon/util v0.0.2
+# github.com/go-dragon/util v0.0.3
 ## explicit
 github.com/go-dragon/util
 # github.com/go-dragon/validator v0.0.1
