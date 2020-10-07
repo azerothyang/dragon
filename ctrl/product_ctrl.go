@@ -51,7 +51,7 @@ func (p Product) Test(resp http.ResponseWriter, req *http.Request, _ httprouter.
 
 	// mysql example
 
-	res := (&service.Product{}).GetList()
+	res := (&service.ProductService{}).GetList()
 
 	//res := dto.TStructToData(product, []string{"product_id", "product_name", "create_time"})
 

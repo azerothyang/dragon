@@ -2,13 +2,14 @@ package service
 
 import (
 	"dragon/repository"
+	"fmt"
 	"log"
 )
 
-type Product struct {
+type ProductService struct {
 }
 
-func (p *Product) GetList() interface{} {
+func (p *ProductService) GetList() interface{} {
 	tx := repository.NewDefaultTx()
 	productRepo := repository.ProductRepository{BaseRepository: repository.BaseRepository{
 		TableName: repository.TProduct{}.TableName(),
@@ -19,18 +20,13 @@ func (p *Product) GetList() interface{} {
 		{"product_id = ?": 1},
 		//{"create_time <= ?": "2019-08-01"},
 	}
-	productInfo, _ := productRepo.GetOne(&product,
+	res := productRepo.GetOne(&product,
 		conditions, "product_id,product_name,create_time", "")
-	log.Println(productInfo)
-
-	var product2 repository.TProduct
-	var conditions2 = []map[string]interface{}{
-		{"product_id = ?": 2},
-		//{"create_time <= ?": "2019-08-01"},
+	if repository.HasFatalError(res) {
+		log.Fatal(res.Error)
 	}
-	productInfo2, _ := productRepo.GetOne(&product2,
-		conditions2, "product_id,product_name,create_time", "")
+	log.Println("product", fmt.Sprintf("%+v", product))
 
-	return productInfo2
+	return product
 
 }

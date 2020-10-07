@@ -42,8 +42,16 @@ func NewDefaultTx() *gorm.DB {
 		PrepareStmt:            true,
 		WithConditions:         true,
 		SkipDefaultTransaction: true,
-		Context: GormDB.Statement.Context,
+		Context:                GormDB.Statement.Context,
 	})
+}
+
+// 判断是否有致命错误，致命错误 不包含 (查询结果为空)
+func HasFatalError(res *gorm.DB) bool {
+	if res.Error != nil && (!errors.Is(res.Error, gorm.ErrRecordNotFound)) {
+		return true
+	}
+	return false
 }
 
 type BaseRepository struct {
@@ -75,68 +83,59 @@ func (b *BaseRepository) Add(data interface{}) error {
 }
 
 // 软删除通过条件
-func (b *BaseRepository) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (err error) {
+func (b *BaseRepository) SoftDelete(conditions []map[string]interface{}, field string, val interface{}) *gorm.DB {
 	queryDb := b.Tx.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
-	res := queryDb.Update(field, val)
-	return res.Error
+	return queryDb.Update(field, val)
 }
 
 // 真删除
-func (b *BaseRepository) Delete(conditions []map[string]interface{}, model interface{}) (err error) {
+func (b *BaseRepository) Delete(conditions []map[string]interface{}, model interface{}) *gorm.DB {
 	queryDb := b.Tx
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
-	res := queryDb.Delete(model)
-	return res.Error
+	return queryDb.Delete(model)
 }
 
 // 更新通过条件
-func (b *BaseRepository) Updates(conditions []map[string]interface{}, data interface{}) (err error) {
+// https://gorm.io/zh_CN/docs/update.html
+func (b *BaseRepository) Updates(conditions []map[string]interface{}, data map[string]interface{}) *gorm.DB {
 	queryDb := b.Tx.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
-	res := queryDb.Updates(data)
-	return res.Error
+	return queryDb.Updates(data)
 }
 
-// 获取列表, limit=-1 拉取全部
-func (b *BaseRepository) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, err error) {
+// 获取列表, limit=-1 拉取全部。 res返回为 可以根据
+func (b *BaseRepository) GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) *gorm.DB {
 	queryDb := b.Tx.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
-	queryDb = queryDb.Order(orderBy).Offset(offset)
+	if orderBy != "" {
+		queryDb = queryDb.Order(orderBy)
+	}
+	queryDb = queryDb.Offset(offset)
 	if limit == -1 {
-		res := queryDb.Find(list)
-		if res.Error == gorm.ErrRecordNotFound {
-			// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
-			return nil, nil
-		}
-		return list, res.Error
+		return queryDb.Find(list)
 	}
-	res := queryDb.Limit(limit).Find(list)
-	if res.Error == gorm.ErrRecordNotFound {
-		// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
-		return nil, nil
-	}
-	return list, res.Error
+	return queryDb.Limit(limit).Find(list)
 }
 
 // 获取单个信息
-func (b *BaseRepository) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (resData interface{}, err error) {
+func (b *BaseRepository) GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) *gorm.DB {
 	queryDb := b.Tx.Select(cols)
 	for _, condition := range conditions {
 		for cond, val := range condition {
@@ -145,45 +144,42 @@ func (b *BaseRepository) GetOne(data interface{}, conditions []map[string]interf
 	}
 	// orderBy空字符，则无需加入Order条件
 	if orderBy == "" {
-		res := queryDb.First(data)
-		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
-			return nil, nil
-		}
-		return data, res.Error
+		return queryDb.First(data)
 	}
 
-	res := queryDb.Order(orderBy).First(data)
-	if res.Error == gorm.ErrRecordNotFound {
-		// 如果是记录未找到，则直接返回空,而不返回错误,list也改为nil
-		return nil, nil
-	}
-	return data, res.Error
+	return queryDb.Order(orderBy).First(data)
 }
 
 // 获取总数
-func (b *BaseRepository) GetCount(conditions []map[string]interface{}) (count int64, err error) {
+func (b *BaseRepository) GetCount(conditions []map[string]interface{}) (count int64, res *gorm.DB) {
 	queryDb := b.Tx.Table(b.TableName)
 	for _, condition := range conditions {
 		for cond, val := range condition {
 			queryDb = queryDb.Where(cond, val)
 		}
 	}
-	res := queryDb.Count(&count)
-	err = res.Error
+	res = queryDb.Count(&count)
 	return
 }
 
-// 获取列表和总数
-func (b *BaseRepository) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, count int64, listErr error, countErr error) {
+// 获取列表和总数，此方法不能用于事务
+func (b *BaseRepository) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (count int64, listRes *gorm.DB, countRes *gorm.DB) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
-		resData, listErr = b.GetList(list, conditions, orderBy, offset, limit, cols)
+		repo := BaseRepository{
+			TableName: b.TableName,
+			Tx:        NewDefaultTx(),
+		}
+		listRes = repo.GetList(list, conditions, orderBy, offset, limit, cols)
 		wg.Done()
 	}()
 	go func() {
-		count, countErr = b.GetCount(conditions)
+		repo := BaseRepository{
+			TableName: b.TableName,
+			Tx:        NewDefaultTx(),
+		}
+		count, countRes = repo.GetCount(conditions)
 		wg.Done()
 	}()
 	wg.Wait()
