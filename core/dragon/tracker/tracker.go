@@ -1,7 +1,7 @@
 package tracker
 
 import (
-	"encoding/json"
+	"dragon/tools"
 	"net/http"
 	"time"
 )
@@ -33,12 +33,12 @@ type Tracker struct {
 }
 
 func (tracker *Tracker) Marshal() string {
-	m, _ := json.Marshal(tracker)
+	m, _ := tools.FastJson.Marshal(tracker)
 	return string(m)
 }
 
 func UnMarshal(s string) *Tracker {
 	track := Tracker{}
-	json.Unmarshal([]byte(s), &track)
+	tools.FastJson.Unmarshal([]byte(s), &track)
 	return &track
 }

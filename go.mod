@@ -3,10 +3,11 @@ module dragon
 go 1.15
 
 require (
-	github.com/go-dragon/erro v0.0.2
+	github.com/go-dragon/erro v0.0.2 // indirect
 	github.com/go-dragon/util v0.0.2
 	github.com/go-dragon/validator v0.0.1
 	github.com/go-redis/redis v6.15.2+incompatible
+	github.com/json-iterator/go v1.1.10
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/segmentio/kafka-go v0.3.7
 	github.com/smartwalle/alipay/v3 v3.1.3 // indirect

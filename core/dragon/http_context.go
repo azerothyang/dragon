@@ -3,7 +3,7 @@ package dragon
 import (
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
-	"encoding/json"
+	"dragon/tools"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"io/ioutil"
@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 )
+
 // HttpContextController interface
 type HttpContextController interface {
 	GetRequestParams() map[string]string
@@ -69,7 +70,7 @@ func (h *HttpContext) BindRequestJsonToStruct(data interface{}) error {
 		log.Println(err)
 		return err
 	}
-	err = json.Unmarshal(body, data)
+	err = tools.FastJson.Unmarshal(body, data)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -96,7 +97,7 @@ func (h *HttpContext) Json(data *Output, statusCode int) {
 		Output: *data,
 		SpanId: trackMan.SpanId,
 	}
-	js, err := json.Marshal(outData)
+	js, err := tools.FastJson.Marshal(outData)
 	// 生成耗时
 	trackMan.CostTime = time.Since(trackMan.StartTime).String()
 

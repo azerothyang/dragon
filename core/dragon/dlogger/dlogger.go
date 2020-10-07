@@ -2,7 +2,7 @@ package dlogger
 
 import (
 	"dragon/core/dragon/conf"
-	"encoding/json"
+	"dragon/tools"
 	"fmt"
 	"log"
 	"os"
@@ -31,7 +31,7 @@ func writeLog(data interface{}, level string) {
 	if reflect.TypeOf(data).String() == "string" {
 		logInfo = data.(string)
 	} else {
-		d, _ := json.Marshal(data)
+		d, _ := tools.FastJson.Marshal(data)
 		logInfo = string(d)
 	}
 	// todo check if safe
