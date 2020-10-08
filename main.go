@@ -2,48 +2,18 @@ package main
 
 import (
 	"dragon/core/dragon"
-	"dragon/core/dragon/conf"
-	"dragon/core/dragon/dredis"
 	"dragon/middleware"
-	"dragon/repository"
 	"dragon/router"
-	"dragon/tools/dmongo"
-	"log"
-	"net/http"
 	_ "net/http/pprof"
 )
 
 func main() {
-	//init config
-	conf.InitConf()
-
-	// init pprof
-	// check if pprof is enabled, then listen port
-	if conf.Conf.Server.Pprof.Enabled {
-		go func() {
-			err := http.ListenAndServe(conf.Conf.Server.Pprof.Host+":"+conf.Conf.Server.Pprof.Port, nil)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}()
-	}
-
+	//dragon init conf, pprof mysql, redis mongodb and so on
+	dragon.AppInit()
 	//init dragon
 	dr := dragon.New()
-
 	//init route, you can chain any middleware here :)
 	dr.InitRoute(middleware.LogInfo(router.Routes))
-
-	//init db
-	repository.InitDB()
-
-	//init redis
-	dredis.InitRedis()
-
-	// init mongodb
-	dmongo.InitDB()
-
 	//dragon fly
 	dr.Fly()
-
 }

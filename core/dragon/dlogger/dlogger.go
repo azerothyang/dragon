@@ -6,13 +6,21 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 	"time"
 )
 
+const (
+	DebugLevel    = "debug"
+	InfoLevel     = "info"
+	WarnLevel     = "warn"
+	ErrorLevel    = "error"
+	SqlInfoLevel  = "sql"
+	SqlErrorLevel = "sql.error"
+)
+
 // write log
-func writeLog(data interface{}, level string) {
-	if data == nil {
+func writeLog(level string, data ...interface{}) {
+	if data == nil || len(data) == 0 {
 		// 如果data为空，不进行打印
 		return
 	}
@@ -25,15 +33,11 @@ func writeLog(data interface{}, level string) {
 	path := conf.ExecDir + "/" + logDir + "/" + date + "." + level + ".log"
 	logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(fmt.Sprintf("error:%+v", err))
 	}
 	var logInfo string
-	if reflect.TypeOf(data).String() == "string" {
-		logInfo = data.(string)
-	} else {
-		d, _ := tools.FastJson.Marshal(data)
-		logInfo = string(d)
-	}
+	d, _ := tools.FastJson.Marshal(&data)
+	logInfo = string(d)
 	// todo check if safe
 	go func(file *os.File, datetime string, level string, logInfo string) {
 		fmt.Fprintf(file, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
@@ -41,26 +45,26 @@ func writeLog(data interface{}, level string) {
 	}(logFile, datetime, level, logInfo)
 }
 
-func Debug(data interface{}) {
-	writeLog(data, "debug")
+func Debug(data ...interface{}) {
+	writeLog(DebugLevel, data...)
 }
 
-func Info(data interface{}) {
-	writeLog(data, "info")
+func Info(data ...interface{}) {
+	writeLog(InfoLevel, data...)
 }
 
-func Warn(data interface{}) {
-	writeLog(data, "warn")
+func Warn(data ...interface{}) {
+	writeLog(WarnLevel, data...)
 }
 
-func Error(data interface{}) {
-	writeLog(data, "error")
+func Error(data ...interface{}) {
+	writeLog(ErrorLevel, data...)
 }
 
-func SqlInfo(data interface{}) {
-	writeLog(data, "sql")
+func SqlInfo(data ...interface{}) {
+	writeLog(SqlInfoLevel, data...)
 }
 
-func SqlError(data interface{}) {
-	writeLog(data, "sql.error")
+func SqlError(data ...interface{}) {
+	writeLog(SqlErrorLevel, data...)
 }
