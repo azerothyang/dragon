@@ -11,7 +11,7 @@ import (
 
 // AppInit func
 // do some components init
-func AppInit()  {
+func AppInit() {
 	//init config
 	conf.InitConf()
 

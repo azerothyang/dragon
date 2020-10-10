@@ -46,8 +46,8 @@ func NewDefaultTx() *gorm.DB {
 	})
 }
 
-// 判断是否有致命错误，致命错误 不包含 (查询结果为空)
-func HasFatalError(res *gorm.DB) bool {
+// 判断是否有致命错误，致命错误 不包含 (查询结果为空)， 错误不要进行log.Fatal处理，这个会让进程挂掉
+func HasSeriousError(res *gorm.DB) bool {
 	if res.Error != nil && (!errors.Is(res.Error, gorm.ErrRecordNotFound)) {
 		return true
 	}

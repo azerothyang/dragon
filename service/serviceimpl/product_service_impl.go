@@ -22,8 +22,8 @@ func (p *ProductServiceImpl) GetList() interface{} {
 	}
 	res := productRepo.GetOne(&product,
 		conditions, "product_id,product_name,create_time", "")
-	if repository.HasFatalError(res) {
-		log.Fatal(res.Error)
+	if repository.HasSeriousError(res) {
+		log.Println("err", res.Error)
 	}
 	log.Println("product", fmt.Sprintf("%+v", product))
 

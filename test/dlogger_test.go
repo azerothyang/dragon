@@ -12,7 +12,7 @@ func Test_writeLog(t *testing.T) {
 	//dlogger.Info("1", "2", "3")
 	dlogger.Info(map[string]interface{}{
 		"hello": "world",
-		"x": 1,
+		"x":     1,
 	}, "666")
 	time.Sleep(time.Second)
 }
