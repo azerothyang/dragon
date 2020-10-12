@@ -11,7 +11,7 @@ type ProductServiceImpl struct {
 
 func (p *ProductServiceImpl) GetList() interface{} {
 	tx := repository.NewDefaultTx()
-	productRepo := repository.ProductRepository{BaseRepository: repository.BaseRepository{
+	productRepo := &repository.ProductRepository{BaseRepository: repository.BaseRepository{
 		TableName: repository.TProduct{}.TableName(),
 		Tx:        tx,
 	}}
