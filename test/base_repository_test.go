@@ -47,7 +47,7 @@ func TestBaseRepository_GetListAndCount(t *testing.T) {
 	count, listRes, countRes := productRepo.GetListAndCount(&list, []map[string]interface{}{
 		{"product_id IN (?)": []int{1, 2}},
 	}, "", 0, -1, "*")
-	if repository.HasFatalError(listRes) || repository.HasFatalError(countRes) {
+	if repository.HasSeriousError(listRes) || repository.HasSeriousError(countRes) {
 		log.Fatal(listRes.Error, countRes.Error)
 	}
 
