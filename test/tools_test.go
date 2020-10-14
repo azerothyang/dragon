@@ -60,3 +60,23 @@ func BenchmarkFastJsonDecode(b *testing.B) {
 	}
 	log.Println("res", fmt.Sprintf("%+v", res))
 }
+
+func TestUUidV4(t *testing.T) {
+	const size = 10000000
+	car := make(map[string]int, size)
+	for i:=0; i<size; i++ {
+		uuid := tools.UUidV4()
+		if _, ok := car[uuid]; ok {
+			// 如果uuid重复则报错
+			log.Fatal("uuid repeat", uuid)
+		}
+		car[uuid] = 1
+	}
+	log.Println("uuidV4 generate success")
+}
+
+func BenchmarkUUidV4(b *testing.B) {
+	for i:=0; i<b.N; i++ {
+		tools.UUidV4()
+	}
+}
