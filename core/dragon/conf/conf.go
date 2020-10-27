@@ -59,6 +59,10 @@ type ConfS struct {
 	Log struct {
 		Dir string
 	}
+	Zipkin struct {
+		Reporter    string
+		Servicename string
+	}
 }
 
 var (

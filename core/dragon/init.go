@@ -26,6 +26,9 @@ func AppInit() {
 		}()
 	}
 
+	// init zipkin server middleware
+	//dragonzipkin.Init()
+
 	//init db
 	repository.InitDB()
 

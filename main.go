@@ -13,6 +13,7 @@ func main() {
 	//init dragon
 	dr := dragon.New()
 	//init route, you can chain any middleware here :)
+	//dr.InitRoute(dragonzipkin.ServerMiddleware(middleware.LogInfo(router.Routes)))
 	dr.InitRoute(middleware.LogInfo(router.Routes))
 	//dragon fly
 	dr.Fly()

@@ -41,6 +41,16 @@ github.com/klauspost/compress/zstd/internal/xxhash
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742
 github.com/modern-go/reflect2
+# github.com/openzipkin/zipkin-go v0.2.5
+## explicit
+github.com/openzipkin/zipkin-go
+github.com/openzipkin/zipkin-go/idgenerator
+github.com/openzipkin/zipkin-go/middleware/http
+github.com/openzipkin/zipkin-go/model
+github.com/openzipkin/zipkin-go/propagation
+github.com/openzipkin/zipkin-go/propagation/b3
+github.com/openzipkin/zipkin-go/reporter
+github.com/openzipkin/zipkin-go/reporter/http
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/satori/go.uuid v1.2.0
@@ -101,6 +111,8 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 # google.golang.org/appengine v1.6.6
 ## explicit
+# google.golang.org/grpc v1.30.0
+google.golang.org/grpc/metadata
 # gopkg.in/yaml.v2 v2.2.2
 ## explicit
 gopkg.in/yaml.v2

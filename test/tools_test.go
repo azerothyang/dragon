@@ -64,7 +64,7 @@ func BenchmarkFastJsonDecode(b *testing.B) {
 func TestUUidV4(t *testing.T) {
 	const size = 10000000
 	car := make(map[string]int, size)
-	for i:=0; i<size; i++ {
+	for i := 0; i < size; i++ {
 		uuid := tools.UUidV4()
 		if _, ok := car[uuid]; ok {
 			// 如果uuid重复则报错
@@ -76,7 +76,7 @@ func TestUUidV4(t *testing.T) {
 }
 
 func BenchmarkUUidV4(b *testing.B) {
-	for i:=0; i<b.N; i++ {
+	for i := 0; i < b.N; i++ {
 		tools.UUidV4()
 	}
 }
