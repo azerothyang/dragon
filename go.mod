@@ -9,6 +9,7 @@ require (
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/json-iterator/go v1.1.10
 	github.com/julienschmidt/httprouter v1.2.0
+	github.com/nacos-group/nacos-sdk-go v1.0.1
 	github.com/openzipkin/zipkin-go v0.2.5
 	github.com/satori/go.uuid v1.2.0
 	github.com/segmentio/kafka-go v0.3.7

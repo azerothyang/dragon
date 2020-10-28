@@ -2,6 +2,8 @@ package dragon
 
 import (
 	"dragon/core/dragon/conf"
+	"dragon/core/dragon/dnacos"
+	"dragon/core/dragon/dragonzipkin"
 	"dragon/core/dragon/dredis"
 	"dragon/repository"
 	"dragon/tools/dmongo"
@@ -27,7 +29,12 @@ func AppInit() {
 	}
 
 	// init zipkin server middleware
-	//dragonzipkin.Init()
+	if conf.Conf.Zipkin.Enable {
+		dragonzipkin.Init()
+	}
+	if conf.Conf.Nacos.Enable {
+		dnacos.Init()
+	}
 
 	//init db
 	repository.InitDB()

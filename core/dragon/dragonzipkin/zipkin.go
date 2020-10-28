@@ -27,7 +27,7 @@ func Init() {
 	if err != nil {
 		log.Fatalf("unable to get ClientIp: %+v\n", err)
 	}
-	endpoint, err := zipkin.NewEndpoint(conf.Conf.Zipkin.Servicename, ip + ":"+conf.Conf.Server.Port)
+	endpoint, err := zipkin.NewEndpoint(conf.Conf.Server.Servicename, ip+":"+conf.Conf.Server.Port)
 	if err != nil {
 		log.Fatalf("unable to create local endpoint: %+v\n", err)
 	}
@@ -48,7 +48,7 @@ func Init() {
 	}
 }
 
-func getClientIp() (string ,error) {
+func getClientIp() (string, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return "", err

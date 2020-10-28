@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"dragon/tools"
 	"errors"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -15,9 +16,10 @@ import (
 //config struct
 type ConfS struct {
 	Server struct {
-		Host  string
-		Port  string
-		Pprof struct {
+		Servicename string
+		Host        string
+		Port        string
+		Pprof       struct {
 			Enabled bool
 			Host    string
 			Port    string
@@ -59,20 +61,31 @@ type ConfS struct {
 	Log struct {
 		Dir string
 	}
+	Nacos struct {
+		Enable      bool
+		Ip          string
+		Port        uint64
+		Clustername string
+		Groupname   string
+		Idc         string
+	}
 	Zipkin struct {
-		Reporter    string
-		Servicename string
+		Enable   bool
+		Reporter string
 	}
 }
 
 var (
-	Conf    ConfS
-	Env     = "dev"
-	ExecDir = "" // current exec file path
+	Conf       ConfS
+	Env        = "dev"
+	ExecDir    = "" // current exec file path
+	IntranetIp = ""
 )
 
 //init config
 func InitConf() {
+	// init Intranet Ip
+	IntranetIp, _ = tools.GetClientIp()
 	dir, err := GetCurrentPath()
 	ExecDir = dir
 	if err != nil {
