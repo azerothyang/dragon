@@ -12,7 +12,7 @@ func TestSelectOneHealthyInstance(t *testing.T) {
 	//init config
 	conf.InitConf()
 	dragon.AppInit()
-	addr, ins, err := dnacos.SelectOneHealthyInstance()
+	addr, ins, err := dnacos.SelectOneHealthyInstance("dragon", "", nil)
 	log.Println("addr", addr)
 	log.Printf("%+v\n", ins)
 	log.Println("err", err)

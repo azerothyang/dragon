@@ -19,7 +19,11 @@ type ConfS struct {
 		Servicename string
 		Host        string
 		Port        string
-		Pprof       struct {
+		K8s         struct {
+			Ip   string
+			Port string
+		}
+		Pprof struct {
 			Enabled bool
 			Host    string
 			Port    string
@@ -86,6 +90,7 @@ var (
 func InitConf() {
 	// init Intranet Ip
 	IntranetIp, _ = tools.GetClientIp()
+	log.Println("intranet ip is " + IntranetIp)
 	dir, err := GetCurrentPath()
 	ExecDir = dir
 	if err != nil {
