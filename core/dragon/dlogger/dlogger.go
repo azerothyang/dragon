@@ -32,6 +32,7 @@ func writeLog(level string, data ...interface{}) {
 	logDir := conf.Conf.Log.Dir
 	path := conf.ExecDir + "/" + logDir + "/" + date + "." + level + ".log"
 	logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	defer logFile.Close()
 	if err != nil {
 		log.Println(fmt.Sprintf("error:%+v", err))
 	}
@@ -39,10 +40,7 @@ func writeLog(level string, data ...interface{}) {
 	d, _ := tools.FastJson.Marshal(&data)
 	logInfo = string(d)
 	// todo check if safe
-	go func(file *os.File, datetime string, level string, logInfo string) {
-		fmt.Fprintf(file, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
-		file.Close()
-	}(logFile, datetime, level, logInfo)
+	fmt.Fprintf(logFile, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
 }
 
 func Debug(data ...interface{}) {
