@@ -26,8 +26,9 @@ func init() {
 	Routes = httprouter.New()
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
+	dRouter := dragon.NewDRouter(Routes)
 	// -----------------------------商品相关-----------------------------
-	Routes.GET("/test", dragon.WrapController(productCtrl.Test))
+	dRouter.GET("/test", productCtrl.Test)
 	// -----------------------------商品相关-----------------------------
 }
 
