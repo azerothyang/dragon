@@ -1,6 +1,5 @@
 package constant
 
 const (
-	StatusOK =  "statusOK"
+	StatusOK = "statusOK"
 )
-

@@ -66,7 +66,7 @@ func Init() {
 	if !success {
 		log.Fatalln("nacos服务注册失败", err)
 	}
-	log.Println("nacos服务注册成功：", conf.Conf.Server.K8s.Ip + ":" + conf.Conf.Server.K8s.Port)
+	log.Println("nacos服务注册成功：", conf.Conf.Server.K8s.Ip+":"+conf.Conf.Server.K8s.Port)
 }
 
 func DeregisterInstance() {

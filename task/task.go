@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func Run()  {
+func Run() {
 	TestTask()
 }
 

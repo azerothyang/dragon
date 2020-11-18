@@ -11,7 +11,6 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"sync"
 	"time"
 )
 
@@ -25,15 +24,15 @@ const (
 )
 
 // 模型处理接口
-type HandleModel interface {
-	Add(data interface{}) error                                                                                                                                                                  // 新增
-	SoftDelete(conditions []map[string]interface{}, field string, val interface{}) (err error)                                                                                                   // 软删除
-	Delete(conditions []map[string]interface{}, model interface{}) (err error)                                                                                                                   // 真删除
-	Updates(conditions []map[string]interface{}, data interface{}) (err error)                                                                                                                   // 通过编码伪删除
-	GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, err error)                                          // 查询列表
-	GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) (resData interface{}, err error)                                                                  // 查询一条
-	GetCount(conditions []map[string]interface{}) (count int64, err error)                                                                                                                       // 获取总数
-	GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (resData interface{}, count int64, listErr error, countErr error) // 获取总数
+type HandleRepository interface {
+	Add(data interface{}) error                                                                                                                                                   // 新增
+	SoftDelete(conditions []map[string]interface{}, field string, val interface{}) *gorm.DB                                                                                       // 软删除
+	Delete(conditions []map[string]interface{}, model interface{}) *gorm.DB                                                                                                       // 真删除
+	Updates(conditions []map[string]interface{}, data map[string]interface{}) *gorm.DB                                                                                            // 通过编码伪删除
+	GetList(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) *gorm.DB                                                   // 查询列表
+	GetOne(data interface{}, conditions []map[string]interface{}, cols string, orderBy string) *gorm.DB                                                                           // 查询一条
+	GetCount(conditions []map[string]interface{}) (count int64, res *gorm.DB)                                                                                                     // 获取总数
+	GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (count int64, listRes *gorm.DB, countRes *gorm.DB) // 获取总数
 }
 
 // new default tx
@@ -164,25 +163,20 @@ func (b *BaseRepository) GetCount(conditions []map[string]interface{}) (count in
 
 // 获取列表和总数，此方法不能用于事务
 func (b *BaseRepository) GetListAndCount(list interface{}, conditions []map[string]interface{}, orderBy string, offset int, limit int, cols string) (count int64, listRes *gorm.DB, countRes *gorm.DB) {
-	var wg sync.WaitGroup
-	wg.Add(2)
+	listResCh := make(chan *gorm.DB, 1)
 	go func() {
 		repo := BaseRepository{
 			TableName: b.TableName,
 			Tx:        NewDefaultTx(),
 		}
-		listRes = repo.GetList(list, conditions, orderBy, offset, limit, cols)
-		wg.Done()
+		listResCh <- repo.GetList(list, conditions, orderBy, offset, limit, cols)
 	}()
-	go func() {
-		repo := BaseRepository{
-			TableName: b.TableName,
-			Tx:        NewDefaultTx(),
-		}
-		count, countRes = repo.GetCount(conditions)
-		wg.Done()
-	}()
-	wg.Wait()
+	repo := BaseRepository{
+		TableName: b.TableName,
+		Tx:        NewDefaultTx(),
+	}
+	count, countRes = repo.GetCount(conditions)
+	listRes = <-listResCh
 	return
 }
 
