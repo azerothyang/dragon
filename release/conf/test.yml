@@ -6,9 +6,9 @@ server:
     ip: 172.16.15.137 #k8s or docker swarm deployment，the expose service ip and port 【k8s或者docker swarm部署，对应的外部service ip和port】
     port: 10001
   pprof:
-    enabled: false
+    enabled: true
     host:
-    port: 8080
+    port: 18066
 database:
   mysql:
     master:

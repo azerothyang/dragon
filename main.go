@@ -4,7 +4,6 @@ import (
 	"dragon/core/dragon"
 	"dragon/middleware"
 	"dragon/router"
-	_ "net/http/pprof"
 )
 
 func main() {

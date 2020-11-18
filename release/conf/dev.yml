@@ -5,10 +5,10 @@ server:
   k8s:
     ip: 172.16.15.137 #k8s or docker swarm deployment，the expose service ip and port 【k8s或者docker swarm部署，对应的外部service ip和port】
     port: 10001
-  pprof:
+  pprof: ## 结合go-echarts-statsview，可视化pprof  https://github.com/go-echarts/statsview，##// Visit your browser at http://localhost:18066/debug/statsview Or debug as always via http://localhost:18066/debug/pprof, http://localhost:18066/debug/pprof/heap, ...
     enabled: true
     host:
-    port: 8080
+    port: 18066
 database:
   mysql:
     master:
