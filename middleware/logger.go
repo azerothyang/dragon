@@ -24,6 +24,7 @@ func LogInfo(next http.Handler) http.Handler {
 			ReqHeader: r.Header,
 			Body:      string(body),
 			StartTime: start,
+			DateTime:  start.Format("2006-01-02 15:04:05"),
 			CostTime:  "",
 		}
 		trackInfo := trackMan.Marshal()
