@@ -10,10 +10,10 @@ import (
 )
 
 // 商品控制器
-type Product struct {
+type ProductCtrl struct {
 }
 
-func (p Product) Test(ctx *dragon.HttpContext) {
+func (p *ProductCtrl) Test(ctx *dragon.HttpContext) {
 	// redis ZRangeByScoreWithScores
 	//orders, err := dredis.Redis.ZRangeByScoreWithScores("order", redis.ZRangeBy{
 	//	Min:    "0",

@@ -19,7 +19,7 @@ type notFoundHandler struct {
 
 var (
 	Routes      *httprouter.Router
-	productCtrl = ctrl.Product{} //product controller
+	productCtrl = &ctrl.ProductCtrl{} //product controller
 )
 
 func init() {
