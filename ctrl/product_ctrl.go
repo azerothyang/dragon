@@ -2,6 +2,7 @@ package ctrl
 
 import (
 	"dragon/core/dragon"
+	"dragon/service"
 	"dragon/service/serviceimpl"
 	"fmt"
 	"github.com/go-dragon/validator"
@@ -49,8 +50,8 @@ func (p *ProductCtrl) Test(ctx *dragon.HttpContext) {
 
 	// mysql example
 	log.Println("reqParams", fmt.Sprintf("%+v", ctx.GetRequestParams()))
-
-	res := (&serviceimpl.ProductServiceImpl{}).GetList()
+	var productSrv service.ProductService = &serviceimpl.ProductServiceImpl{}
+	res := productSrv.GetList()
 
 	//res := dto.TStructToData(product, []string{"product_id", "product_name", "create_time"})
 
