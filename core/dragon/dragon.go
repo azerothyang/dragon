@@ -26,6 +26,10 @@ func (dragon *Dragon) Fly() {
 	//dragon fly
 	log.Println("env: " + conf.Env)
 	log.Println("set environment variable DRAGON dev,test,prod 🐲🐲🐲")
-	log.Println("start server on " + conf.Conf.Server.Host + ":" + conf.Conf.Server.Port)
+	webAddr := "http://0.0.0.0:" + conf.Conf.Server.Port
+	if conf.Conf.Server.Host != ""{
+		webAddr = "http://" + conf.Conf.Server.Host + ":" + conf.Conf.Server.Port
+	}
+	log.Println("start server on: " + webAddr)
 	log.Fatal(http.ListenAndServe(conf.Conf.Server.Host+":"+conf.Conf.Server.Port, dragon.Handler))
 }

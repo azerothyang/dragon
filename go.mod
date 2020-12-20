@@ -3,7 +3,7 @@ module dragon
 go 1.15
 
 require (
-	github.com/go-dragon/erro v0.0.2 // indirect
+	github.com/go-dragon/erro v0.0.2
 	github.com/go-dragon/util v0.0.3
 	github.com/go-dragon/validator v0.0.1
 	github.com/go-echarts/statsview v0.2.0

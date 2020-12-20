@@ -14,6 +14,7 @@ github.com/aliyun/alibaba-cloud-sdk-go/services/kms
 github.com/buger/jsonparser
 # github.com/go-dragon/erro v0.0.2
 ## explicit
+github.com/go-dragon/erro
 # github.com/go-dragon/util v0.0.3
 ## explicit
 github.com/go-dragon/util
