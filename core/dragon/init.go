@@ -2,6 +2,7 @@ package dragon
 
 import (
 	"dragon/core/dragon/conf"
+	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/dnacos"
 	"dragon/core/dragon/dragonzipkin"
 	"dragon/core/dragon/dredis"
@@ -54,4 +55,9 @@ func AppInit() {
 
 	// init mongodb
 	dmongo.InitDB()
+
+	// init logger
+	go func() {
+		dlogger.TickFlush()
+	}()
 }

@@ -75,7 +75,7 @@ Working directory: <project_dir>/release
 
 # ab performance
  ``` 
- cpu: 1 core, ram: 1 G
+ cpu: 4 core, ram: 8 G
  Server Software:        nginx/1.12.2
  Server Hostname:        test.com
  Server Port:            80
@@ -90,7 +90,7 @@ Working directory: <project_dir>/release
  Write errors:           0
  Total transferred:      17700000 bytes
  HTML transferred:       1300000 bytes
- Requests per second:    10705.75 [#/sec] (mean)
+ Requests per second:    73749.75 [#/sec] (mean)
  Time per request:       9.341 [ms] (mean)
  Time per request:       0.093 [ms] (mean, across all concurrent requests)
  Transfer rate:          1850.51 [Kbytes/sec] received

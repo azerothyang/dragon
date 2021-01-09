@@ -1,11 +1,13 @@
 package dlogger
 
 import (
+	"bytes"
 	"dragon/core/dragon/conf"
 	"dragon/tools"
 	"fmt"
 	"log"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -18,29 +20,55 @@ const (
 	SqlErrorLevel = "sql.error"
 )
 
+// 日志buffer，定时扫描刷到磁盘中
+var logBuf = bytes.NewBufferString("")
+// 日志缓存处理锁
+var logBufMutex = sync.Mutex{}
+
+
+// tick将日志写入文件中
+func TickFlush()  {
+	tk := time.NewTicker(300*time.Millisecond)
+	defer tk.Stop()
+	for range tk.C {
+		// 取出缓存区日志，固化到本地
+		logBufMutex.Lock()
+		content := logBuf.String()
+		logBuf.Reset()
+		logBufMutex.Unlock()
+
+		// 根据data类型删除json或者字符串
+		now := time.Now()
+		date := now.Format("2006-01-02")
+		// 生成或打开文件
+		logDir := conf.Conf.Log.Dir
+		path := conf.ExecDir + "/" + logDir + "/" + date + ".log"
+		logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+		defer logFile.Close() // 防止异常退出
+		if err != nil {
+			log.Println(fmt.Sprintf("error:%+v", err))
+		}
+		fmt.Fprintf(logFile, content)
+		logFile.Close()
+	}
+}
+
 // write log
 func writeLog(level string, data ...interface{}) {
 	if data == nil || len(data) == 0 {
 		// 如果data为空，不进行打印
 		return
 	}
-	// 根据data类型删除json或者字符串
-	now := time.Now()
-	datetime := now.Format("2006-01-02 15:04:05")
-	date := now.Format("2006-01-02")
-	// 生成或打开文件
-	logDir := conf.Conf.Log.Dir
-	path := conf.ExecDir + "/" + logDir + "/" + date + "." + level + ".log"
-	logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	defer logFile.Close()
-	if err != nil {
-		log.Println(fmt.Sprintf("error:%+v", err))
-	}
 	var logInfo string
 	d, _ := tools.FastJson.Marshal(&data)
 	logInfo = string(d)
 	// todo check if safe
-	fmt.Fprintf(logFile, "[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
+	datetime := time.Now().Format("2006-01-02 15:04:05")
+	content := fmt.Sprintf("[%s] [%s] || %s \r\n\r\n", datetime, level, logInfo)
+	// 写入缓冲区，日志
+	logBufMutex.Lock()
+	logBuf.WriteString(content)
+	logBufMutex.Unlock()
 }
 
 func Debug(data ...interface{}) {
