@@ -55,7 +55,7 @@ func (p *ProductHandler) Test(ctx *dragon.HttpContext) {
 	// mysql example
 	log.Println("reqParams", fmt.Sprintf("%+v", ctx.GetRequestParams()))
 
-	productSrv := service.NewProductService(repository.GormDB) // 如果是事务处理，这个db可以为gorm，begin的db，只能从头传进去🤷‍
+	productSrv := service.NewProductService(repository.GormDB) // 如果是事务处理，这个db可以为gorm的begin的db，只能从头传进去🤷‍
 	res, err := productSrv.GetOne()
 	log.Println("err:", err)
 
