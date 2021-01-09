@@ -6,7 +6,7 @@ import (
 	"dragon/core/dragon/dnacos"
 	"dragon/core/dragon/dragonzipkin"
 	"dragon/core/dragon/dredis"
-	"dragon/repository"
+	"dragon/domain/repository"
 	"dragon/tools/dmongo"
 	"github.com/go-echarts/statsview"
 	"github.com/go-echarts/statsview/viewer"

@@ -22,13 +22,13 @@ const (
 
 // 日志buffer，定时扫描刷到磁盘中
 var logBuf = bytes.NewBufferString("")
+
 // 日志缓存处理锁
 var logBufMutex = sync.Mutex{}
 
-
 // tick将日志写入文件中
-func TickFlush()  {
-	tk := time.NewTicker(300*time.Millisecond)
+func TickFlush() {
+	tk := time.NewTicker(300 * time.Millisecond)
 	defer tk.Stop()
 	for range tk.C {
 		// 取出缓存区日志，固化到本地

@@ -7,7 +7,7 @@ import (
 	"dragon/core/dragon"
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
-	"dragon/ctrl"
+	"dragon/handler"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
@@ -18,17 +18,18 @@ type notFoundHandler struct {
 }
 
 var (
-	Routes      *httprouter.Router
-	productCtrl = &ctrl.ProductCtrl{} //product controller
+	Routes         *httprouter.Router
+	productHandler handler.IProductHandler
 )
 
 func init() {
+	productHandler = &handler.ProductHandler{} //product handler 初始化
 	Routes = httprouter.New()
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
 	dRouter := dragon.NewDRouter(Routes)
 	// -----------------------------商品相关-----------------------------
-	dRouter.GET("/test", productCtrl.Test)
+	dRouter.GET("/test", productHandler.Test)
 	// -----------------------------商品相关-----------------------------
 }
 
