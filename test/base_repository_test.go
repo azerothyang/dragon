@@ -2,7 +2,8 @@ package test
 
 import (
 	"dragon/core/dragon/conf"
-	"dragon/repository"
+	"dragon/domain/entity"
+	"dragon/domain/repository"
 	"fmt"
 	"log"
 	"testing"
@@ -15,7 +16,7 @@ func TestBaseRepository_Updates(t *testing.T) {
 	repository.InitDB()
 
 	productRepo := repository.ProductRepository{
-		BaseRepository: repository.BaseRepository{TableName: repository.TProduct{}.TableName(), Tx: repository.NewDefaultTx()}}
+		BaseRepository: repository.BaseRepository{TableName: entity.ProductEntity{}.TableName(), MysqlDB: repository.GormDB}}
 
 	res := productRepo.Updates([]map[string]interface{}{
 		{"product_id = ?": 1},
@@ -41,9 +42,9 @@ func TestBaseRepository_GetListAndCount(t *testing.T) {
 	repository.InitDB()
 
 	productRepo := repository.ProductRepository{
-		BaseRepository: repository.BaseRepository{TableName: repository.TProduct{}.TableName(), Tx: repository.NewDefaultTx()}}
+		BaseRepository: repository.BaseRepository{TableName: entity.ProductEntity{}.TableName(), MysqlDB: repository.GormDB}}
 
-	var list []repository.TProduct
+	var list []entity.ProductEntity
 	count, listRes, countRes := productRepo.GetListAndCount(&list, []map[string]interface{}{
 		{"product_id IN (?)": []int{1, 2}},
 	}, "", 0, -1, "*")

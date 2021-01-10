@@ -3,12 +3,16 @@ package service
 import (
 	"dragon/domain/entity"
 	"dragon/domain/repository"
+	"errors"
+	"github.com/go-dragon/util"
 	"gorm.io/gorm"
+	"time"
 )
 
 // ProductService interface
 type IProductService interface {
 	GetOne() (*entity.ProductEntity, error)
+	TransactionTest() error
 }
 
 type ProductService struct {
@@ -35,4 +39,33 @@ func (p *ProductService) GetOne() (*entity.ProductEntity, error) {
 		return &product, res.Error
 	}
 	return &product, nil
+}
+
+// test transaction easy demo
+func (p *ProductService) TransactionTest() error {
+	productInfo := entity.ProductEntity{
+		ProductCode:   util.RandomStr(10),
+		ProductName:   "",
+		BrandId:       0,
+		ProductStatus: 0,
+		CreateTime:    time.Now().Format("2006-01-02 15:04:05"),
+		UpdateTime:    time.Now().Format("2006-01-02 15:04:05"),
+	}
+	err1 := p.ProductRepository.Add(&productInfo)
+	productInfo = entity.ProductEntity{
+		ProductCode:   util.RandomStr(10),
+		ProductName:   "",
+		BrandId:       0,
+		ProductStatus: 0,
+		CreateTime:    time.Now().Format("2006-01-02 15:04:05"),
+		UpdateTime:    time.Now().Format("2006-01-02 15:04:05"),
+	}
+	err2 := p.ProductRepository.Add(&productInfo)
+	err1 = errors.New("manual error")
+	if err1 != nil || err2 != nil {
+		p.TxConnDB.Rollback()
+		return errors.New("data write fail")
+	}
+	p.TxConnDB.Commit()
+	return nil
 }
