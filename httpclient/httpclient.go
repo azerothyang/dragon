@@ -13,6 +13,11 @@ type Client struct {
 	TrackWriter *http.Request
 }
 
+// new a client
+func NewClient(req *http.Request) *Client {
+	return &Client{TrackWriter: req}
+}
+
 // Client response struct
 type Response struct {
 	Content string
