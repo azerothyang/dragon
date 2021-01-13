@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"encoding/json"
 	"regexp"
 	"strconv"
 	"strings"
@@ -148,6 +149,14 @@ func (v *Validator) Validate(form *map[string]string, rules Rules) *Validator {
 				}
 			}
 
+			if method == "date" {
+				if v.date(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "格式不正确, 正确格式需要: 2006-01-02"
+					continue
+				}
+			}
+
 			if method == "datetime" {
 				if v.datetime(field, form) == false {
 					v.HasErr = true
@@ -171,6 +180,13 @@ func (v *Validator) Validate(form *map[string]string, rules Rules) *Validator {
 					continue
 				}
 			}
+			if method == "json" {
+				if v.json(field, form) == false {
+					v.HasErr = true
+					v.ErrList[field] = "参数不是json"
+					continue
+				}
+			}
 		}
 	}
 	return v
@@ -187,7 +203,11 @@ func (*Validator) notEmpty(field string, form *map[string]string) bool {
 
 // chinese mobile validate
 func (*Validator) mobile(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	if ok, _ := regexp.MatchString("^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$", v); ok {
 		return true
 	}
@@ -196,7 +216,11 @@ func (*Validator) mobile(field string, form *map[string]string) bool {
 
 // password validate 密码验证 密码8-16位数字和字母的组合这两个符号(不能是纯数字或者纯字母)
 func (*Validator) password(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	if ok, _ := regexp.MatchString("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$", v); ok {
 		return true
 	}
@@ -205,7 +229,11 @@ func (*Validator) password(field string, form *map[string]string) bool {
 
 // user nick validate 用户昵称校验 中文和英文或数字不能有特殊符号长度为2-10位
 func (*Validator) nick(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	if ok, _ := regexp.MatchString("^[a-zA-Z0-9\u4e00-\u9fff]{2,10}$", v); ok {
 		return true
 	}
@@ -214,7 +242,11 @@ func (*Validator) nick(field string, form *map[string]string) bool {
 
 // regex validate
 func (*Validator) regex(field string, form *map[string]string, pattern string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	if ok, _ := regexp.MatchString(pattern, v); ok {
 		return true
 	}
@@ -223,7 +255,11 @@ func (*Validator) regex(field string, form *map[string]string, pattern string) b
 
 // numeric param min number param >= arg
 func (*Validator) min(field string, form *map[string]string, arg string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	number, err := strconv.Atoi(v)
 	min, errV := strconv.Atoi(arg)
 	if err != nil || errV != nil {
@@ -237,7 +273,11 @@ func (*Validator) min(field string, form *map[string]string, arg string) bool {
 
 // numeric param max number param <= arg
 func (*Validator) max(field string, form *map[string]string, arg string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	number, err := strconv.Atoi(v)
 	max, errV := strconv.Atoi(arg)
 	if err != nil || errV != nil {
@@ -251,7 +291,11 @@ func (*Validator) max(field string, form *map[string]string, arg string) bool {
 
 // numeric
 func (*Validator) numeric(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	_, err := strconv.ParseFloat(v, 64)
 	if err != nil {
 		return false
@@ -261,7 +305,11 @@ func (*Validator) numeric(field string, form *map[string]string) bool {
 
 // param maxLength
 func (*Validator) maxLength(field string, form *map[string]string, arg string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	maxLength, err := strconv.Atoi(arg)
 	if err != nil {
 		return false
@@ -274,7 +322,11 @@ func (*Validator) maxLength(field string, form *map[string]string, arg string) b
 
 // param minLength
 func (*Validator) minLength(field string, form *map[string]string, arg string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	minLength, err := strconv.Atoi(arg)
 	if err != nil {
 		return false
@@ -286,7 +338,11 @@ func (*Validator) minLength(field string, form *map[string]string, arg string) b
 }
 
 func (*Validator) int64(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	_, err := strconv.ParseInt(v, 10, 64)
 	if err != nil {
 		return false
@@ -295,7 +351,11 @@ func (*Validator) int64(field string, form *map[string]string) bool {
 }
 
 func (*Validator) int32(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	_, err := strconv.ParseInt(v, 10, 32)
 	if err != nil {
 		return false
@@ -305,8 +365,26 @@ func (*Validator) int32(field string, form *map[string]string) bool {
 
 // date time validate
 func (*Validator) datetime(field string, form *map[string]string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	_, err := time.Parse("2006-01-02 15:04:05", v)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+// date validate
+func (*Validator) date(field string, form *map[string]string) bool {
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
+	_, err := time.Parse("2006-01-02", v)
 	if err != nil {
 		return false
 	}
@@ -315,7 +393,11 @@ func (*Validator) datetime(field string, form *map[string]string) bool {
 
 // in:1,2,3
 func (*Validator) in(field string, form *map[string]string, arg string) bool {
-	v, _ := (*form)[field]
+	v, ok := (*form)[field]
+	if !ok {
+		// 如果map[key]不存在，则跳过，且校验通过
+		return true
+	}
 	args := strings.Split(arg, ",")
 	for _, str := range args {
 		if v == str {
@@ -329,4 +411,16 @@ func (*Validator) in(field string, form *map[string]string, arg string) bool {
 // notIn:1,2,3
 func (v *Validator) notIn(field string, form *map[string]string, arg string) bool {
 	return !v.in(field, form, arg)
+}
+
+// json: {"hello":"world"}
+func (v *Validator) json(field string, form *map[string]string) bool {
+	if _, ok := (*form)[field]; ok {
+		var data map[string]string
+		err := json.Unmarshal([]byte((*form)[field]), &data)
+		if err != nil {
+			return false
+		}
+	}
+	return true
 }
