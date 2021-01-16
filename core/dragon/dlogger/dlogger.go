@@ -12,12 +12,12 @@ import (
 )
 
 const (
-	DebugLevel    = "debug"
-	InfoLevel     = "info"
-	WarnLevel     = "warn"
-	ErrorLevel    = "error"
-	SqlInfoLevel  = "sql"
-	SqlErrorLevel = "sql.error"
+	DebugLevel    = "DEBUG"
+	InfoLevel     = "INFO"
+	WarnLevel     = "WARN"
+	ErrorLevel    = "ERROR"
+	SqlInfoLevel  = "SQL_INFO"
+	SqlErrorLevel = "SQL_ERROR"
 )
 
 // 日志buffer，定时扫描刷到磁盘中
