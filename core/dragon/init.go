@@ -8,9 +8,9 @@ import (
 	"dragon/core/dragon/dredis"
 	"dragon/domain/repository"
 	"dragon/tools/dmongo"
-	"github.com/go-echarts/statsview"
-	"github.com/go-echarts/statsview/viewer"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
+	"net/http"
 )
 
 // AppInit func
@@ -19,8 +19,7 @@ func AppInit() {
 	//init config
 	conf.InitConf()
 
-	// init pprof
-	// check if pprof is enabled, then listen port
+	// init Prometheus pprof
 	if conf.Conf.Server.Pprof.Enabled {
 		var host string
 		if conf.Conf.Server.Pprof.Host != "" {
@@ -28,14 +27,10 @@ func AppInit() {
 		} else {
 			host = "0.0.0.0"
 		}
-		viewer.SetConfiguration(viewer.WithTheme(viewer.ThemeMacarons), viewer.WithAddr(host+":"+conf.Conf.Server.Pprof.Port))
 		go func() {
-			log.Println("StatsView Pprof server on "+host+":"+conf.Conf.Server.Pprof.Port, "http://"+host+":"+conf.Conf.Server.Pprof.Port+"/debug/statsview")
-			mgr := statsview.New()
-			defer mgr.Stop()
-			// Start() runs a HTTP server at `localhost:18066` by default.
-			mgr.Start()
-			// Stop() will shutdown the http server gracefully
+			http.Handle("/metrics", promhttp.Handler())
+			log.Println("Prometheus Pprof server on "+host+":"+conf.Conf.Server.Pprof.Port, "http://"+host+":"+conf.Conf.Server.Pprof.Port+"/metrics")
+			http.ListenAndServe(host+":"+conf.Conf.Server.Pprof.Port, nil)
 		}()
 	}
 
