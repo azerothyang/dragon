@@ -3,10 +3,10 @@ module dragon
 go 1.15
 
 require (
-	github.com/go-dragon/util v0.0.3
+	github.com/go-dragon/util v0.0.4
 	github.com/go-dragon/validator v0.0.3
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/json-iterator/go v1.1.10
+	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/nacos-group/nacos-sdk-go v1.0.1
 	github.com/openzipkin/zipkin-go v0.2.5
