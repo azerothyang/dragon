@@ -3,8 +3,8 @@ package dlogger
 import (
 	"bytes"
 	"dragon/core/dragon/conf"
-	"dragon/tools"
 	"fmt"
+	"github.com/go-dragon/util"
 	"log"
 	"os"
 	"sync"
@@ -60,7 +60,7 @@ func writeLog(level string, data ...interface{}) {
 		return
 	}
 	var logInfo string
-	d, _ := tools.FastJson.Marshal(&data)
+	d, _ := util.FastJson.Marshal(&data)
 	logInfo = string(d)
 	// todo check if safe
 	datetime := time.Now().Format("2006-01-02 15:04:05")
