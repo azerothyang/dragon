@@ -29,7 +29,7 @@ func init() {
 	Routes.PanicHandler = panicHandler
 	dRouter := dragon.NewDRouter(Routes)
 	// -----------------------------商品相关-----------------------------
-	dRouter.GET("/metrics", productHandler.Test)
+	dRouter.GET("/test", productHandler.Test)
 	// -----------------------------商品相关-----------------------------
 }
 

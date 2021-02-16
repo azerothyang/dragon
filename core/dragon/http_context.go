@@ -3,8 +3,8 @@ package dragon
 import (
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
-	"dragon/tools"
 	"fmt"
+	"github.com/go-dragon/util"
 	"github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"log"
@@ -70,7 +70,7 @@ func (h *HttpContext) BindRequestJsonToStruct(data interface{}) error {
 		log.Println(err)
 		return err
 	}
-	err = tools.FastJson.Unmarshal(body, data)
+	err = util.FastJson.Unmarshal(body, data)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -97,7 +97,7 @@ func (h *HttpContext) Json(data *Output, statusCode int) {
 		Output: *data,
 		SpanId: trackMan.SpanId,
 	}
-	js, err := tools.FastJson.Marshal(outData)
+	js, err := util.FastJson.Marshal(outData)
 	// 生成耗时
 	trackMan.CostTime = time.Since(trackMan.StartTime).String()
 

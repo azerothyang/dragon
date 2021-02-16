@@ -16,6 +16,9 @@
 # components 
 1. [httprouter](https://github.com/julienschmidt/httprouter). HttpRouter is a lightweight high performance HTTP request router.
 2. [GORM](https://github.com/jinzhu/gorm). The fantastic ORM library for Golang, aims to be developer friendly.
+3. [util](https://pkg.go.dev/github.com/go-dragon/util). for golang common util.
+4. [validator](https://pkg.go.dev/github.com/go-dragon/validator). validate the data.
+5. [erro](https://pkg.go.dev/github.com/go-dragon/erro). erro pkg aims to wrap the error stack.
 
 # start dragon
  dragon is mvc go framework. So you can hack with controller and model. 
