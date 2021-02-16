@@ -3,6 +3,7 @@ module dragon
 go 1.15
 
 require (
+	github.com/go-dragon/erro v0.0.3 // indirect
 	github.com/go-dragon/util v0.0.5
 	github.com/go-dragon/validator v0.0.3
 	github.com/go-redis/redis v6.15.2+incompatible
