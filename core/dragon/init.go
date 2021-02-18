@@ -8,18 +8,19 @@ import (
 	"dragon/core/dragon/dredis"
 	"dragon/domain/repository"
 	"dragon/tools/dmongo"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 )
 
 // AppInit func
 // do some components init
+// todo add Prometheus in the future
 func AppInit() {
 	//init config
 	conf.InitConf()
 
-	// init Prometheus pprof
+	// init pprof
 	if conf.Conf.Server.Pprof.Enabled {
 		var host string
 		if conf.Conf.Server.Pprof.Host != "" {
@@ -28,8 +29,7 @@ func AppInit() {
 			host = "0.0.0.0"
 		}
 		go func() {
-			http.Handle("/metrics", promhttp.Handler())
-			log.Println("Prometheus Pprof server on "+host+":"+conf.Conf.Server.Pprof.Port, "http://"+host+":"+conf.Conf.Server.Pprof.Port+"/metrics")
+			log.Println("Pprof server on "+host+":"+conf.Conf.Server.Pprof.Port, "http://"+host+":"+conf.Conf.Server.Pprof.Port+"/debug/pprof")
 			http.ListenAndServe(host+":"+conf.Conf.Server.Pprof.Port, nil)
 		}()
 	}

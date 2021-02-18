@@ -1,7 +1,8 @@
 FROM centos:centos7.6.1810
 LABEL maintainer = "holmescheng"
 ENV PROJECT_DIR ./release/
-ENV BINARY_NAME linux_linux
+# 根据项目名称，定义二进制文件名
+ENV BINARY_NAME dragon_linux
 
 # dragon 运行环境变量，默认为生成环境，可以设置为dev,test,prod分别对应不同的配置文件
 ENV DRAGON dev
