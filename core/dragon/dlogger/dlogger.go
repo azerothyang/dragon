@@ -44,13 +44,20 @@ func TickFlush() {
 		logDir := conf.Conf.Log.Dir
 		path := conf.ExecDir + "/" + logDir + "/" + date + ".log"
 		logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-		defer logFile.Close() // 防止异常退出
 		if err != nil {
 			log.Println(fmt.Sprintf("error:%+v", err))
 		}
 		fmt.Fprintf(logFile, content)
 		logFile.Close()
 	}
+}
+
+// checkFileIsExist
+func checkFileIsExist(filename string) bool {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
 
 // write log
