@@ -2,38 +2,48 @@ package rabbitmq
 
 import (
 	"github.com/streadway/amqp"
-	"log"
 )
 
 // Rabbit struct
 type Rabbit struct {
-	Dsn       string
-	Conn      *amqp.Connection
-	Channel   *amqp.Channel
-	Queue     *amqp.Queue
-	QueueName string
-	Consumer  <-chan amqp.Delivery
+	Dsn          string
+	Conn         *amqp.Connection
+	Channel      *amqp.Channel
+	Queue        *amqp.Queue
+	QueueName    string
+	ExchangeName string
+	RoutingKey   string
+	ChanConfirm  chan amqp.Confirmation
 }
 
 // New a Rabbit
 // dsn amqp://guest:guest@localhost:5672/
-func New(dsn string, queueName string) *Rabbit {
+// exchangeKind: direct:精准推送；fanout:广播。推送到绑定到此交换机下的所有队列；topic组播。比如上面我绑定的关键字是sms_send，那么他可以推送到*.sms_send的所有队列。#表示匹配单个或者多个单词如：sms_send.#
+func New(dsn string, exchangeName string, exchangeKind string, queueName string, routingKey string) (*Rabbit, error) {
 	// connection
 	conn, err := amqp.Dial(dsn)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// channel
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// default publish msg with confirm
 	err = ch.Confirm(false)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
+	}
+	confirmCh := make(chan amqp.Confirmation)
+	confirmCh = ch.NotifyPublish(confirmCh) // set publish notify
+
+	// exchange
+	err = ch.ExchangeDeclare(exchangeName, exchangeKind, true, false, false, false, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	// queue
@@ -46,16 +56,25 @@ func New(dsn string, queueName string) *Rabbit {
 		nil,
 	)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
+	}
+
+	// bind queue
+	err = ch.QueueBind(queueName, routingKey, exchangeName, false, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Rabbit{
-		Dsn:       dsn,
-		Conn:      conn,
-		Channel:   ch,
-		Queue:     &q,
-		QueueName: queueName,
-	}
+		Dsn:          dsn,
+		Conn:         conn,
+		Channel:      ch,
+		Queue:        &q,
+		QueueName:    queueName,
+		ExchangeName: exchangeName,
+		RoutingKey:   routingKey,
+		ChanConfirm:  confirmCh,
+	}, nil
 }
 
 // Close
@@ -65,16 +84,13 @@ func (r *Rabbit) Close() {
 }
 
 // Publish
-func (r *Rabbit) Publish(body string) (chan amqp.Confirmation, error) {
-	confirmCh := make(chan amqp.Confirmation)
-	r.Channel.NotifyPublish(confirmCh)
-
-	err := r.Channel.Publish("", r.QueueName, false, false, amqp.Publishing{
+func (r *Rabbit) Publish(body string) error {
+	err := r.Channel.Publish(r.ExchangeName, r.RoutingKey, false, false, amqp.Publishing{
 		ContentType:  "text/plain",
 		DeliveryMode: amqp.Persistent,
 		Body:         []byte(body),
 	})
-	return confirmCh, err
+	return err
 }
 
 // Consumer, msg need to ack

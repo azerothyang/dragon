@@ -3,6 +3,7 @@ package test
 import (
 	"dragon/tools"
 	"fmt"
+	"github.com/go-dragon/util"
 	"log"
 	"sync"
 	"testing"
@@ -28,7 +29,7 @@ func TestFastJson(t *testing.T) {
 	for i := 0; i < 50000; i++ {
 		wg.Add(1)
 		go func() {
-			tools.FastJson.Marshal(&data)
+			util.FastJson.Marshal(&data)
 			wg.Done()
 		}()
 	}
@@ -48,7 +49,7 @@ func BenchmarkFastJson(b *testing.B) {
 		"f": "world",
 	}
 	for i := 0; i < b.N; i++ {
-		tools.FastJson.Marshal(&data)
+		util.FastJson.Marshal(&data)
 	}
 }
 
@@ -56,7 +57,7 @@ func BenchmarkFastJsonDecode(b *testing.B) {
 	data := `{"x":1, "y":"hello world"}`
 	var res map[string]interface{}
 	for i := 0; i < b.N; i++ {
-		tools.FastJson.Unmarshal([]byte(data), &res)
+		util.FastJson.Unmarshal([]byte(data), &res)
 	}
 	log.Println("res", fmt.Sprintf("%+v", res))
 }
