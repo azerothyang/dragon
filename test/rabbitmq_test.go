@@ -19,7 +19,7 @@ func TestPublish(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("消息发布结果:", (<-mq.ChanConfirm).Ack)
+	log.Println("消息发布结果:", (<-mq.PubConfirmCh).Ack)
 	mq.Close()
 }
 
@@ -35,7 +35,7 @@ func TestManyPublish(t *testing.T) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		confirm := <-mq.ChanConfirm
+		confirm := <-mq.PubConfirmCh
 		log.Println("消息发布结果:", confirm.Ack)
 	}
 	mq.Close()
@@ -53,7 +53,7 @@ func BenchmarkPublish(b *testing.B) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		confirm := <-mq.ChanConfirm
+		confirm := <-mq.PubConfirmCh
 		log.Println("消息发布结果:", confirm.Ack)
 	}
 	mq.Close()
@@ -61,7 +61,7 @@ func BenchmarkPublish(b *testing.B) {
 
 // test consumer 10k/s
 func TestGetConsumer(t *testing.T) {
-	mq, err := rabbitmq.New("amqp://guest:guest@localhost:5672/", "test_ex", "direct", "test_queue", "test_key")
+	mq, err := rabbitmq.New("amqp://guest:guest@localhost:5672/", "test_ex", "direct", "test_queue", "test_key") // 这里当routingKey为空字符时，以queueName为准进行消费；当routingKey非空时，最终的消费获取queueName为test_queue或者routingKey为testKey发布的内容。
 	if err != nil {
 		log.Fatal(err)
 	}

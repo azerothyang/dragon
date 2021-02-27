@@ -13,7 +13,7 @@ type Rabbit struct {
 	QueueName    string
 	ExchangeName string
 	RoutingKey   string
-	ChanConfirm  chan amqp.Confirmation
+	PubConfirmCh chan amqp.Confirmation //publish confirm channel
 }
 
 // New a Rabbit
@@ -37,8 +37,8 @@ func New(dsn string, exchangeName string, exchangeKind string, queueName string,
 	if err != nil {
 		return nil, err
 	}
-	confirmCh := make(chan amqp.Confirmation)
-	confirmCh = ch.NotifyPublish(confirmCh) // set publish notify
+	pubConfirmCh := make(chan amqp.Confirmation)
+	pubConfirmCh = ch.NotifyPublish(pubConfirmCh) // set publish notify
 
 	// exchange
 	err = ch.ExchangeDeclare(exchangeName, exchangeKind, true, false, false, false, nil)
@@ -73,7 +73,7 @@ func New(dsn string, exchangeName string, exchangeKind string, queueName string,
 		QueueName:    queueName,
 		ExchangeName: exchangeName,
 		RoutingKey:   routingKey,
-		ChanConfirm:  confirmCh,
+		PubConfirmCh: pubConfirmCh,
 	}, nil
 }
 
