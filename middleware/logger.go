@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// 这里的next是router.go里Routes
 func LogInfo(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()

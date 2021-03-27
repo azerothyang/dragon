@@ -15,8 +15,8 @@ database:
       host: 127.0.0.1
       port: 3306
       user: root
-      password: dragon123
-      database: dragon
+      password: 123456
+      database: travel
       charset: utf8mb4,utf8
       timeout: 3s  #connect timeout time
       maxidle: 20  #maxIdle connections, db will at least serve 20 idle connections; if you set 0, that means no limit。
@@ -24,7 +24,7 @@ database:
   redis:
     host: 127.0.0.1
     port: 6379
-    auth: dragon
+    auth:
     timeout: 3000 #redis dial timeout per millisecond. int type
     db: 0
   mongodb:
