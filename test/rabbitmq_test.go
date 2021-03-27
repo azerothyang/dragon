@@ -40,6 +40,7 @@ func TestManyPublish(t *testing.T) {
 	}
 	mq.Close()
 }
+
 // 500/s
 func BenchmarkPublish(b *testing.B) {
 	mq, err := rabbitmq.New("amqp://guest:guest@localhost:5672/", "test_ex", "direct", "test_queue", "test_key")
