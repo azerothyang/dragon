@@ -19,18 +19,18 @@ type notFoundHandler struct {
 
 var (
 	Routes         *httprouter.Router
-	productHandler handler.IProductHandler
+	userHandler handler.IUserHandler
 )
 
 func init() {
-	productHandler = &handler.ProductHandler{} //product handler 初始化
+	userHandler = &handler.UserHandler{} //product handler 初始化
 	Routes = httprouter.New()
 	Routes.NotFound = notFoundHandler{}
 	Routes.PanicHandler = panicHandler
 	dRouter := dragon.NewDRouter(Routes)
-	// -----------------------------商品相关-----------------------------
-	dRouter.GET("/test", productHandler.Test)
-	// -----------------------------商品相关-----------------------------
+	// -----------------------------用户相关-----------------------------
+	dRouter.GET("/test", userHandler.Test)
+	// -----------------------------用户相关-----------------------------
 }
 
 // not found route handle

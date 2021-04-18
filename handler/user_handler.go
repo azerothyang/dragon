@@ -4,21 +4,19 @@ import (
 	"dragon/core/dragon"
 	"dragon/domain/repository"
 	"dragon/domain/service"
-	"fmt"
 	"github.com/go-dragon/validator"
-	"log"
 	"net/http"
 )
 
-type IProductHandler interface {
+type IUserHandler interface {
 	Test(ctx *dragon.HttpContext)
 }
 
-// 商品处理器
-type ProductHandler struct {
+// 用户处理器
+type UserHandler struct {
 }
 
-func (p *ProductHandler) Test(ctx *dragon.HttpContext) {
+func (u *UserHandler) Test(ctx *dragon.HttpContext) {
 	// redis ZRangeByScoreWithScores
 	//orders, err := dredis.Redis.ZRangeByScoreWithScores("order", redis.ZRangeBy{
 	//	Min:    "0",
@@ -53,11 +51,10 @@ func (p *ProductHandler) Test(ctx *dragon.HttpContext) {
 	//fmt.Println("mongoRes", hex.EncodeToString(objectId[:]))
 
 	// mysql example
-	log.Println("reqParams", fmt.Sprintf("%+v", ctx.GetRequestParams()))
-
+	//log.Println("reqParams", fmt.Sprintf("%+v", ctx.GetRequestParams()))
 	userSrv := service.NewUserService(repository.GormDB) // 如果是事务处理，这个db可以为gorm的begin的db，只能从头传进去🤷‍
-	res, err := userSrv.GetOne()
-	log.Println("err:", err)
+	res, _ := userSrv.GetOne()
+	//log.Println("err:", err)
 
 	//res := dto.TStructToData(product, []string{"product_id", "product_name", "create_time"})
 

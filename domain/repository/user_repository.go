@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 用户仓库
+// IUserRepository 用户仓库
 type IUserRepository interface {
 	IBaseRepository
 }

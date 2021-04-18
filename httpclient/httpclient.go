@@ -13,39 +13,39 @@ type Client struct {
 	TrackWriter *http.Request
 }
 
-// new a client
+// NewClient new a client
 func NewClient(req *http.Request) *Client {
 	return &Client{TrackWriter: req}
 }
 
-// Client response struct
+// Response Client response struct
 type Response struct {
 	Content string
 	Status  int
 	Err     error
 }
 
-//send get request
+// GET send get request
 func (c *Client) GET(url string, params map[string]string, headers map[string]string) *Response {
 	return c.send(url, params, "GET", headers)
 }
 
-//send post request
+// POST send post request
 func (c *Client) POST(url string, params map[string]string, headers map[string]string) *Response {
 	return c.send(url, params, "POST", headers)
 }
 
-//send put request
+// PUT send put request
 func (c *Client) PUT(url string, params map[string]string, headers map[string]string) *Response {
 	return c.send(url, params, "PUT", headers)
 }
 
-//send delete request
+// DELETE send delete request
 func (c *Client) DELETE(url string, params map[string]string, headers map[string]string) *Response {
 	return c.send(url, params, "DELETE", headers)
 }
 
-//send patch request
+// PATCH send patch request
 func (c *Client) PATCH(url string, params map[string]string, headers map[string]string) *Response {
 	return c.send(url, params, "PATCH", headers)
 }
