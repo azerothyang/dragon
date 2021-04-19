@@ -7,6 +7,7 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/model"
 	"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/spf13/viper"
 	"log"
 	"strconv"
 )
@@ -28,8 +29,8 @@ func Init() {
 	// 至少一个ServerConfig
 	serverConfigs := []constant.ServerConfig{
 		{
-			IpAddr: conf.Conf.Nacos.Ip,
-			Port:   conf.Conf.Nacos.Port,
+			IpAddr: viper.GetString("nacos.ip"),
+			Port:   viper.GetUint64("nacos.port"),
 		},
 	}
 
@@ -50,33 +51,31 @@ func Init() {
 	//})
 
 	// Register instance：RegisterInstance
-	port, _ := strconv.Atoi(conf.Conf.Server.K8s.Port)
 	success, err := NamingClient.RegisterInstance(vo.RegisterInstanceParam{
-		Ip:          conf.Conf.Server.K8s.Ip,
-		Port:        uint64(port),
-		ServiceName: conf.Conf.Server.Servicename,
-		ClusterName: conf.Conf.Nacos.Clustername,
+		Ip:          conf.IntranetIp,
+		Port:        viper.GetUint64("server.port"),
+		ServiceName: viper.GetString("server.servicename"),
+		ClusterName: viper.GetString("nacos.clustername"),
 		Weight:      10,
 		Enable:      true,
 		Healthy:     true,
-		GroupName:   conf.Conf.Nacos.Groupname,
+		GroupName:   viper.GetString("nacos.groupname"),
 		Ephemeral:   true,
-		Metadata:    map[string]string{"idc": conf.Conf.Nacos.Idc},
+		Metadata:    map[string]string{"idc": viper.GetString("nacos.idc")},
 	})
 	if !success {
 		log.Fatalln("nacos服务注册失败", err)
 	}
-	log.Println("nacos服务注册成功：", conf.Conf.Server.K8s.Ip+":"+conf.Conf.Server.K8s.Port)
+	log.Println("nacos服务注册成功：", conf.IntranetIp+":", viper.GetUint64("server.port"))
 }
 
 func DeregisterInstance() {
-	port, _ := strconv.Atoi(conf.Conf.Server.K8s.Port)
 	NamingClient.DeregisterInstance(vo.DeregisterInstanceParam{
-		Ip:          conf.Conf.Server.K8s.Ip,
-		Port:        uint64(port),
-		Cluster:     conf.Conf.Nacos.Clustername,
-		ServiceName: conf.Conf.Server.Servicename,
-		GroupName:   conf.Conf.Nacos.Groupname,
+		Ip:          conf.IntranetIp,
+		Port:        viper.GetUint64("server.port"),
+		Cluster:     viper.GetString("nacos.clustername"),
+		ServiceName: viper.GetString("server.servicename"),
+		GroupName:   viper.GetString("nacos.groupname"),
 		Ephemeral:   true,
 	})
 }

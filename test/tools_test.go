@@ -1,6 +1,7 @@
 package test
 
 import (
+	"dragon/core/dragon/conf"
 	"dragon/tools"
 	"fmt"
 	"github.com/go-dragon/util"
@@ -79,5 +80,29 @@ func TestUUidV4(t *testing.T) {
 func BenchmarkUUidV4(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tools.UUidV4()
+	}
+}
+
+func TestGetClientIp(t *testing.T) {
+	conf.InitConf()
+	tests := []struct {
+		name    string
+		want    string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{name: "TestGetClientIp1", want: "192.168.31.112"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tools.GetClientIp()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetClientIp() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("GetClientIp() got = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

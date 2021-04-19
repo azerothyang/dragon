@@ -5,6 +5,7 @@ import (
 	"dragon/core/dragon/conf"
 	"fmt"
 	"github.com/go-dragon/util"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 	"sync"
@@ -41,7 +42,7 @@ func TickFlush() {
 		now := time.Now()
 		date := now.Format("2006-01-02")
 		// 生成或打开文件
-		logDir := conf.Conf.Log.Dir
+		logDir := viper.GetString("log.dir")
 		path := conf.ExecDir + "/" + logDir + "/" + date + ".log"
 		logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 		if err != nil {

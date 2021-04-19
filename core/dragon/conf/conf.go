@@ -1,9 +1,10 @@
 package conf
 
 import (
+	"bytes"
 	"dragon/tools"
 	"errors"
-	"gopkg.in/yaml.v2"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,74 +14,7 @@ import (
 	"strings"
 )
 
-//config struct
-type ConfS struct {
-	Server struct {
-		Servicename string
-		Host        string
-		Port        string
-		K8s         struct {
-			Ip   string
-			Port string
-		}
-		Pprof struct {
-			Enabled bool
-			Host    string
-			Port    string
-		}
-	}
-	Database struct {
-		Mysql struct {
-			Master struct {
-				Host     string
-				Port     string
-				User     string
-				Password string
-				Database string
-				Charset  string
-				Timeout  string
-				Maxidle  int
-				Maxconn  int
-			}
-		}
-		Redis struct {
-			Host    string
-			Port    string
-			Auth    string
-			Timeout string
-			Db      int
-		}
-		Mongodb struct {
-			Host     string
-			Port     string
-			Username string
-			Password string
-			Database string
-			Timeout  uint8
-		}
-	}
-	Kafka struct {
-		Broker string
-	}
-	Log struct {
-		Dir string
-	}
-	Nacos struct {
-		Enable      bool
-		Ip          string
-		Port        uint64
-		Clustername string
-		Groupname   string
-		Idc         string
-	}
-	Zipkin struct {
-		Enable   bool
-		Reporter string
-	}
-}
-
 var (
-	Conf       ConfS
 	Env        = "dev"
 	ExecDir    = "" // current exec file path
 	IntranetIp = ""
@@ -126,9 +60,10 @@ func InitConf() {
 		// read yml config fail, return fail
 		panic("release/conf/" + Env + ".yml not found")
 	}
-	err = yaml.Unmarshal(config, &Conf)
+	viper.SetConfigType("yaml") // or viper.SetConfigType("YAML")
+	err = viper.ReadConfig(bytes.NewReader(config))
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
 

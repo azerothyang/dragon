@@ -18,7 +18,7 @@ type notFoundHandler struct {
 }
 
 var (
-	Routes         *httprouter.Router
+	Routes      *httprouter.Router
 	userHandler handler.IUserHandler
 )
 

@@ -2,11 +2,8 @@ server:
   servicename: dragon
   host:
   port: 1130
-  k8s:
-    ip: 172.16.15.137 #k8s or docker swarm deployment，the expose service ip and port 【k8s或者docker swarm部署，对应的外部service ip和port】
-    port: 10001
   pprof:
-    enabled: true
+    enable: true
     host:
     port: 18066
 database:

@@ -2,8 +2,8 @@ package kafka
 
 import (
 	"context"
-	"dragon/core/dragon/conf"
 	"github.com/segmentio/kafka-go"
+	"github.com/spf13/viper"
 	"time"
 )
 
@@ -12,7 +12,7 @@ func Produce(topic string, content string, key string) error {
 	// to produce messages
 	partition := 0
 
-	conn, _ := kafka.DialLeader(context.Background(), "tcp", conf.Conf.Kafka.Broker, topic, partition)
+	conn, _ := kafka.DialLeader(context.Background(), "tcp", viper.GetString("kafka.broker"), topic, partition)
 	defer func() {
 		conn.Close()
 	}()
@@ -34,7 +34,7 @@ func GetConsumerConn(topic string, offset int64) *kafka.Reader {
 	// to consume messages
 	// make a new reader that consumes from topic-A, partition 0
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{conf.Conf.Kafka.Broker},
+		Brokers:   []string{viper.GetString("kafka.broker")},
 		Topic:     topic,
 		Partition: 0,
 		MinBytes:  10e3, // 10KB

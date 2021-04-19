@@ -8,6 +8,7 @@ import (
 	"dragon/core/dragon/dredis"
 	"dragon/domain/repository"
 	"dragon/tools/dmongo"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
@@ -21,24 +22,26 @@ func AppInit() {
 	conf.InitConf()
 
 	// init pprof
-	if conf.Conf.Server.Pprof.Enabled {
+	if viper.GetBool("server.pprof.enable") {
 		var host string
-		if conf.Conf.Server.Pprof.Host != "" {
-			host = conf.Conf.Server.Pprof.Host
+		if viper.GetString("server.pprof.host") != "" {
+			host = viper.GetString("server.pprof.host")
 		} else {
-			host = "0.0.0.0"
+			host = conf.IntranetIp
 		}
 		go func() {
-			log.Println("Pprof server on "+host+":"+conf.Conf.Server.Pprof.Port, "http://"+host+":"+conf.Conf.Server.Pprof.Port+"/debug/pprof")
-			http.ListenAndServe(host+":"+conf.Conf.Server.Pprof.Port, nil)
+			log.Println("Pprof server on "+host+":"+viper.GetString("server.pprof.port"), "http://"+host+":"+viper.GetString("server.pprof.port")+"/debug/pprof")
+			http.ListenAndServe(host+":"+viper.GetString("server.pprof.port"), nil)
 		}()
 	}
 
 	// init zipkin server middleware
-	if conf.Conf.Zipkin.Enable {
+	if viper.GetBool("zipkin.enable") {
 		dragonzipkin.Init()
 	}
-	if conf.Conf.Nacos.Enable {
+
+	// init nacos
+	if viper.GetBool("nacos.enable") {
 		dnacos.Init()
 	}
 

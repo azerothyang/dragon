@@ -5,6 +5,7 @@ import (
 	"dragon/core/dragon/dlogger"
 	"errors"
 	"fmt"
+	"github.com/spf13/viper"
 	"gorm.io/driver/mysql" //导入mysql驱动
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -219,7 +220,7 @@ func InitDB() {
 
 	//mysql master
 	dsnMaster = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&timeout=%s&loc=Local", //loc set the timezone
-		conf.Conf.Database.Mysql.Master.User, conf.Conf.Database.Mysql.Master.Password, conf.Conf.Database.Mysql.Master.Host, conf.Conf.Database.Mysql.Master.Port, conf.Conf.Database.Mysql.Master.Database, conf.Conf.Database.Mysql.Master.Charset, conf.Conf.Database.Mysql.Master.Timeout)
+		viper.GetString("database.mysql.master.user"), viper.GetString("database.mysql.master.password"), viper.GetString("database.mysql.master.host"), viper.GetString("database.mysql.master.port"), viper.GetString("database.mysql.master.database"), viper.GetString("database.mysql.master.charset"), viper.GetString("database.mysql.master.timeout"))
 
 	//gorm realizes mysql reconnect
 	GormDB, err = gorm.Open(mysql.New(mysql.Config{
@@ -253,10 +254,10 @@ func InitDB() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	log.Println("mysql maxIdle conns:", conf.Conf.Database.Mysql.Master.Maxidle)
-	log.Println("mysql maxOpenConn conns:", conf.Conf.Database.Mysql.Master.Maxconn)
-	sqlDb.SetMaxIdleConns(conf.Conf.Database.Mysql.Master.Maxidle)
-	sqlDb.SetMaxOpenConns(conf.Conf.Database.Mysql.Master.Maxconn)
+	log.Println("mysql maxIdle conns:", viper.GetInt("database.mysql.master.maxidle"))
+	log.Println("mysql maxOpenConn conns:", viper.GetInt("database.mysql.master.maxconn"))
+	sqlDb.SetMaxIdleConns(viper.GetInt("database.mysql.master.maxidle"))
+	sqlDb.SetMaxOpenConns(viper.GetInt("database.mysql.master.maxconn"))
 	sqlDb.SetConnMaxIdleTime(time.Hour)
 	sqlDb.SetConnMaxLifetime(24 * time.Hour)
 }

@@ -1,12 +1,12 @@
 package dragonzipkin
 
 import (
-	"dragon/core/dragon/conf"
 	"errors"
 	zipkin "github.com/openzipkin/zipkin-go"
 	zipkinhttp "github.com/openzipkin/zipkin-go/middleware/http"
 	"github.com/openzipkin/zipkin-go/reporter"
 	reporterhttp "github.com/openzipkin/zipkin-go/reporter/http"
+	"github.com/spf13/viper"
 	"log"
 	"net"
 	"net/http"
@@ -20,14 +20,14 @@ var Client *zipkinhttp.Client
 // InitServerMiddleware and client
 func Init() {
 	// set up a span reporter
-	Reporter = reporterhttp.NewReporter(conf.Conf.Zipkin.Reporter)
+	Reporter = reporterhttp.NewReporter(viper.GetString("zipkin.reporter"))
 	//defer reporter.Close()
 	// create our local service endpoint
 	ip, err := getClientIp()
 	if err != nil {
 		log.Fatalf("unable to get ClientIp: %+v\n", err)
 	}
-	endpoint, err := zipkin.NewEndpoint(conf.Conf.Server.Servicename, ip+":"+conf.Conf.Server.Port)
+	endpoint, err := zipkin.NewEndpoint(viper.GetString("server.servicename"), ip+":"+viper.GetString("server.port"))
 	if err != nil {
 		log.Fatalf("unable to create local endpoint: %+v\n", err)
 	}

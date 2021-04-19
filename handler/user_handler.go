@@ -12,7 +12,7 @@ type IUserHandler interface {
 	Test(ctx *dragon.HttpContext)
 }
 
-// 用户处理器
+// UserHandler 用户处理器
 type UserHandler struct {
 }
 

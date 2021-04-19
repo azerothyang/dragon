@@ -15,8 +15,8 @@ func TestBaseRepository_Updates(t *testing.T) {
 	//init db
 	repository.InitDB()
 
-	productRepo := repository.ProductRepository{
-		BaseRepository: repository.BaseRepository{TableName: entity.ProductEntity{}.TableName(), MysqlDB: repository.GormDB}}
+	productRepo := repository.UserRepository{
+		BaseRepository: repository.BaseRepository{TableName: entity.UserEntity{}.TableName(), MysqlDB: repository.GormDB}}
 
 	res := productRepo.Updates([]map[string]interface{}{
 		{"product_id = ?": 1},
@@ -41,12 +41,12 @@ func TestBaseRepository_GetListAndCount(t *testing.T) {
 	//init db
 	repository.InitDB()
 
-	productRepo := repository.ProductRepository{
-		BaseRepository: repository.BaseRepository{TableName: entity.ProductEntity{}.TableName(), MysqlDB: repository.GormDB}}
+	productRepo := repository.UserRepository{
+		BaseRepository: repository.BaseRepository{TableName: entity.UserEntity{}.TableName(), MysqlDB: repository.GormDB}}
 
-	var list []entity.ProductEntity
+	var list []entity.UserEntity
 	count, listRes, countRes := productRepo.GetListAndCount(&list, []map[string]interface{}{
-		{"product_id IN (?)": []int{1, 2}},
+		{"user_id IN (?)": []int{1, 2}},
 	}, "", 0, -1, "*")
 	if repository.HasSeriousError(listRes) || repository.HasSeriousError(countRes) {
 		log.Fatal(listRes.Error, countRes.Error)

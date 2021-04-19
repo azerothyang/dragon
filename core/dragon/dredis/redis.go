@@ -1,10 +1,8 @@
 package dredis
 
 import (
-	"dragon/core/dragon/conf"
 	"github.com/go-redis/redis"
-	"log"
-	"strconv"
+	"github.com/spf13/viper"
 	"time"
 )
 
@@ -14,18 +12,14 @@ var (
 
 // init redis
 func InitRedis() {
-	timeout, err := strconv.Atoi(conf.Conf.Database.Redis.Timeout)
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
+	timeout := viper.GetDuration("database.redis.timeout")
 	Redis = redis.NewClient(&redis.Options{
-		Addr:         conf.Conf.Database.Redis.Host + ":" + conf.Conf.Database.Redis.Port,
-		Password:     conf.Conf.Database.Redis.Auth, // password set
-		DB:           conf.Conf.Database.Redis.Db,   // use default DB
-		ReadTimeout:  time.Duration(timeout) * time.Millisecond,
-		WriteTimeout: time.Duration(timeout) * time.Millisecond,
-		DialTimeout:  time.Duration(timeout) * time.Millisecond,
+		Addr:         viper.GetString("database.redis.host") + ":" + viper.GetString("database.redis.port"),
+		Password:     viper.GetString("database.redis.auth"), // password set
+		DB:           viper.GetInt("database.redis.db"),      // use default DB
+		ReadTimeout:  timeout * time.Millisecond,
+		WriteTimeout: timeout * time.Millisecond,
+		DialTimeout:  timeout * time.Millisecond,
 		PoolSize:     300,
 		MinIdleConns: 50,
 	})
