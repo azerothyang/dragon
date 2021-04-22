@@ -13,7 +13,7 @@ type UserEntity struct {
 	UpdateTime string
 }
 
-//set orm table name
+// TableName set orm table name
 func (UserEntity) TableName() string {
 	return "t_user"
 }

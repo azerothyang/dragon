@@ -30,7 +30,7 @@ func (u *UserHandler) Test(ctx *dragon.HttpContext) {
 	//fmt.Println("reqData", reqData)
 	v := validator.New()
 	v.Validate(&reqData, validator.Rules{
-		"test": "notEmpty",
+		"user_name": "notEmpty",
 	})
 	if v.HasErr {
 		ctx.Json(&dragon.Output{

@@ -67,12 +67,10 @@ func (h *HttpContext) BindRequestJsonToStruct(data interface{}) error {
 	var err error
 	body, err = ioutil.ReadAll(h.Request.Body)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	err = util.FastJson.Unmarshal(body, data)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	return nil
