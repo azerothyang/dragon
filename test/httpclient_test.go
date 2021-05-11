@@ -23,6 +23,18 @@ func TestGET(t *testing.T) {
 	fmt.Println(res.Status)
 }
 
+// benchmark GET
+func BenchmarkGET(b *testing.B) {
+	srv := &httpclient.Client{}
+	for i := 0; i < b.N; i++ {
+		res := srv.GET("https://qwu.zero-w.cn/", nil, nil)
+		if res.Err != nil {
+			log.Println(res.Err)
+		}
+		//log.Println(res.Content)
+	}
+}
+
 // test POST
 func TestPOST(t *testing.T) {
 	srv := &httpclient.Client{}
