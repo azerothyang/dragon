@@ -27,6 +27,9 @@ func (dragon *Dragon) Fly() {
 	//dragon fly
 	log.Println("env: " + conf.Env)
 	log.Println("set environment variable DRAGON dev,test,prod 🐲🐲🐲")
+	if conf.IntranetIp == "" {
+		conf.IntranetIp = "127.0.0.1"
+	}
 	webAddr := "http://" + conf.IntranetIp + ":" + viper.GetString("server.port")
 	if viper.GetString("server.host") != "" {
 		webAddr = "http://" + viper.GetString("server.host") + ":" + viper.GetString("server.port")
