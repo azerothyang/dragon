@@ -100,7 +100,7 @@ func (h *HttpContext) Json(data *Output, statusCode int) {
 	trackMan.CostTime = time.Since(trackMan.StartTime).String()
 
 	if err != nil {
-		trackMan.Error = err
+		trackMan.ErrInfo = err
 		fmt.Fprint(resp, "error")
 		return
 	}
@@ -113,7 +113,7 @@ func (h *HttpContext) Json(data *Output, statusCode int) {
 	if err != nil {
 		resp.WriteHeader(http.StatusInternalServerError)
 		trackMan.Resp.Header = resp.Header()
-		trackMan.Error = err
+		trackMan.ErrInfo = err
 		fmt.Fprint(resp, "")
 		return
 	}

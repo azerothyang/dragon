@@ -55,7 +55,7 @@ func panicHandler(resp http.ResponseWriter, req *http.Request, err interface{}) 
 	trackMan := tracker.UnMarshal(trackInfo)
 	trackMan.Resp.Header = resp.Header()
 	trackMan.Resp.Data = "<h2>500 Internal Server Error</h2>"
-	trackMan.Error = err
+	trackMan.ErrInfo = err
 	dlogger.Error(trackMan) // 写入日志跟踪
 	resp.Write([]byte("<h2>500 Internal Server Error</h2>"))
 	if err != nil {
