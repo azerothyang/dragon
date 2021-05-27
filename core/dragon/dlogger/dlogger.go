@@ -16,7 +16,7 @@ const (
 	DebugLevel    = "DEBUG"
 	InfoLevel     = "INFO"
 	WarnLevel     = "WARN"
-	ErrorLevel    = "ERROR"
+	ErrorLevel    = "FATAL_ERROR"
 	SqlInfoLevel  = "SQL_INFO"
 	SqlErrorLevel = "SQL_ERROR"
 )
