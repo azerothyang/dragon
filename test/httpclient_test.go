@@ -9,7 +9,7 @@ import (
 
 // test GET
 func TestGET(t *testing.T) {
-	srv := &httpclient.Client{}
+	srv := httpclient.NewClient(nil)
 	res := srv.GET("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -25,7 +25,7 @@ func TestGET(t *testing.T) {
 
 // benchmark GET
 func BenchmarkGET(b *testing.B) {
-	srv := &httpclient.Client{}
+	srv := httpclient.NewClient(nil)
 	for i := 0; i < b.N; i++ {
 		res := srv.GET("https://qwu.zero-w.cn/", nil, nil)
 		if res.Err != nil {
@@ -37,8 +37,8 @@ func BenchmarkGET(b *testing.B) {
 
 // test POST
 func TestPOST(t *testing.T) {
-	srv := &httpclient.Client{}
-	res := srv.POST("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
+	srv := httpclient.NewClient(nil)
+	res := srv.POST("https://qwu.zero-w.cn/", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
 		"pageSize": "10",
@@ -51,7 +51,7 @@ func TestPOST(t *testing.T) {
 }
 
 func TestPUT(t *testing.T) {
-	srv := &httpclient.Client{}
+	srv := httpclient.NewClient(nil)
 	res := srv.PUT("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -65,7 +65,7 @@ func TestPUT(t *testing.T) {
 }
 
 func TestPATCH(t *testing.T) {
-	srv := &httpclient.Client{}
+	srv := httpclient.NewClient(nil)
 	res := srv.PATCH("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -79,7 +79,7 @@ func TestPATCH(t *testing.T) {
 }
 
 func TestDELETE(t *testing.T) {
-	srv := &httpclient.Client{}
+	srv := httpclient.NewClient(nil)
 	res := srv.DELETE("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",

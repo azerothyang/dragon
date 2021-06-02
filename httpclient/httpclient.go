@@ -13,11 +13,37 @@ import (
 
 type Client struct {
 	TrackWriter *http.Request
+	HttpCli     *http.Client
 }
 
 // NewClient new a client
 func NewClient(req *http.Request) *Client {
-	return &Client{TrackWriter: req}
+	trans := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}).DialContext,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		MaxConnsPerHost:       100,
+		MaxIdleConnsPerHost:   100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+
+	// 新建一个http的client
+	httpCli := &http.Client{
+		Transport:     trans,
+		CheckRedirect: nil,
+		Jar:           nil,
+		Timeout:       10 * time.Second,
+	}
+	return &Client{
+		TrackWriter: req,
+		HttpCli:     httpCli,
+	}
 }
 
 // Response Client response struct
@@ -88,29 +114,7 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 		trackMan.HttpClient.Req.Body = paramsStr // 记录请求内容
 	}
 
-	trans := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
-		}).DialContext,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		MaxConnsPerHost:       100,
-		MaxIdleConnsPerHost:   100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-	}
-
-	// 新建一个http的client
-	client := &http.Client{
-		Transport:     trans,
-		CheckRedirect: nil,
-		Jar:           nil,
-		Timeout:       10 * time.Second,
-	}
-	rsp, err := client.Do(req)
+	rsp, err := c.HttpCli.Do(req)
 	if err != nil {
 		log.Println(err)
 		resp = &Response{
@@ -119,7 +123,7 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 			err,
 		}
 		if trackMan != nil {
-			trackMan.Error = err
+			trackMan.ErrInfo = err
 			c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		} // todo 继续完成
 		return
@@ -140,7 +144,7 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 		}
 
 		if trackMan != nil {
-			trackMan.Error = errR
+			trackMan.ErrInfo = errR
 			c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		}
 		return
@@ -175,7 +179,7 @@ func (c *Client) POSTJson(url string, paramsStr string, spanId string, calleeSer
 			http.StatusInternalServerError,
 			err,
 		}
-		trackMan.Error = err
+		trackMan.ErrInfo = err
 		c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
@@ -193,7 +197,7 @@ func (c *Client) POSTJson(url string, paramsStr string, spanId string, calleeSer
 			errR,
 		}
 
-		trackMan.Error = errR
+		trackMan.ErrInfo = errR
 		c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
