@@ -2,8 +2,10 @@ package handler
 
 import (
 	"dragon/core/dragon"
+	"dragon/core/dragon/dlogger"
 	"dragon/domain/repository"
 	"dragon/domain/service"
+	"github.com/go-dragon/erro"
 	"github.com/go-dragon/validator"
 	"net/http"
 )
@@ -33,6 +35,7 @@ func (u *UserHandler) Test(ctx *dragon.HttpContext) {
 		"user_name": "notEmpty",
 	})
 	if v.HasErr {
+		dlogger.Error(erro.NewError("error info"))
 		ctx.Json(&dragon.Output{
 			Code: http.StatusBadRequest,
 			Msg:  "",
