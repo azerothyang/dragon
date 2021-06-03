@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/go-dragon/erro v0.0.3
 	github.com/go-dragon/util v0.0.5
-	github.com/go-dragon/validator v0.0.3
+	github.com/go-dragon/validator v1.0.0
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
