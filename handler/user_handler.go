@@ -5,8 +5,9 @@ import (
 	"dragon/core/dragon/dlogger"
 	"dragon/domain/repository"
 	"dragon/domain/service"
+	"dragon/handler/reqdata"
 	"github.com/go-dragon/erro"
-	"github.com/go-dragon/validator"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 )
 
@@ -19,27 +20,27 @@ type UserHandler struct {
 }
 
 func (u *UserHandler) Test(ctx *dragon.HttpContext) {
-	// redis ZRangeByScoreWithScores
-	//orders, err := dredis.Redis.ZRangeByScoreWithScores("order", redis.ZRangeBy{
-	//	Min:    "0",
-	//	Max:    "10",
-	//	Offset: 0,
-	//	Count:  3,
-	//}).Result()
-	//fmt.Println(err, orders)
-	// 初始化req
-	reqData := ctx.GetRequestParams()
-	//fmt.Println("reqData", reqData)
-	v := validator.New()
-	v.Validate(&reqData, validator.Rules{
-		"user_name": "notEmpty",
-	})
-	if v.HasErr {
-		dlogger.Error(erro.NewError("error info"))
+	var userReq reqdata.UserReq
+	// bind json to struct
+	err := ctx.BindReqJsonToStruct(&userReq)
+	if err != nil {
+		errs := erro.NewError(err)
+		dlogger.Error(errs)
 		ctx.Json(&dragon.Output{
 			Code: http.StatusBadRequest,
-			Msg:  "",
-			Data: v.ErrList,
+			Msg:  http.StatusText(http.StatusBadRequest),
+			Data: nil,
+		}, http.StatusBadRequest)
+		return
+	}
+
+	v := validator.New()
+	err = v.Struct(&userReq)
+	if err != nil {
+		ctx.Json(&dragon.Output{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+			Data: err,
 		}, http.StatusBadRequest)
 		return
 	}

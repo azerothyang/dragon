@@ -23,8 +23,8 @@ type Tracker struct {
 		Req struct {
 			Uri  string `json:"uri"`
 			Body string `json:"body"`
-		} `json:"req"`
-		//Req *http.Request `json:"req"`
+		} `json:"reqdata"`
+		//Req *http.Request `json:"reqdata"`
 		Resp string `json:"resp"`
 	} `json:"httpclient"`
 	StartTime time.Time   `json:"start_time"`

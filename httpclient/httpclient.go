@@ -103,13 +103,13 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 		req, _ = http.NewRequest(method, url, strings.NewReader(paramsStr))
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
-	// add req headers
+	// add reqdata headers
 	for k, v := range headers {
 		req.Header.Add(k, v)
 	}
 
 	if trackMan != nil {
-		//trackMan.Service.Req = req todo req直接结构体不行
+		//trackMan.Service.Req = reqdata todo req直接结构体不行
 		trackMan.HttpClient.Req.Uri = req.URL.String()
 		trackMan.HttpClient.Req.Body = paramsStr // 记录请求内容
 	}

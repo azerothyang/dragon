@@ -62,7 +62,7 @@ func (h *HttpContext) GetRequestParams() map[string]string {
 }
 
 //parse raw json bind to struct
-func (h *HttpContext) BindRequestJsonToStruct(data interface{}) error {
+func (h *HttpContext) BindReqJsonToStruct(data interface{}) error {
 	var body []byte
 	var err error
 	body, err = ioutil.ReadAll(h.Request.Body)
