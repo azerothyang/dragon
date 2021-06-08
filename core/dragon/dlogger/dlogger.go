@@ -3,6 +3,7 @@ package dlogger
 import (
 	"bytes"
 	"dragon/core/dragon/conf"
+	"dragon/tools"
 	"fmt"
 	"github.com/go-dragon/util"
 	"github.com/spf13/viper"
@@ -35,6 +36,7 @@ func TickFlush() {
 		// 取出缓存区日志，固化到本地
 		logBufMutex.Lock()
 		content := logBuf.String()
+		bt, _ := tools.UnicodeToZh([]byte(content))
 		logBuf.Reset()
 		logBufMutex.Unlock()
 
@@ -48,7 +50,7 @@ func TickFlush() {
 		if err != nil {
 			log.Println(fmt.Sprintf("error:%+v", err))
 		}
-		fmt.Fprintf(logFile, content)
+		logFile.WriteString(string(bt))
 		logFile.Close()
 	}
 }

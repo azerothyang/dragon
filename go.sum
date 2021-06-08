@@ -60,6 +60,8 @@ github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMo
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-dragon/erro v0.0.3 h1:cGZOsq6PiqhJPaPcxAdmhYBxQqpEhgCGgcXf+NaVqb4=
 github.com/go-dragon/erro v0.0.3/go.mod h1:3yP4vVpOmws0/mSOHLkzIRFuO4YOnArN3mbkejCoMjY=
+github.com/go-dragon/erro v0.0.4 h1:9GIBw5Sc8Hma8fV2hhvBCbf5A1WdpqJotbLAQ6kjjl4=
+github.com/go-dragon/erro v0.0.4/go.mod h1:3yP4vVpOmws0/mSOHLkzIRFuO4YOnArN3mbkejCoMjY=
 github.com/go-dragon/util v0.0.5 h1:8v0rTuIHP3ZpL4REHr0vl85i5Ruc9JX0Fr/hFkFEutU=
 github.com/go-dragon/util v0.0.5/go.mod h1:aiQ2hm6bGcyNQ6hnCqLCtb8Jul57ytXJi5xOPi48HqQ=
 github.com/go-errors/errors v1.0.1 h1:LUHzmkK3GUKUrL/1gfBUxAHzcev3apQlezX/+O7ma6w=

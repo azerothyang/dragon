@@ -14,7 +14,7 @@ github.com/aliyun/alibaba-cloud-sdk-go/services/kms
 github.com/buger/jsonparser
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
-# github.com/go-dragon/erro v0.0.3
+# github.com/go-dragon/erro v0.0.4
 ## explicit
 github.com/go-dragon/erro
 # github.com/go-dragon/util v0.0.5

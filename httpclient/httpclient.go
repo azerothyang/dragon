@@ -1,6 +1,7 @@
 package httpclient
 
 import (
+	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
 	"io/ioutil"
 	"log"
@@ -79,6 +80,13 @@ func (c *Client) PATCH(url string, params map[string]string, headers map[string]
 }
 
 func (c *Client) send(url string, params map[string]string, method string, headers map[string]string) (resp *Response) {
+	defer func() {
+		dlogger.Info("httpclient:"+method, map[string]interface{}{
+			"url":     url,
+			"params":  params,
+			"headers": headers,
+		})
+	}()
 	// 跟踪器
 	var trackMan *tracker.Tracker
 	if c.TrackWriter != nil {
@@ -111,7 +119,7 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 	if trackMan != nil {
 		//trackMan.Service.Req = reqdata todo req直接结构体不行
 		trackMan.HttpClient.Req.Uri = req.URL.String()
-		trackMan.HttpClient.Req.Body = paramsStr // 记录请求内容
+		trackMan.HttpClient.Req.Params = params // 记录请求内容
 	}
 
 	rsp, err := c.HttpCli.Do(req)

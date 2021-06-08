@@ -14,8 +14,11 @@ func LogInfo(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		spanId, _ := util.NewUUID()
+		r.ParseForm()
 		// 读取
 		body, _ := ioutil.ReadAll(r.Body)
+		var rawJsonParams map[string]interface{}
+		util.FastJson.Unmarshal(body, &rawJsonParams)
 		// 把刚刚读出来的再写进去
 		r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 		trackMan := &tracker.Tracker{
@@ -23,7 +26,8 @@ func LogInfo(next http.Handler) http.Handler {
 			Uri:       r.RequestURI,
 			Method:    r.Method,
 			ReqHeader: r.Header,
-			Body:      string(body),
+			RawJson:   rawJsonParams,
+			Form:      r.Form,
 			StartTime: start,
 			DateTime:  start.Format("2006-01-02 15:04:05"),
 			CostTime:  "",
