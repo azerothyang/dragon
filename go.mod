@@ -1,13 +1,12 @@
 module dragon
 
-go 1.15
+go 1.16
 
 require (
 	github.com/go-dragon/erro v0.0.4
 	github.com/go-dragon/util v0.0.5
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/leodido/go-urn v1.2.1 // indirect

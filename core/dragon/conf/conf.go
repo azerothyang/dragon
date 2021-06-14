@@ -3,9 +3,10 @@ package conf
 import (
 	"bytes"
 	"dragon/tools"
+	"embed"
+	_ "embed"
 	"errors"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -18,6 +19,8 @@ var (
 	Env        = "dev"
 	ExecDir    = "" // current exec file path
 	IntranetIp = ""
+	//go:embed config
+	ConfigFS embed.FS // config file system
 )
 
 //init config
@@ -28,42 +31,28 @@ func InitConf() {
 	dir, err := GetCurrentPath()
 	ExecDir = dir
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
-	var envb []byte
-	// read DRAGON env first
+	// read DRAGON env first, if empty str them run dev env
 	env := os.Getenv("DRAGON")
+	log.Println("os.Getenv:", env)
 	if env == "" {
-		envb, err = ioutil.ReadFile(dir + FmtSlash("conf/.env"))
+		env = "dev"
+	}
+	Env = env
 
-		// check last char is LF (\n)
-		if envb[len(envb)-1] == 10 {
-			envb = envb[:len(envb)-1]
-		}
-	} else {
-		envb = []byte(env)
-	}
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	Env = string(envb)
-	// check Env != dev,prod,test
-	if (Env != "dev") && (Env != "test") && (Env != "prod") {
-		panic("environment variable DRAGON can only be dev,test or prod")
-	}
 	var config []byte
-	config, err = ioutil.ReadFile(dir + FmtSlash("conf/"+Env+".yml"))
-	//check env DRAGON or release/.env
+	config, err = ConfigFS.ReadFile("config/" + Env + ".yml")
 	if err != nil {
 		// read yml config fail, return fail
-		panic("release/conf/" + Env + ".yml not found")
+		log.Fatalln("init config fail: core/dragon/conf/config/" + Env + ".yml not found", err)
+		return
 	}
 	viper.SetConfigType("yaml") // or viper.SetConfigType("YAML")
 	err = viper.ReadConfig(bytes.NewReader(config))
 	if err != nil {
-		panic(err)
+		log.Fatalln("viper.ReadConfig fail", err)
 	}
 }
 

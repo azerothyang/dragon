@@ -10,11 +10,7 @@ import (
 // test GET
 func TestGET(t *testing.T) {
 	srv := httpclient.NewClient(nil)
-	res := srv.GET("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
-		"cur_code": "440300000000",
-		"page":     "0",
-		"pageSize": "10",
-	}, nil)
+	res := srv.GET("https://qwu.zero-w.cn", nil, nil)
 
 	if res.Err != nil {
 		log.Println(res.Err)
