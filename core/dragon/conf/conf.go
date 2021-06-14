@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"dragon/tools"
 	"embed"
-	_ "embed"
 	"errors"
 	"github.com/spf13/viper"
 	"log"
