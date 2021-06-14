@@ -6,7 +6,6 @@ import (
 	"dragon/domain/repository"
 	"dragon/domain/service"
 	"dragon/handler/reqdata"
-	"dragon/httpclient"
 	"github.com/go-dragon/erro"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -22,12 +21,6 @@ type UserHandler struct {
 
 func (u *UserHandler) Test(ctx *dragon.HttpContext) {
 	var userReq reqdata.UserReq
-	cli := httpclient.NewClient(nil)
-	cli.GET("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
-		"cur_code": "440300000000",
-		"page":     "0",
-		"pageSize": "10",
-	}, nil)
 	// bind json to struct
 	err := ctx.BindReqJsonToStruct(&userReq)
 	if err != nil {
