@@ -127,7 +127,6 @@ func WrapController(handler func(ctx *HttpContext)) httprouter.Handle {
 			Request: request,
 			Writer:  writer,
 			Params:  params,
-			Mutex:   sync.Mutex{},
 		}
 		handler(ctx)
 	}
