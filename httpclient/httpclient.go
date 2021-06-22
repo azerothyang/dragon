@@ -175,10 +175,6 @@ func (c *Client) POSTJson(url string, paramsStr string) (resp *Response) {
 	var req *http.Request
 	req, _ = http.NewRequest("POST", url, strings.NewReader(paramsStr))
 	req.Header.Add("Content-Type", "application/json")
-	// 跟踪器
-	trackInfo := c.TrackWriter.Header.Get(tracker.TrackKey)
-	trackMan := tracker.UnMarshal(trackInfo)
-
 	rsp, err := http.DefaultClient.Do(req)
 
 	if err != nil {
@@ -187,34 +183,26 @@ func (c *Client) POSTJson(url string, paramsStr string) (resp *Response) {
 			http.StatusInternalServerError,
 			err,
 		}
-		trackMan.ErrInfo = err
-		c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
 	defer rsp.Body.Close()
 
 	content, errR := ioutil.ReadAll(rsp.Body)
-	// 写入返回content
-	trackMan.HttpClient.Resp = string(content)
 
 	if errR != nil {
 		log.Println(err)
 		resp = &Response{
-			trackMan.HttpClient.Resp,
+			string(content),
 			http.StatusInternalServerError,
 			errR,
 		}
-
-		trackMan.ErrInfo = errR
-		c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		return
 	}
 
 	resp = &Response{
-		trackMan.HttpClient.Resp,
+		string(content),
 		rsp.StatusCode,
 		errR,
 	}
-	c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 	return
 }

@@ -87,3 +87,9 @@ func TestDELETE(t *testing.T) {
 	fmt.Println(res.Content)
 	fmt.Println(res.Status)
 }
+
+func TestClient_POSTJson(t *testing.T) {
+	cli := httpclient.NewClient(nil)
+	rsp := cli.POSTJson("https://www.baidu.com/", `{"x":1, "y":2}`)
+	log.Println(rsp.Content)
+}
