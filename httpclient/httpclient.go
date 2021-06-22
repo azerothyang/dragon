@@ -171,7 +171,7 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 }
 
 //send postJson
-func (c *Client) POSTJson(url string, paramsStr string, spanId string, calleeService ...string) (resp *Response) {
+func (c *Client) POSTJson(url string, paramsStr string) (resp *Response) {
 	var req *http.Request
 	req, _ = http.NewRequest("POST", url, strings.NewReader(paramsStr))
 	req.Header.Add("Content-Type", "application/json")
