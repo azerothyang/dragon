@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	url2 "net/url"
 	"strings"
 	"time"
 )
@@ -96,7 +95,7 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 
 	paramsStr := ""
 	for k, v := range params {
-		paramsStr += k + "=" + url2.QueryEscape(v) + "&"
+		paramsStr += k + "=" + v + "&"
 	}
 	if paramsStr != "" {
 		paramsStr = paramsStr[:len(paramsStr)-1]
@@ -175,7 +174,7 @@ func (c *Client) POSTJson(url string, paramsStr string) (resp *Response) {
 	var req *http.Request
 	req, _ = http.NewRequest("POST", url, strings.NewReader(paramsStr))
 	req.Header.Add("Content-Type", "application/json")
-	rsp, err := http.DefaultClient.Do(req)
+	rsp, err := c.HttpCli.Do(req)
 
 	if err != nil {
 		resp = &Response{
