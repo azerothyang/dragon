@@ -21,9 +21,9 @@ func TestGET(t *testing.T) {
 
 // benchmark GET
 func BenchmarkGET(b *testing.B) {
-	srv := httpclient.NewClient(nil)
+	cli := httpclient.DefaultClient
 	for i := 0; i < b.N; i++ {
-		res := srv.GET("https://qwu.zero-w.cn/", nil, nil)
+		res := cli.GET("https://qwu.zero-w.cn/", nil, nil)
 		if res.Err != nil {
 			log.Println(res.Err)
 		}
@@ -33,7 +33,7 @@ func BenchmarkGET(b *testing.B) {
 
 // test POST
 func TestPOST(t *testing.T) {
-	srv := httpclient.NewClient(nil)
+	srv := httpclient.DefaultClient
 	res := srv.POST("https://qwu.zero-w.cn/", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -47,7 +47,7 @@ func TestPOST(t *testing.T) {
 }
 
 func TestPUT(t *testing.T) {
-	srv := httpclient.NewClient(nil)
+	srv := httpclient.DefaultClient
 	res := srv.PUT("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -61,7 +61,7 @@ func TestPUT(t *testing.T) {
 }
 
 func TestPATCH(t *testing.T) {
-	srv := httpclient.NewClient(nil)
+	srv := httpclient.DefaultClient
 	res := srv.PATCH("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -75,7 +75,7 @@ func TestPATCH(t *testing.T) {
 }
 
 func TestDELETE(t *testing.T) {
-	srv := httpclient.NewClient(nil)
+	srv := httpclient.DefaultClient
 	res := srv.DELETE("http://talent.qh-1.cn/pc/httpclient/orgs", map[string]string{
 		"cur_code": "440300000000",
 		"page":     "0",
@@ -89,7 +89,7 @@ func TestDELETE(t *testing.T) {
 }
 
 func TestClient_POSTJson(t *testing.T) {
-	cli := httpclient.NewClient(nil)
+	cli := httpclient.DefaultClient
 	rsp := cli.POSTJson("https://www.baidu.com/", `{"x":1, "y":2}`)
 	log.Println(rsp.Content)
 }
