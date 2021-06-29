@@ -28,9 +28,10 @@
  > dir core/dragon/conf/config/xxx.yml,  dev.yml/prod.yml/test.yml/..***
  > or you can set env DRAGON in docker
 
-2. build your app
+2. build && run your app
 ```
-go build main.go
+cd dragon
+go build main.go && mv main ./release/ && ./release/main
 ```
 > ### move your main(exec file) to release dir
 
