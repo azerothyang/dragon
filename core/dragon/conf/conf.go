@@ -45,7 +45,7 @@ func InitConf() {
 	config, err = ConfigFS.ReadFile("config/" + Env + ".yml")
 	if err != nil {
 		// read yml config fail, return fail
-		log.Fatalln("init config fail: core/dragon/conf/config/" + Env + ".yml not found", err)
+		log.Fatalln("init config fail: core/dragon/conf/config/"+Env+".yml not found", err)
 		return
 	}
 	viper.SetConfigType("yaml") // or viper.SetConfigType("YAML")

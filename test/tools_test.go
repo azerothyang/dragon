@@ -5,6 +5,7 @@ import (
 	"dragon/tools"
 	"fmt"
 	"github.com/go-dragon/util"
+	"github.com/go-playground/validator/v10"
 	"log"
 	"sync"
 	"testing"
@@ -105,4 +106,25 @@ func TestGetClientIp(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestValidator(t *testing.T) {
+	var str = []byte(`{
+    "MemberId":"4",
+    "Cols":"DeliveryAddress,SkinType,AgeMin,AgeMax,Job,GoodAt,Wechat,CreateTime,UpdateTime"
+}`)
+	type validateData struct {
+		MemberId int64  `validate:"required"`
+		Cols     string `validate:"required"`
+	}
+	var data validateData
+	err := util.FastJson.Unmarshal(str, &data)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println("data", data)
+
+	v := validator.New()
+	err = v.Struct(&data)
+	log.Println("err", err)
 }
