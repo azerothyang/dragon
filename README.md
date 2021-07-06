@@ -1,5 +1,5 @@
 # Dragon
-# [change project to](https://github.com/go-dragon/dragon)
+# [project new link](https://github.com/go-dragon/dragon)
 <!-- MarkdownTOC autolink=true autoanchor=true-->
 
 - [start dragon](#start-dragon)
