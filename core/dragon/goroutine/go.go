@@ -112,7 +112,6 @@ Error:
 	return n, &strconv.NumError{Func: "ParseUint", Num: string(s0), Err: err}
 }
 
-
 // CurGoroutineID 当前的
 func CurGoroutineID() uint64 {
 	bp := http2littleBuf.Get().(*[]byte)

@@ -24,7 +24,7 @@ func (u *UserHandler) Test(ctx *dragon.HttpContext) {
 	var userReq reqdata.UserReq
 	// bind json to struct
 	gid := goroutine.CurGoroutineID()
-	err := ctx.BindReqJsonToStruct(&userReq)
+	err := ctx.BindPostJson(&userReq)
 	if err != nil {
 		errs := erro.NewError(err)
 		dlogger.Error(errs)

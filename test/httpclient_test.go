@@ -9,8 +9,7 @@ import (
 
 // test GET
 func TestGET(t *testing.T) {
-	srv := httpclient.NewClient(nil)
-	res := srv.GET("https://qwu.zero-w.cn", nil, nil)
+	res := httpclient.DefaultClient.GET("https://qwu.zero-w.cn", nil, nil)
 
 	if res.Err != nil {
 		log.Println(res.Err)

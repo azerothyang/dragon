@@ -1,6 +1,7 @@
 package httpclient
 
 import (
+	"context"
 	"dragon/core/dragon/dlogger"
 	"dragon/core/dragon/tracker"
 	"io/ioutil"
@@ -12,28 +13,53 @@ import (
 )
 
 // DefaultClient default http client pool
-var DefaultClient = NewClient(nil)
+var DefaultClient = NewClient(&Option{
+	DialContext: (&net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 60 * time.Second,
+	}).DialContext,
+	ForceAttemptHTTP2:     false,
+	MaxIdleConns:          100,
+	MaxConnsPerHost:       100,
+	MaxIdleConnsPerHost:   20,
+	IdleConnTimeout:       90 * time.Second,
+	TLSHandshakeTimeout:   10 * time.Second,
+	ExpectContinueTimeout: 1 * time.Second,
+})
 
 type Client struct {
-	TrackWriter *http.Request
-	HttpCli     *http.Client
+	HttpCli *http.Client
 }
 
-// NewClient new a client
-func NewClient(req *http.Request) *Client {
+// Option client opt
+// DialContext: (&net.Dialer{
+//			Timeout:   option.DialTimeout,
+//			KeepAlive: option.DialKeepAlive,
+//		}).DialContext
+type Option struct {
+	DialContext           func(ctx context.Context, network, addr string) (net.Conn, error)
+	ForceAttemptHTTP2     bool
+	MaxIdleConns          int
+	MaxConnsPerHost       int
+	MaxIdleConnsPerHost   int
+	IdleConnTimeout       time.Duration
+	TLSHandshakeTimeout   time.Duration
+	ExpectContinueTimeout time.Duration
+}
+
+// NewClient new a client, that means you need to handle  config your
+
+func NewClient(option *Option) *Client {
 	trans := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 60 * time.Second,
-		}).DialContext,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		MaxConnsPerHost:       100,
-		MaxIdleConnsPerHost:   20,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
+		Proxy:                 http.ProxyFromEnvironment,
+		DialContext:           option.DialContext,
+		ForceAttemptHTTP2:     option.ForceAttemptHTTP2,
+		MaxIdleConns:          option.MaxIdleConns,
+		MaxConnsPerHost:       option.MaxConnsPerHost,
+		MaxIdleConnsPerHost:   option.MaxIdleConnsPerHost,
+		IdleConnTimeout:       option.IdleConnTimeout,
+		TLSHandshakeTimeout:   option.TLSHandshakeTimeout,
+		ExpectContinueTimeout: option.ExpectContinueTimeout,
 	}
 
 	// 新建一个http的client
@@ -44,8 +70,7 @@ func NewClient(req *http.Request) *Client {
 		Timeout:       10 * time.Second,
 	}
 	return &Client{
-		TrackWriter: req,
-		HttpCli:     httpCli,
+		HttpCli: httpCli,
 	}
 }
 
@@ -91,10 +116,6 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 	}()
 	// 跟踪器
 	var trackMan *tracker.Tracker
-	if c.TrackWriter != nil {
-		trackInfo := c.TrackWriter.Header.Get(tracker.TrackKey)
-		trackMan = tracker.UnMarshal(trackInfo)
-	}
 
 	paramsStr := ""
 	for k, v := range params {
@@ -132,30 +153,18 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 			http.StatusInternalServerError,
 			err,
 		}
-		if trackMan != nil {
-			trackMan.ErrInfo = err
-			c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
-		} // todo 继续完成
 		return
 	}
 	defer rsp.Body.Close()
 
 	content, errR := ioutil.ReadAll(rsp.Body)
 	contentStr := string(content)
-	if trackMan != nil {
-		trackMan.HttpClient.Resp = contentStr
-	}
 
 	if errR != nil {
 		resp = &Response{
 			contentStr,
 			http.StatusInternalServerError,
 			errR,
-		}
-
-		if trackMan != nil {
-			trackMan.ErrInfo = errR
-			c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 		}
 		return
 	}
@@ -165,9 +174,6 @@ func (c *Client) send(url string, params map[string]string, method string, heade
 		contentStr,
 		rsp.StatusCode,
 		errR,
-	}
-	if trackMan != nil {
-		c.TrackWriter.Header.Set(tracker.TrackKey, trackMan.Marshal()) // 最后写日志跟踪
 	}
 	return
 }

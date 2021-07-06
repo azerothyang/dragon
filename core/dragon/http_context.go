@@ -13,11 +13,12 @@ import (
 	"time"
 )
 
-// HttpContextController interface
-type HttpContextController interface {
-	GetRequestParams() map[string]string
-	BindRequestJsonToStruct(data interface{}) error
+// IHttpContext interface
+type IHttpContext interface {
+	GetReqParams() map[string]string
+	BindPostJson(data interface{}) error
 	Json(data *Output, statusCode int)
+	String(data string, statusCode int)
 }
 
 // HttpContext
@@ -41,8 +42,8 @@ type OutData struct {
 	SpanId string `json:"span_id"`
 }
 
-// GetRequestParams get request params (get and post params)
-func (h *HttpContext) GetRequestParams() map[string]string {
+// GetReqParams get request params (get and post params)
+func (h *HttpContext) GetReqParams() map[string]string {
 	requests := make(map[string]string)
 	var err error
 	err = h.Request.ParseForm()
@@ -61,8 +62,8 @@ func (h *HttpContext) GetRequestParams() map[string]string {
 	return requests
 }
 
-//parse raw json bind to struct
-func (h *HttpContext) BindReqJsonToStruct(data interface{}) error {
+// BindPostJson parse raw json bind to struct
+func (h *HttpContext) BindPostJson(data interface{}) error {
 	var body []byte
 	var err error
 	body, err = ioutil.ReadAll(h.Request.Body)
@@ -110,6 +111,37 @@ func (h *HttpContext) Json(data *Output, statusCode int) {
 
 	// output
 	_, err = resp.Write(js)
+	if err != nil {
+		resp.WriteHeader(http.StatusInternalServerError)
+		trackMan.Resp.Header = resp.Header()
+		trackMan.ErrInfo = err
+		fmt.Fprint(resp, "")
+		return
+	}
+}
+
+// String send string to client
+func (h *HttpContext) String(data string, statusCode int) {
+	resp := h.Writer
+	resp.Header().Set("x-server", "dragon")
+	resp.Header().Set("Access-Control-Allow-Origin", "*")
+	resp.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT,PATCH")
+	resp.Header().Set("Access-Control-Allow-Credentials", "true")
+	resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept-Encoding, Origin")
+
+	trackInfo := h.Request.Header.Get(tracker.TrackKey)
+	trackMan := tracker.UnMarshal(trackInfo)
+	defer func() {
+		dlogger.Info(trackMan) // 最后写日志跟踪
+	}()
+	trackMan.Resp.Header = resp.Header()
+	// 生成耗时
+	trackMan.CostTime = time.Since(trackMan.StartTime).String()
+	// trackMan data log
+	resp.WriteHeader(statusCode)
+	trackMan.Resp.Data = data
+	// output
+	_, err := resp.Write([]byte(data))
 	if err != nil {
 		resp.WriteHeader(http.StatusInternalServerError)
 		trackMan.Resp.Header = resp.Header()
