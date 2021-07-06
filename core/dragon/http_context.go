@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -26,7 +25,6 @@ type HttpContext struct {
 	Request *http.Request
 	Writer  http.ResponseWriter
 	Params  httprouter.Params
-	Mutex   sync.Mutex
 }
 
 // output struct
