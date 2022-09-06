@@ -133,5 +133,5 @@ just create .fsw.json config:
  ```
 > just run cmd
  ```
- $ fswatch
+ $ fswatch 
  ```
